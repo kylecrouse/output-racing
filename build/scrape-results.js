@@ -18,17 +18,15 @@ const client = contentful.createClient({
 
 	const request = new Promise(resolve => {
     page.on('request', req => {
-  		if (req.resourceType() === 'document' && req.url().substr(-4) === '.csv') {
-        const options = {
+      if (req.resourceType() === 'document' && req.url().substr(-4) === '.csv') {
+        resolve(fetch(req._url, {
           encoding: null,
           method: req._method,
           headers: req._headers
-        };
-        /* resend the request */
-        resolve(fetch(req._url, options));
+        }));
       }
-		  req.continue();
-  	});
+      req.continue();
+    });
   });
 	  
 	await page.goto('http://www.danlisa.com/scoring/season_race.php?race_id=104963&csv=y');
