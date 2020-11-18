@@ -19,6 +19,7 @@
     "@babel/core": "^7.12.3",
     "@babel/node": "^7.12.6",
     "contentful-management": "^6.3.2",
+    "csv-parse": "^4.14.1",
     "node-fetch": "^2.6.1",
     "puppeteer": "^5.5.0"
   }
