@@ -36,7 +36,31 @@ const client = contentful.createClient({
   const response = await request;
   const csv = await response.text();
   
-  const results = new Promise((reject, resolve) => {
+  const race = await new Promise((resolve, reject) => {
+    parse(csv, {
+      relax_column_count: true,
+      from_line: 1,
+      to_line: 11,
+      on_record: record => record[1]
+    }, (err, output) => {
+      if (err) reject(err);
+      else resolve({
+        league: output[0],
+        series: output[1],
+        season: output[2],
+        date: new Date(output[3]),
+        track: output[4],
+        laps: output[5],
+        duration: output[6],
+        cautions: output[7],
+        cautionLaps: output[8],
+        leadChanges: output[9],
+        leaders: output[10]
+      });
+    })
+  });
+  
+  const results = await new Promise((resolve, reject) => {
     parse(csv, {
       relax_column_count: true,
       columns: true,
@@ -66,7 +90,8 @@ const client = contentful.createClient({
     });
   });
 
-  console.log(await results);
+  console.log('race', race);
+  console.log('results', results);
   
   await browser.close();
     
