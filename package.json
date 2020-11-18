@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "babel-node ./build/scrape-drivers.js && next build && next export",
     "danlisa": "babel-node ./build/scrape-results.js",
+    "drivers": "babel-node ./build/scrape-drivers.js",
     "export": "next build && next export",
     "start": "next start"
   },

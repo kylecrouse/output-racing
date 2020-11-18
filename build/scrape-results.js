@@ -3,14 +3,14 @@ const contentful = require('contentful-management');
 const fetch = require('node-fetch');
 const parse = require('csv-parse');
 
-// const client = contentful.createClient({
-// 	accessToken: process.env.CONTENTFUL_ACCESS_TOKEN
-// });
+const client = contentful.createClient({
+	accessToken: process.env.CONTENTFUL_ACCESS_TOKEN
+});
 
 (async () => {
-	// const space = await client.getSpace('38idy44jf6uy');
-	// const environment = await space.getEnvironment('master');
-	// const entries = await environment.getEntries({ content_type: "driver" });
+	const space = await client.getSpace('38idy44jf6uy');
+	const environment = await space.getEnvironment('master');
+	const entries = await environment.getEntries({ content_type: "driver" });
 	
 	const browser = await puppeteer.launch();
 	const page = await browser.newPage();
@@ -42,7 +42,10 @@ const parse = require('csv-parse');
       columns: true,
       from_line: 12,
       on_record: (record, context) => ({
-        driver: record['Driver'],
+        driver: (name => {
+          const driver = entries.items.find(driver => driver.fields.name['en-US'] === name);
+          return driver ? driver.sys.id : name;
+        })(record['Driver']),
         car: record['Car'],
         start: record['Start'],
         finish: record['Finish'],

@@ -77,16 +77,18 @@ const client = contentful.createClient({
 		);
 		if (driver.length > 0) {
 			// Update
-			driver[0].fields.name['en-US'] = member.driver_nickname.length > 0 ? member.driver_nickname : member.displayName;
-			driver[0].fields.number['en-US'] = member.car_number;
-			driver[0].fields.custId['en-US'] = member.custID;
-			driver[0].fields.active['en-US'] = true;
+			driver[0].fields.name = { 'en-US': member.displayName };
+			driver[0].fields.nickname = { 'en-US': member.driver_nickname };
+			driver[0].fields.number = { 'en-US': member.car_number };
+			driver[0].fields.custId = { 'en-US': member.custID };
+			driver[0].fields.active = { 'en-US': true };
 			await driver[0].update();
 			console.log(`updated ${member.displayName}...`);
 		} else {
 			// Add
 			const entry = await environment.createEntry('driver', { fields: {
-				name: { 'en-US': member.driver_nickname.length > 0 ? member.driver_nickname : member.displayName },
+				name: { 'en-US': member.displayName },
+				nickname: { 'en-US': member.driver_nickname },
 				number: { 'en-US': member.car_number },
 				custId: { 'en-US': member.custID },
 				active: { 'en-US': true },
