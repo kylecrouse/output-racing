@@ -4,18 +4,18 @@ const fetch = require('node-fetch');
 const parse = require('csv-parse');
 
 const client = contentful.createClient({
-	accessToken: process.env.CONTENTFUL_ACCESS_TOKEN
+  accessToken: process.env.CONTENTFUL_ACCESS_TOKEN
 });
 
 (async () => {
-	const space = await client.getSpace('38idy44jf6uy');
-	const environment = await space.getEnvironment('master');
-	const entries = await environment.getEntries({ content_type: "driver" });
-	
-	const browser = await puppeteer.launch();
-	const page = await browser.newPage();
-	await page.setRequestInterception(true);
-
+  const space = await client.getSpace('38idy44jf6uy');
+  const environment = await space.getEnvironment('master');
+  const entries = await environment.getEntries({ content_type: "driver" });
+  
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.setRequestInterception(true);
+  
 	const request = new Promise(resolve => {
     page.on('request', req => {
       if (req.resourceType() === 'document' && req.url().substr(-4) === '.csv') {
@@ -29,7 +29,7 @@ const client = contentful.createClient({
     });
   });
 	  
-	await page.goto('http://www.danlisa.com/scoring/season_race.php?race_id=104963&csv=y');
+  await page.goto('http://www.danlisa.com/scoring/season_race.php?race_id=104963&csv=y');
   
   const response = await request;
   const csv = await response.text();
