@@ -1,0 +1,24 @@
+{
+  "name": "output-racing",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "babel-node ./build/scrape-drivers.js && next build && next export",
+    "export": "next build && next export",
+    "start": "next start"
+  },
+  "dependencies": {
+    "contentful": "^7.14.13",
+    "next": "10.0.1",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "spectre.css": "^0.5.9"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.3",
+    "@babel/node": "^7.12.6",
+    "contentful-management": "^6.3.2",
+    "puppeteer": "^5.5.0"
+  }
+}
