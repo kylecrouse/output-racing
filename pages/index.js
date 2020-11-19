@@ -15,21 +15,26 @@ export default function Home(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <div className={styles.navBar}>
+        <h1>Output Racing</h1>
+      </div>
+      
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Output Racing
-        </h1>
 
-        <p className={styles.description}>
-          Current Drivers
-        </p>
-
-        <table border="1" cellpadding="5">
-          { 
-            props.drivers
-              .sort((a, b) => parseInt(a.fields.number) > parseInt(b.fields.number))
-              .map(driver => <Driver {...driver.fields}/>) 
-          }
+        <table border="1" cellPadding="5" style={{margin: "8rem 0 5rem"}}>
+          <thead>
+            <tr>
+              <th>Driver</th>
+              <th>Number</th>
+            </tr>
+          </thead>
+          <tbody>
+            { 
+              props.drivers
+                .sort((a, b) => parseInt(a.fields.number) > parseInt(b.fields.number))
+                .map(driver => <Driver {...driver.fields}/>) 
+            }
+          </tbody>
         </table>
           
       </main>
@@ -48,7 +53,7 @@ Home.getInitialProps = async () => {
 
 function Driver(props) {
   return (
-    <tr>
+    <tr key={props.custId}>
       <td>{props.name}</td>
       <td>{props.number}</td>
     </tr>

@@ -12,6 +12,7 @@
   position: fixed;
   height: 5rem;
   z-index: 2;
+  width: 100%;
 }
 
 .main {

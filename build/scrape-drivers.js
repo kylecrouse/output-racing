@@ -72,38 +72,72 @@ const client = contentful.createClient({
   
   	await Promise.all(members.map(async (member) => {
 		const driver = entries.items.splice(
-			entries.items.findIndex(driver => driver.fields.custId['en-US'] === member.custID), 
+			entries.items.findIndex(driver => isFieldEqual(driver.fields.custId, member.custID)), 
 			1
 		);
 		if (driver.length > 0) {
 			// Update
-			driver[0].fields.name = { 'en-US': member.displayName };
-			driver[0].fields.nickname = { 'en-US': member.driver_nickname };
-			driver[0].fields.number = { 'en-US': member.car_number };
-			driver[0].fields.custId = { 'en-US': member.custID };
-			driver[0].fields.active = { 'en-US': true };
-			await driver[0].update();
-			console.log(`updated ${member.displayName}...`);
+			let shouldUpdate = false;
+			if (!isFieldEqual(driver[0].fields.name, member.displayName)) {
+				driver[0].fields.name = localize(member.displayName);
+				shouldUpdate = true;
+			}
+			if (!isFieldEqual(driver[0].fields.nickname, member.driver_nickname)) {
+				driver[0].fields.nickname = localize(member.driver_nickname);
+				shouldUpdate = true;
+			}
+			if (!isFieldEqual(driver[0].fields.number, member.car_number)) {
+				driver[0].fields.number = localize(member.car_number);
+				shouldUpdate = true;
+			}
+			if (!isFieldEqual(driver[0].fields.custId, member.custID)) {
+				driver[0].fields.custId = localize(member.custID);
+				shouldUpdate = true;
+			}
+			if (!isFieldEqual(driver[0].fields.active, true)) {
+				driver[0].fields.active = localize(true);
+				shouldUpdate = true;
+			}
+			if (shouldUpdate) {
+				const entry = await driver[0].update();
+				await entry.publish();
+				console.log(`updated ${member.displayName}...`);
+			} else {
+				console.log(`skipped ${member.displayName}...`);
+			}
 		} else {
 			// Add
 			const entry = await environment.createEntry('driver', { fields: {
-				name: { 'en-US': member.displayName },
-				nickname: { 'en-US': member.driver_nickname },
-				number: { 'en-US': member.car_number },
-				custId: { 'en-US': member.custID },
-				active: { 'en-US': true },
+				name: localize(member.displayName),
+				nickname: localize(member.driver_nickname),
+				number: localize(member.car_number),
+				custId: localize(member.custID),
+				active: localize(true),
 			}});
 			await entry.publish();
 			console.log(`added ${member.displayName}...`);
 		}
 	}));
 	
-	await Promise.all(entries.items.map(async (entry) => {
-		entry.fields.active['en-US'] = false;
-		await entry.update();
-		console.log(`deactivated ${entry.fields.name['en-US']}...`);
+	await Promise.all(entries.items.map(async (driver) => {
+		if (!isFieldEqual(driver.fields.active, false)) {
+			driver.fields.active = localize(false);
+			const entry = await driver.update();
+			await entry.publish();
+			console.log(`deactivated ${driver.fields.name['en-US']}...`);
+		} else {
+			console.log(`skipped ${driver.fields.name['en-US']}...`);
+		}
 	}));
 	
 	await browser.close();
 	
 })().catch((e) => console.error(e));
+
+function isFieldEqual(actual, expected) {
+	return JSON.stringify(actual) === JSON.stringify(localize(expected));
+}
+
+function localize(value) {
+	return { 'en-US': value };
+}
