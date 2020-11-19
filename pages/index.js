@@ -47,7 +47,6 @@ Home.getInitialProps = async () => {
 };
 
 function Driver(props) {
-  console.log(props);
   return (
     <tr>
       <td>{props.name}</td>

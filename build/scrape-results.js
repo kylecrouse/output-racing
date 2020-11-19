@@ -7,10 +7,12 @@ const client = contentful.createClient({
   accessToken: process.env.CONTENTFUL_ACCESS_TOKEN
 });
 
+const raceId = 104963;
+    
 (async () => {
   const space = await client.getSpace('38idy44jf6uy');
   const environment = await space.getEnvironment('master');
-  const entries = await environment.getEntries({ content_type: "driver" });
+  const drivers = await environment.getEntries({ content_type: "driver" });
   
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
@@ -28,8 +30,8 @@ const client = contentful.createClient({
       req.continue();
     });
   });
-	  
-  await page.goto('http://www.danlisa.com/scoring/season_race.php?race_id=104963&csv=y');
+  
+  await page.goto(`http://www.danlisa.com/scoring/season_race.php?race_id=${raceId}&csv=y`);
   
   const response = await request;
   const csv = await response.text();
@@ -43,17 +45,17 @@ const client = contentful.createClient({
     }, (err, output) => {
       if (err) reject(err);
       else resolve({
-        league: output[0],
-        series: output[1],
-        season: output[2],
+        // league: output[0],
+        // series: output[1],
+        // season: output[2],
         date: new Date(output[3]),
         track: output[4],
-        laps: output[5],
+        laps: parseInt(output[5], 10),
         duration: output[6],
-        cautions: output[7],
-        cautionLaps: output[8],
-        leadChanges: output[9],
-        leaders: output[10]
+        cautions: parseInt(output[7], 10),
+        cautionLaps: parseInt(output[8], 10),
+        leadChanges: parseInt(output[9], 10),
+        leaders: parseInt(output[10], 10)
       });
     })
   });
@@ -65,10 +67,10 @@ const client = contentful.createClient({
       from_line: 12,
       on_record: (record, context) => ({
         driver: (name => {
-          const driver = entries.items.find(driver => driver.fields.name['en-US'] === name);
+          const driver = drivers.items.find(driver => driver.fields.name['en-US'] === name);
           return driver ? driver.sys.id : name;
         })(record['Driver']),
-        car: record['Car'],
+        // car: record['Car'],
         start: record['Start'],
         finish: record['Finish'],
         interval: record['Interval'],
@@ -88,9 +90,24 @@ const client = contentful.createClient({
     });
   });
 
-  console.log('race', race);
-  console.log('results', results);
+  let entry = await environment.getEntry(raceId);
+  if (entry) {
+    entry.fields = localize({ ...race, results });
+    await entry.update();
+    console.log(`...updated results from ${race.track}`);
+  } else {
+    entry = await environment.createEntryWithId('race', raceId, { fields: localize({ ...race, results }) });
+    await entry.publish();
+    console.log(`...added results from ${race.track}`);
+  }
   
   await browser.close();
     
 })().catch((e) => console.error(e));
+
+function localize(obj) {
+  for (key in obj) {
+    obj[key] = { 'en-US' : obj[key] };
+  }
+  return obj
+}

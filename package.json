@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "contentful": "^7.14.13",
+    "moment": "^2.29.1",
     "next": "10.0.1",
     "react": "17.0.1",
     "react-dom": "17.0.1"
