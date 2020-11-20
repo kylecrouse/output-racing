@@ -1,19 +1,20 @@
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import styles from '../../styles/Home.module.css'
 import { createClient } from 'contentful'
 import moment from 'moment'
 
 const client = createClient({
   space: '38idy44jf6uy',
+  environment: 'master',
   accessToken: 'hnJokTLzykmhsacKuzCdXre6Uf0LHDTMQ418DC2oZEc'
 })
 
-export default function Home(props) {
+export default function Race(props) {
   return (
 	<div className={styles.container}>
 	  <Head>
-		<title>Output Racing</title>
-		<link rel="icon" href="/favicon.ico" />
+  		<title>Output Racing</title>
+  		<link rel="icon" href="/favicon.ico" />
 	  </Head>
     
     <div className={styles.navBar}>
@@ -62,7 +63,21 @@ export default function Home(props) {
   		  { 
   			props.results
   			  .sort((a, b) => parseInt(a.finish, 10) > parseInt(b.finish, 10))
-  			  .map(item => <Row {...item} />) 
+  			  .map(props => (
+            <tr key={props.custId}>
+              <td>{props.finish}</td>
+              <td>{props.start}</td>
+              <td><a href={`/driver/${props.custId}`}>{props.nickname || props.name}</a></td>
+              <td>{props.points + props.bonus + props.penalty}</td>
+              <td>{props.interval}</td>
+              <td>{props.completed}</td>
+              <td>{props.led}</td>
+              <td>{props.fastest}</td>
+              <td>{props.average}</td>
+              <td>{props.incidents}</td>
+              <td>{props.status}</td>
+            </tr>
+          )) 
   		  }
         </tbody>
   		</table>
@@ -77,32 +92,22 @@ export default function Home(props) {
   )
 }
 
-Home.getInitialProps = async () => {
-  const entry = await client.getEntry(104963);
+export async function getStaticPaths() {
+  const entries = await client.getEntries({ content_type: 'race' });
+  return {
+    paths: entries.items.map(entry => ({ params: { raceId: entry.sys.id }})),
+    fallback: false,
+  }
+}
+
+export async function getStaticProps({ params }) {
+  const entry = await client.getEntry(params.raceId);
   entry.fields.results = await Promise.all(entry.fields.results.map(async (item) => {
     const driver = await client.getEntry(item.driver);
-    return { ...item, driver: driver.fields.name };
+    return { ...item, ...driver.fields };
   }));
-  return { ...entry.fields };
+  return { props: { ...entry.fields }};
 };
-
-function Row(props) {
-  return (
-    <tr>
-  	  <td>{props.finish}</td>
-      <td>{props.start}</td>
-  	  <td>{props.driver}</td>
-      <td>{props.points + props.bonus + props.penalty}</td>
-      <td>{props.interval}</td>
-      <td>{props.completed}</td>
-      <td>{props.led}</td>
-      <td>{props.fastest}</td>
-      <td>{props.average}</td>
-      <td>{props.incidents}</td>
-      <td>{props.status}</td>
-  	</tr>
-  );
-}
 
 function renderImage(image) {
   if (image && image.fields.file) {
