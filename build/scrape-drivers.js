@@ -84,7 +84,7 @@ const client = contentful.createClient({
 	let frameIndex = -1;
 	
 	const spinners = Object.assign(
-		...members.map(member => ({ [member.custID]: { state: "waiting", text: `[0/6] Queued ${member.displayName}...` }}))
+		...members.map(member => ({ [member.custID]: { state: "waiting", text: `[0/6] ⏱  Queued ${member.displayName}...` }}))
 	);	
 	const loop = setInterval(() => {
 		frameIndex = frameIndex + 1 >= frames.length ? 0 : frameIndex + 1;
@@ -103,11 +103,11 @@ const client = contentful.createClient({
 			// await watcher;
 			await profile.goto(`https://members.iracing.com/membersite/member/CareerStats.do?custid=${member.custID}`, { timeout: 60000, waitUntil: 'networkidle2' });
 			
-			spinners[member.custID].text = `[2/6] Fetching license for ${chalk.magenta(member.displayName)}...`;
+			spinners[member.custID].text = `[2/6] 🏎  Fetching license for ${chalk.magenta(member.displayName)}...`;
 			const license = await profile.evaluate(() => window.MemberProfile.driver.licenses.find(({ catId }) => catId === 1));
-			spinners[member.custID].text = `[2/6] Retrieved license for ${chalk.magenta(member.displayName)}.`;
+			spinners[member.custID].text = `[2/6] 🏎  Retrieved license for ${chalk.magenta(member.displayName)}.`;
 			
-			spinners[member.custID].text = `[3/6] Fetching stats for ${chalk.magenta(member.displayName)}...`;
+			spinners[member.custID].text = `[3/6] 🏁  Fetching stats for ${chalk.magenta(member.displayName)}...`;
 			const stats = await profile.evaluate((custid) => {
 				return new Promise((resolve, reject) => {
 					loadGet(
@@ -130,7 +130,7 @@ const client = contentful.createClient({
 					);
 				});
 			}, member.custID);
-			spinners[member.custID].text = `[3/6] Retrieved stats for ${chalk.magenta(member.displayName)}.`;
+			spinners[member.custID].text = `[3/6] 🏁  Retrieved stats for ${chalk.magenta(member.displayName)}.`;
 			
 			await profile.close();
 			
@@ -171,9 +171,9 @@ const client = contentful.createClient({
 					shouldUpdate = true;
 				}
 				if (shouldUpdate) {
-					spinners[member.custID].text = `[5/6] Updating data for ${chalk.magenta(member.displayName)}...`;
+					spinners[member.custID].text = `[5/6] 💾  Updating data for ${chalk.magenta(member.displayName)}...`;
 					const entry = await driver[0].update();
-					spinners[member.custID].text = `[6/6] Publishing ${chalk.magenta(member.displayName)}...`;
+					spinners[member.custID].text = `[6/6] ✏️  Publishing ${chalk.magenta(member.displayName)}...`;
 					await entry.publish();
 					spinners[member.custID] = { state: "completed", text: `[6/6] ✅  Updated ${chalk.greenBright(member.displayName)}...` };
 				} else {
@@ -181,7 +181,7 @@ const client = contentful.createClient({
 				}
 			} else {
 				// Add
-				spinners[member.custID].text = `[5/6] Creating ${chalk.magenta(member.displayName)}...`;
+				spinners[member.custID].text = `[5/6] 💾  Creating ${chalk.magenta(member.displayName)}...`;
 				const entry = await environment.createEntry('driver', { fields: {
 					name: localize(member.displayName),
 					nickname: localize(member.driver_nickname),
@@ -191,7 +191,7 @@ const client = contentful.createClient({
 					license: localize(license),
 					careerStats: localize(stats)
 				}});
-				spinners[member.custID].text = `[6/6] Publishing ${chalk.magenta(member.displayName)}...`;
+				spinners[member.custID].text = `[6/6] ✏️  Publishing ${chalk.magenta(member.displayName)}...`;
 				await entry.publish();
 				spinners[member.custID] = { state: "completed", text: `[6/6] ✅  Added ${chalk.greenBright(member.displayName)}...` };
 			}
