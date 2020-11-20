@@ -94,6 +94,7 @@ const raceId = 104963;
   if (entry) {
     entry.fields = localize({ ...race, results });
     await entry.update();
+    await entry.publish();
     console.log(`...updated results from ${race.track}`);
   } else {
     entry = await environment.createEntryWithId('race', raceId, { fields: localize({ ...race, results }) });

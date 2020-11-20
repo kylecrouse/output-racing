@@ -1,5 +1,8 @@
 const puppeteer = require('puppeteer');
 const contentful = require('contentful-management');
+const Promise = require('bluebird');
+const log = require('log-update');
+const chalk = require('chalk');
 
 const username = process.env.IRACING_USERNAME;
 const password = process.env.IRACING_PASSWORD;
@@ -69,55 +72,135 @@ const client = contentful.createClient({
 		start += results.length;
 		
 	} while (results.length === limit);
-  
-  	await Promise.all(members.map(async (member) => {
-		const driver = entries.items.splice(
-			entries.items.findIndex(driver => isFieldEqual(driver.fields.custId, member.custID)), 
-			1
+	
+	const colors = {
+		waiting: 'gray',
+		working: 'white',
+		ignored: 'white',
+		completed: 'white',
+		error: 'red'
+	};
+	const frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+	let frameIndex = -1;
+	
+	const spinners = Object.assign(
+		...members.map(member => ({ [member.custID]: { state: "waiting", text: `[0/6] Queued ${member.displayName}...` }}))
+	);	
+	const loop = setInterval(() => {
+		frameIndex = frameIndex + 1 >= frames.length ? 0 : frameIndex + 1;
+		log(Object.values(spinners).map(
+			({ text, state }) => chalk[colors[state]](`${state === "working" ? frames[frameIndex] : " "} ${text}`)).join(`\n`)
 		);
-		if (driver.length > 0) {
-			// Update
-			let shouldUpdate = false;
-			if (!isFieldEqual(driver[0].fields.name, member.displayName)) {
-				driver[0].fields.name = localize(member.displayName);
-				shouldUpdate = true;
-			}
-			if (!isFieldEqual(driver[0].fields.nickname, member.driver_nickname)) {
-				driver[0].fields.nickname = localize(member.driver_nickname);
-				shouldUpdate = true;
-			}
-			if (!isFieldEqual(driver[0].fields.number, member.car_number)) {
-				driver[0].fields.number = localize(member.car_number);
-				shouldUpdate = true;
-			}
-			if (!isFieldEqual(driver[0].fields.custId, member.custID)) {
-				driver[0].fields.custId = localize(member.custID);
-				shouldUpdate = true;
-			}
-			if (!isFieldEqual(driver[0].fields.active, true)) {
-				driver[0].fields.active = localize(true);
-				shouldUpdate = true;
-			}
-			if (shouldUpdate) {
-				const entry = await driver[0].update();
-				await entry.publish();
-				console.log(`updated ${member.displayName}...`);
+	}, 80);
+	
+	await Promise.map(members, member => {
+		return new Promise(async (resolve, reject) => {
+			spinners[member.custID] = { state: "working", text: `[1/6] ☎️  Connecting to iRacing for ${chalk.magenta(member.displayName)}...` };
+			
+			const profile = await browser.newPage();
+			// const watcher = profile.waitForFunction('window.MemberProfile !== undefined');
+			// await profile.goto(`https://members.iracing.com/membersite/member/CareerStats.do?custid=${member.custID}`);
+			// await watcher;
+			await profile.goto(`https://members.iracing.com/membersite/member/CareerStats.do?custid=${member.custID}`, { timeout: 60000, waitUntil: 'networkidle2' });
+			
+			spinners[member.custID].text = `[2/6] Fetching license for ${chalk.magenta(member.displayName)}...`;
+			const license = await profile.evaluate(() => window.MemberProfile.driver.licenses.find(({ catId }) => catId === 1));
+			spinners[member.custID].text = `[2/6] Retrieved license for ${chalk.magenta(member.displayName)}.`;
+			
+			spinners[member.custID].text = `[3/6] Fetching stats for ${chalk.magenta(member.displayName)}...`;
+			const stats = await profile.evaluate((custid) => {
+				return new Promise((resolve, reject) => {
+					loadGet(
+						"/memberstats/member/GetCareerStats",
+						{ custid },
+						function (req) {
+							return function() {
+								if (req.readyState == 4) {
+										if (req.status == 200) {
+												var data = extractJSON(req.responseText);
+												if (data) {
+													decodeAllFields(data);
+													// filter these results to only return Oval stats
+													resolve(data.find(item => item.category === 'Oval'));
+												} else reject('error', custid)
+										}
+								}
+							}					
+						}	
+					);
+				});
+			}, member.custID);
+			spinners[member.custID].text = `[3/6] Retrieved stats for ${chalk.magenta(member.displayName)}.`;
+			
+			await profile.close();
+			
+			spinners[member.custID].text = `[4/6] 🔍  Retrieving existing data for ${chalk.magenta(member.displayName)}...`;
+			const driver = entries.items.splice(
+				entries.items.findIndex(driver => isFieldEqual(driver.fields.custId, member.custID)), 
+				1
+			);
+			if (driver.length > 0) {
+				// Update
+				let shouldUpdate = false;
+				if (!isFieldEqual(driver[0].fields.name, member.displayName)) {
+					driver[0].fields.name = localize(member.displayName);
+					shouldUpdate = true;
+				}
+				if (!isFieldEqual(driver[0].fields.nickname, member.driver_nickname)) {
+					driver[0].fields.nickname = localize(member.driver_nickname);
+					shouldUpdate = true;
+				}
+				if (!isFieldEqual(driver[0].fields.number, member.car_number)) {
+					driver[0].fields.number = localize(member.car_number);
+					shouldUpdate = true;
+				}
+				if (!isFieldEqual(driver[0].fields.custId, member.custID)) {
+					driver[0].fields.custId = localize(member.custID);
+					shouldUpdate = true;
+				}
+				if (!isFieldEqual(driver[0].fields.active, true)) {
+					driver[0].fields.active = localize(true);
+					shouldUpdate = true;
+				}
+				if (!isFieldEqual(driver[0].fields.license, license)) {
+					driver[0].fields.license = localize(license);
+					shouldUpdate = true;
+				}
+				if (!isFieldEqual(driver[0].fields.careerStats, stats)) {
+					driver[0].fields.careerStats = localize(stats);
+					shouldUpdate = true;
+				}
+				if (shouldUpdate) {
+					spinners[member.custID].text = `[5/6] Updating data for ${chalk.magenta(member.displayName)}...`;
+					const entry = await driver[0].update();
+					spinners[member.custID].text = `[6/6] Publishing ${chalk.magenta(member.displayName)}...`;
+					await entry.publish();
+					spinners[member.custID] = { state: "completed", text: `[6/6] ✅  Updated ${chalk.greenBright(member.displayName)}...` };
+				} else {
+					spinners[member.custID] = { state: "ignored", text: `[6/6] ✅  Skipped ${chalk.greenBright(member.displayName)}...` };
+				}
 			} else {
-				console.log(`skipped ${member.displayName}...`);
+				// Add
+				spinners[member.custID].text = `[5/6] Creating ${chalk.magenta(member.displayName)}...`;
+				const entry = await environment.createEntry('driver', { fields: {
+					name: localize(member.displayName),
+					nickname: localize(member.driver_nickname),
+					number: localize(member.car_number),
+					custId: localize(member.custID),
+					active: localize(true),
+					license: localize(license),
+					careerStats: localize(stats)
+				}});
+				spinners[member.custID].text = `[6/6] Publishing ${chalk.magenta(member.displayName)}...`;
+				await entry.publish();
+				spinners[member.custID] = { state: "completed", text: `[6/6] ✅  Added ${chalk.greenBright(member.displayName)}...` };
 			}
-		} else {
-			// Add
-			const entry = await environment.createEntry('driver', { fields: {
-				name: localize(member.displayName),
-				nickname: localize(member.driver_nickname),
-				number: localize(member.car_number),
-				custId: localize(member.custID),
-				active: localize(true),
-			}});
-			await entry.publish();
-			console.log(`added ${member.displayName}...`);
-		}
-	}));
+			
+			resolve();
+		});
+	}, { concurrency: 6 });
+	
+	clearInterval(loop);
 	
 	await Promise.all(entries.items.map(async (driver) => {
 		if (!isFieldEqual(driver.fields.active, false)) {
@@ -130,7 +213,7 @@ const client = contentful.createClient({
 		}
 	}));
 	
-	await browser.close();
+	return await browser.close();
 	
 })().catch((e) => console.error(e));
 

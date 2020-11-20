@@ -20,8 +20,11 @@
   "devDependencies": {
     "@babel/core": "^7.12.3",
     "@babel/node": "^7.12.6",
+    "bluebird": "^3.7.2",
+    "chalk": "^4.1.0",
     "contentful-management": "^6.3.2",
     "csv-parse": "^4.14.1",
+    "log-update": "^4.0.0",
     "node-fetch": "^2.6.1",
     "puppeteer": "^5.5.0"
   }
