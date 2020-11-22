@@ -2,13 +2,16 @@ const puppeteer = require('puppeteer');
 const contentful = require('contentful-management');
 const fetch = require('node-fetch');
 const parse = require('csv-parse');
+const chalk = require('chalk');
+const Logger = require('./Logger');
 
 const client = contentful.createClient({
   accessToken: process.env.CONTENTFUL_ACCESS_TOKEN
 });
 
-const raceId = 104963;
-    
+// TODO: Validate this
+const raceId = process.argv[2];
+
 (async () => {
   const space = await client.getSpace('38idy44jf6uy');
   const environment = await space.getEnvironment('master');
@@ -17,6 +20,8 @@ const raceId = 104963;
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.setRequestInterception(true);
+  
+  const log = new Logger(`${chalk.bold('Loading')} results for race ID ${chalk.magenta(raceId)}...`);
   
 	const request = new Promise(resolve => {
     page.on('request', req => {
@@ -31,11 +36,13 @@ const raceId = 104963;
     });
   });
   
+  // TODO: build an error handler for non-200 responses
   await page.goto(`http://www.danlisa.com/scoring/season_race.php?race_id=${raceId}&csv=y`);
   
   const response = await request;
   const csv = await response.text();
   
+  log.update(`${chalk.bold('Parsing race info')} for race ID ${chalk.magenta(raceId)}...`);
   const race = await new Promise((resolve, reject) => {
     parse(csv, {
       relax_column_count: true,
@@ -60,6 +67,7 @@ const raceId = 104963;
     })
   });
   
+  log.update(`${chalk.bold('Parsing race results')} for race ID ${chalk.magenta(raceId)}...`);
   const results = await new Promise((resolve, reject) => {
     parse(csv, {
       relax_column_count: true,
@@ -90,16 +98,23 @@ const raceId = 104963;
     });
   });
 
-  let entry = await environment.getEntry(raceId);
-  if (entry) {
-    entry.fields = localize({ ...race, results });
-    await entry.update();
-    await entry.publish();
-    console.log(`...updated results from ${race.track}`);
-  } else {
-    entry = await environment.createEntryWithId('race', raceId, { fields: localize({ ...race, results }) });
-    await entry.publish();
-    console.log(`...added results from ${race.track}`);
+  log.update(`${chalk.bold('Saving entries')} for race ID ${chalk.magenta(raceId)}...`);
+  try {
+    const entry = await environment.getEntry(raceId);
+    if (entry) {
+      entry.fields = localize({ ...race, results });
+      const updatedEntry = await entry.update();
+      await updatedEntry.publish();
+      log.success(`${chalk.bold('Updated results')} for race ID ${chalk.magenta(raceId)}.`);
+    }
+  } catch(err) {
+    if (err.name === 'NotFound') {
+      const entry = await environment.createEntryWithId('race', raceId, { fields: localize({ ...race, results }) });
+      await entry.publish();
+      log.success(`${chalk.bold('Added results')} for race ID ${chalk.magenta(raceId)}.`);
+    } else {
+      log.error(err);
+    }
   }
   
   await browser.close();
@@ -107,8 +122,7 @@ const raceId = 104963;
 })().catch((e) => console.error(e));
 
 function localize(obj) {
-  for (key in obj) {
-    obj[key] = { 'en-US' : obj[key] };
-  }
+  for (key in obj)
+    obj[key] = { 'en-US' : obj[key] }
   return obj
 }
