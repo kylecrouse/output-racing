@@ -24,7 +24,7 @@ export default function Driver(props) {
 
       <div>
         { props.numberArt &&
-            <img src={ props.numberArt.fields.file.url } style={{ float: "left", marginRight: "2rem" }}/>
+            <img src={ props.numberArt.fields.file.url } style={{ float: "left", width: "200px", marginTop: "-1rem", marginRight: "2rem" }}/>
         }
         <div style={{ float: "right" }}>
           <h2>{props.nickname || props.name}</h2>

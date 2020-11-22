@@ -32,8 +32,9 @@ export default function Race(props) {
       <div>
         <img src="https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/phoenix/2014/logo.jpg" style={{ float: "left", marginRight: "2rem" }}/>
         <div style={{ float: "right" }}>
-          <h2>{props.track}</h2>
-          <h3>{moment(props.date).format('MMMM Do, YYYY')}</h3>
+          <h2>{props.name}</h2>
+          <h3>{props.track}</h3>
+          <h4>{moment(props.date).format('MMMM Do, YYYY')}</h4>
           <ul style={{ listStyle: "none", paddingLeft: 0 }}>
             <li>{props.laps} laps ({props.duration})</li>
             <li>{props.cautions} cautions for {props.cautionLaps} laps</li>
@@ -67,7 +68,16 @@ export default function Race(props) {
             <tr key={props.custId}>
               <td>{props.finish}</td>
               <td>{props.start}</td>
-              <td><a href={`/driver/${props.custId}`}>{props.nickname || props.name}</a></td>
+              <td>
+                <a href={`/driver/${props.custId}.html`} style={{ display: "block" }}>
+                  { props.numberArt &&
+                      <div style={{ float: "left", marginRight: "5px", width: "22px", height: "22px", marginTop: "-1px" }}>
+                        { renderImage(props.numberArt) }
+                      </div>
+                  }
+                  {props.nickname || props.name}
+                </a>
+              </td>
               <td>{props.points + props.bonus + props.penalty}</td>
               <td>{props.interval}</td>
               <td>{props.completed}</td>
