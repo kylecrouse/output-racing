@@ -1,11 +1,11 @@
 const puppeteer = require('puppeteer');
 const contentful = require('contentful-management');
 const Promise = require('bluebird');
-const { exec } = require('child_process');
+const { exec, spawn } = require('child_process');
 const fetch = require('node-fetch');
 const parse = require('csv-parse');
+const log = require('log-update');
 const chalk = require('chalk');
-const Logger = require('./Logger');
 
 const client = contentful.createClient({
   accessToken: process.env.CONTENTFUL_ACCESS_TOKEN
@@ -19,7 +19,7 @@ const seasonId = process.argv[2];
   const environment = await space.getEnvironment('master');
   const drivers = await environment.getEntries({ content_type: "driver" });
   
-  const browser = await puppeteer.launch({headless:false});
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.setRequestInterception(true);
   
@@ -36,9 +36,10 @@ const seasonId = process.argv[2];
     });
   });
 
-  const log = new Logger(`${chalk.bold('Loading')} schedule for season ID ${chalk.magenta(seasonId)}...`);
+  console.log(`${chalk.bold('Loading schedule')} for season ID ${chalk.magenta(seasonId)}...`);
   
   await page.goto(`http://www.danlisa.com/scoring/season_schedule.php?season_id=${seasonId}`);
+
   const events = await page.$$eval(
     '#sched_table [id^=sch_] td:nth-child(2), #sched_table [id^=sch_] td:nth-child(8)', 
     cells => cells
@@ -57,7 +58,7 @@ const seasonId = process.argv[2];
   const response = await request;
   const csv = await response.text();
   
-  log.update(`${chalk.bold('Parsing schedule')} for season ID ${chalk.magenta(seasonId)}...`);
+  console.log(`${chalk.bold('Parsing schedule')} for season ID ${chalk.magenta(seasonId)}...`);
   const season = await new Promise((resolve, reject) => {
     parse(csv, {
       relax_column_count: true,
@@ -81,8 +82,9 @@ const seasonId = process.argv[2];
         offWeek: record['Off Week'] === 'Yes',
         uploaded: record['Results Uploaded'] === 'Yes',
         raceId: events.find(({ date }) => date === record['Race Date']).id,
-        name: record['Event Name'].replace('Sponsor: ', ''),
+        name: `${record['Event Name'].replace('Sponsor: ', '') || 'Output Racing'} ${event.type === 'Short Track' ? event.laps : parseInt(event.distance)}`,
         track: record['Track'],
+        type: record['Track Type'],
         time: record['Time'],
         laps: record['Laps'],
         distance: record['Distance (Miles)']
@@ -93,47 +95,101 @@ const seasonId = process.argv[2];
     });
   });
   
-  log.update(`${chalk.bold('Processing results')} for season ID ${chalk.magenta(seasonId)}...`);
+  console.log(`${chalk.bold('Processing results')} for season ID ${chalk.magenta(seasonId)}...`);
+  const colors = {
+    waiting: 'gray',
+    working: 'white',
+    ignored: 'white',
+    completed: 'white',
+    error: 'red'
+  };
+  const frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+  let frameIndex = -1;
+  const spinners = Object.assign(
+    ...schedule
+      .filter(event => event.raceId && event.uploaded)
+      .map(event => ({ [event.raceId]: { state: "waiting", text: `Queued ${event.raceId}...` }}))
+  );	
+  const loop = setInterval(() => {
+    frameIndex = frameIndex + 1 >= frames.length ? 0 : frameIndex + 1;
+    log(Object.values(spinners).map(
+      ({ text, state }) => chalk[colors[state]](`${state === "working" ? frames[frameIndex] + ' ' : state === "waiting" ? '🏴' : state === "error" ? '🛑': '🏁'} ${text}`)).join(`\n`)
+    );
+  }, 80);
+  
   let results = [];
   await Promise.map(schedule, event => {
     return new Promise(async (resolve, reject) => {
       if (event.uploaded && event.raceId) {
-        exec(`yarn race ${event.raceId}`, (error, stdout, stderr) => {
-          if (error) reject(error);
-          else {
-            results.push(event.raceId);
-            resolve(stdout);
-          }
+        spinners[event.raceId] = { 
+          state: "working", 
+          text: `${chalk.bold('Spawning')} scraper for race ID ${chalk.magenta(event.raceId)}...` 
+        };
+        const yarn = spawn('yarn', ['race', event.raceId, event.name]);
+        yarn.stdout.on('data', (data) => { 
+          spinners[event.raceId].text = data.toString(); 
         });
+        yarn.stderr.on('data', (data) => { 
+          spinners[event.raceId] = { state: "error", text: `[${event.raceId}] ${data.toString()}` }; 
+        });
+        yarn.on('close', (code) => {
+          results.push(link(event.raceId));
+          spinners[event.raceId] = { state: "completed", text: `${chalk.bold('Finished')} processing ${chalk.magenta(event.name)}` }
+          resolve();
+        });
+      } else {
+        resolve();
       }
     });
-  }, { concurrency: 3 }); 
-  results = results.map(id => link(id));
+  }, { concurrency: 1 }); 
   
-  // TODO: Fetch standings (as new process?)
-
-  log.update(`${chalk.bold('Saving')} season ID ${chalk.magenta(seasonId)}...`);
+  clearInterval(loop);
+  log.done();
+  
+  console.log(`${chalk.bold('Saving')} season ID ${chalk.magenta(seasonId)}...`);
   try {
     const entry = await environment.getEntry(seasonId);
-    if (entry) {
-      entry.fields = localize({ ...season, schedule, results });
-      const updatedEntry = await entry.update();
-      await updatedEntry.publish();
-      log.success(`${chalk.bold('Updated')} season ID ${chalk.magenta(seasonId)}.`);
-    }
+    entry.fields = localize({ ...season, schedule, results });
+    const updatedEntry = await entry.update();
+    await updatedEntry.publish();
+    console.log(`${chalk.bold('Updated')} season ID ${chalk.magenta(seasonId)}.`);
   } catch(err) {
     if (err.name === 'NotFound') {
       const entry = await environment.createEntryWithId('season', seasonId, { 
         fields: localize({ ...season, schedule, results }) 
       });
       await entry.publish();
-      log.success(`${chalk.bold('Added')} season ID ${chalk.magenta(seasonId)}.`);
+      console.log(`${chalk.bold('Added')} season ID ${chalk.magenta(seasonId)}.`);
     } else {
-      log.error(err);
+      console.error(err);
     }
   }
   
-  log.done();
+  await new Promise((resolve, reject) => {
+    const yarn = spawn('yarn', ['standings', seasonId]);
+    yarn.stdout.on('data', (data) => { 
+      console.log(data.toString());
+    });
+    yarn.stderr.on('data', (data) => { 
+      console.error(data.toString());
+    });
+    yarn.on('close', (code) => {
+      resolve();
+    });
+  });
+  
+  await new Promise((resolve, reject) => {
+    const yarn = spawn('yarn', ['stats', 'season_id', seasonId]);
+    yarn.stdout.on('data', (data) => { 
+      console.log(data.toString());
+    });
+    yarn.stderr.on('data', (data) => { 
+      console.error(data.toString());
+    });
+    yarn.on('close', (code) => {
+      resolve();
+    });
+  });
   
   await browser.close();
     

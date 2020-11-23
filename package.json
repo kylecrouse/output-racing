@@ -7,6 +7,8 @@
     "build": "babel-node ./build/scrape-drivers.js && next build && next export",
     "race": "babel-node ./build/scrape-results.js",
     "season": "babel-node ./build/scrape-season.js",
+    "standings": "babel-node ./build/scrape-standings.js",
+    "stats": "babel-node ./build/scrape-stats.js",
     "drivers": "babel-node ./build/scrape-drivers.js",
     "export": "next build && next export",
     "start": "next start"

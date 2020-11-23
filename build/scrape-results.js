@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const contentful = require('contentful-management');
+const { exec } = require('child_process');
 const fetch = require('node-fetch');
 const parse = require('csv-parse');
 const chalk = require('chalk');
@@ -21,7 +22,7 @@ const raceId = process.argv[2];
   const page = await browser.newPage();
   await page.setRequestInterception(true);
   
-  const log = new Logger(`${chalk.bold('Loading')} results for race ID ${chalk.magenta(raceId)}...`);
+  console.log(`${chalk.bold('Loading')} results for race ID ${chalk.magenta(raceId)}...`);
   
 	const request = new Promise(resolve => {
     page.on('request', req => {
@@ -42,7 +43,7 @@ const raceId = process.argv[2];
   const response = await request;
   const csv = await response.text();
   
-  log.update(`${chalk.bold('Parsing race info')} for race ID ${chalk.magenta(raceId)}...`);
+  console.log(`${chalk.bold('Parsing race info')} for race ID ${chalk.magenta(raceId)}...`);
   const race = await new Promise((resolve, reject) => {
     parse(csv, {
       relax_column_count: true,
@@ -52,6 +53,7 @@ const raceId = process.argv[2];
     }, (err, output) => {
       if (err) reject(err);
       else resolve({
+        name: process.argv.length >= 4 ? process.argv[3] : 'Unsponsored',
         // league: output[0],
         // series: output[1],
         // season: output[2],
@@ -67,17 +69,19 @@ const raceId = process.argv[2];
     })
   });
   
-  log.update(`${chalk.bold('Parsing race results')} for race ID ${chalk.magenta(raceId)}...`);
+  // TODO: Create (deactivated?) records for unknown drivers
+  console.log(`${chalk.bold('Parsing race results')} for race ID ${chalk.magenta(raceId)}...`);
   const results = await new Promise((resolve, reject) => {
     parse(csv, {
       relax_column_count: true,
       columns: true,
       from_line: 12,
       on_record: (record, context) => ({
-        driver: (name => {
+        id: (name => {
           const driver = drivers.items.find(driver => driver.fields.name['en-US'] === name);
-          return driver ? driver.sys.id : name;
+          return driver ? driver.sys.id : null;
         })(record['Driver']),
+        name: record['Driver'],
         // car: record['Car'],
         start: record['Start'],
         finish: record['Finish'],
@@ -94,28 +98,45 @@ const raceId = process.argv[2];
       })
     }, (err, output) => {
       if (err) reject(err);
-      else resolve(output);
+      else {
+        resolve(output.map(async (item) => {
+          // Driver matched; return results
+          if (item.id) return item;
+          // No driver match; wait for a new record to be created
+          else {
+            console.log(`${chalk.bold('Adding')} entry for ${chalk.magenta(item.name)}...`);
+            const entry = await environment.createEntry('driver', { fields: localize({
+              name: item.name,
+              active: false
+            }) });
+            await entry.publish();
+            return { ...item, id: entry.sys.id };
+          }
+        }));
+      }
     });
   });
-
-  log.update(`${chalk.bold('Saving entries')} for race ID ${chalk.magenta(raceId)}...`);
+  
+  console.log(`${chalk.bold('Saving entries')} for race ID ${chalk.magenta(raceId)}...`);
   try {
     const entry = await environment.getEntry(raceId);
     if (entry) {
       entry.fields = localize({ ...race, results });
       const updatedEntry = await entry.update();
       await updatedEntry.publish();
-      log.success(`${chalk.bold('Updated results')} for race ID ${chalk.magenta(raceId)}.`);
+      console.log(`${chalk.bold('Updated results')} for race ID ${chalk.magenta(raceId)}.`);
     }
   } catch(err) {
     if (err.name === 'NotFound') {
       const entry = await environment.createEntryWithId('race', raceId, { fields: localize({ ...race, results }) });
       await entry.publish();
-      log.success(`${chalk.bold('Added results')} for race ID ${chalk.magenta(raceId)}.`);
+      console.log(`${chalk.bold('Added results')} for race ID ${chalk.magenta(raceId)}.`);
     } else {
-      log.error(err);
+      console.log(err);
     }
   }
+  
+  //log.done();
   
   await browser.close();
     
