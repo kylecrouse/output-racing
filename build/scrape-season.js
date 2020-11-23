@@ -82,7 +82,7 @@ const seasonId = process.argv[2];
         offWeek: record['Off Week'] === 'Yes',
         uploaded: record['Results Uploaded'] === 'Yes',
         raceId: events.find(({ date }) => date === record['Race Date']).id,
-        name: `${record['Event Name'].replace('Sponsor: ', '') || 'Output Racing'} ${event.type === 'Short Track' ? event.laps : parseInt(event.distance)}`,
+        name: `${record['Event Name'].replace('Sponsor: ', '') || 'Output Racing'} ${record['Track Type'] === 'Short Track' ? record['Laps'] : parseInt(record['Distance (Miles)'])}`,
         track: record['Track'],
         type: record['Track Type'],
         time: record['Time'],

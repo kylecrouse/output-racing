@@ -99,7 +99,7 @@ const raceId = process.argv[2];
     }, (err, output) => {
       if (err) reject(err);
       else {
-        resolve(output.map(async (item) => {
+        resolve(Promise.all(output.map(async (item) => {
           // Driver matched; return results
           if (item.id) return item;
           // No driver match; wait for a new record to be created
@@ -112,7 +112,7 @@ const raceId = process.argv[2];
             await entry.publish();
             return { ...item, id: entry.sys.id };
           }
-        }));
+        })));
       }
     });
   });
@@ -121,7 +121,9 @@ const raceId = process.argv[2];
   try {
     const entry = await environment.getEntry(raceId);
     if (entry) {
-      entry.fields = localize({ ...race, results });
+      // Don't overwrite the name of existing events, to prevent changing manual edits.
+      const { name, ...rest } = race;
+      entry.fields = localize({ ...rest, results });
       const updatedEntry = await entry.update();
       await updatedEntry.publish();
       console.log(`${chalk.bold('Updated results')} for race ID ${chalk.magenta(raceId)}.`);
