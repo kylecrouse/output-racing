@@ -16,7 +16,12 @@ export default function Home(props) {
       </Head>
 
       <div className={styles.navBar}>
-        <h1>Output Racing</h1>
+      <h1 className={styles.header}>Output Racing</h1>
+      <ul className={styles.nav}>
+        <li><a href="/drivers.html">Drivers</a></li>
+        <li><a href="/schedule/10398.html">Schedule</a></li>
+        <li><a href="/standings/10398.html">Standings</a></li>
+      </ul>
       </div>
       
       <main className={styles.main}>

@@ -18,7 +18,12 @@ export default function Race(props) {
 	  </Head>
     
     <div className={styles.navBar}>
-      <h1>Output Racing</h1>
+    <h1 className={styles.header}>Output Racing</h1>
+    <ul className={styles.nav}>
+      <li><a href="/drivers.html">Drivers</a></li>
+      <li><a href="/schedule/10398.html">Schedule</a></li>
+      <li><a href="/standings/10398.html">Standings</a></li>
+    </ul>
     </div>
 
     { props.broadcast &&
@@ -29,7 +34,7 @@ export default function Race(props) {
     
 	  <main className={styles.main}>
 
-      <div>
+      <div style={{ marginTop: "3rem" }}>
         <img src="https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/phoenix/2014/logo.jpg" style={{ float: "left", marginRight: "2rem" }}/>
         <div style={{ float: "right" }}>
           <h2>{props.name}</h2>
@@ -69,7 +74,7 @@ export default function Race(props) {
               <td>{props.finish}</td>
               <td>{props.start}</td>
               <td>
-                <a href={`/driver/${props.custId}.html`} style={{ display: "block" }}>
+                <a href={`/driver/${props.id}.html`} style={{ display: "block" }}>
                   { props.numberArt &&
                       <div style={{ float: "left", marginRight: "5px", width: "22px", height: "22px", marginTop: "-1px" }}>
                         { renderImage(props.numberArt) }
@@ -112,10 +117,12 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const entry = await client.getEntry(params.raceId);
-  entry.fields.results = await Promise.all(entry.fields.results.map(async (item) => {
-    const driver = await client.getEntry(item.driver);
-    return { ...item, ...driver.fields };
-  }));
+  entry.fields.results = await Promise.all(entry.fields.results
+    .filter(result => result.id)
+    .map(async (result) => {
+      const driver = await client.getEntry(result.id);
+      return { ...result, ...driver.fields };
+    }));
   return { props: { ...entry.fields }};
 };
 
