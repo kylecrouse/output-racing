@@ -1,7 +1,9 @@
 import Head from 'next/head'
-import styles from '../../styles/Home.module.css'
 import { createClient } from 'contentful'
 import moment from 'moment'
+import Navbar from '../../components/Navbar'
+import Video from '../../components/Video'
+import DriverChip from '../../components/DriverChip'
 
 const client = createClient({
   space: '38idy44jf6uy',
@@ -11,99 +13,106 @@ const client = createClient({
 
 export default function Race(props) {
   return (
-	<div className={styles.container}>
-	  <Head>
-  		<title>Output Racing</title>
-  		<link rel="icon" href="/favicon.ico" />
-	  </Head>
+  	<div>
+  	  <Head>
+    		<title>Output Racing | {props.name}</title>
+    		<link rel="icon" href="/favicon.ico" />
+  	  </Head>
     
-    <div className={styles.navBar}>
-    <h1 className={styles.header}>Output Racing</h1>
-    <ul className={styles.nav}>
-      <li><a href="/drivers.html">Drivers</a></li>
-      <li><a href="/schedule/10398.html">Schedule</a></li>
-      <li><a href="/standings/10398.html">Standings</a></li>
-    </ul>
-    </div>
-
-    { props.broadcast &&
-      <div className={styles.videoContainer}>
-        <iframe className={styles.video} src={props.broadcast} allowFullScreen></iframe>
-      </div>
-    }
-    
-	  <main className={styles.main}>
-
-      <div style={{ marginTop: "3rem" }}>
-        <img src="https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/phoenix/2014/logo.jpg" style={{ float: "left", marginRight: "2rem" }}/>
-        <div style={{ float: "right" }}>
-          <h2>{props.name}</h2>
-          <h3>{props.track}</h3>
-          <h4>{moment(props.date).format('MMMM Do, YYYY')}</h4>
-          <ul style={{ listStyle: "none", paddingLeft: 0 }}>
-            <li>{props.laps} laps ({props.duration})</li>
-            <li>{props.cautions} cautions for {props.cautionLaps} laps</li>
-            <li>{props.leadChanges} lead changes between {props.leaders} drivers</li>
-          </ul>
-        </div>
-
-      </div>
-  
-  		<table border="1" cellPadding="5" style={{ margin: "2rem 0" }}>
-      <thead>
-        <tr>
-          <th>Finish</th>
-          <th>Start</th>
-          <th>Driver</th>
-          <th>Points</th>
-          <th>Interval</th>
-          <th>Laps</th>
-          <th>Led</th>
-          <th>Fastest</th>
-          <th>Average</th>
-          <th>Incidents</th>
-          <th>Status</th>
-        </tr>
-        </thead>
-        <tbody>
-  		  { 
-  			props.results
-  			  .sort((a, b) => parseInt(a.finish, 10) > parseInt(b.finish, 10))
-  			  .map(props => (
-            <tr key={props.custId}>
-              <td>{props.finish}</td>
-              <td>{props.start}</td>
-              <td>
-                <a href={`/driver/${props.id}.html`} style={{ display: "block" }}>
-                  { props.numberArt &&
-                      <div style={{ float: "left", marginRight: "5px", width: "22px", height: "22px", marginTop: "-1px" }}>
-                        { renderImage(props.numberArt) }
-                      </div>
-                  }
-                  {props.nickname || props.name}
-                </a>
-              </td>
-              <td>{props.points + props.bonus + props.penalty}</td>
-              <td>{props.interval}</td>
-              <td>{props.completed}</td>
-              <td>{props.led}</td>
-              <td>{props.fastest}</td>
-              <td>{props.average}</td>
-              <td>{props.incidents}</td>
-              <td>{props.status}</td>
-            </tr>
-          )) 
-  		  }
-        </tbody>
-  		</table>
+      <Navbar/>
       
-      <div style={{ margin: "2rem 0", width: "80%" }}>
-        { props.media.map(image => renderImage(image)) }
-      </div>
-		  
-	  </main>
+      <style jsx>{`
+        ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+        
+        li { 
+          margin: 0; 
+        }
+        
+        table {
+          margin-top: 3rem;
+        }
+      `}</style>
 
-	</div>
+  	  <main className="container">
+	  	  <div className="columns">
+          <div className="column col-8 col-mx-auto">
+          
+            <div className="columns col-gapless" style={{ alignItems: "center" }}>
+              <div className="column col-3 text-right">
+                { props.logo
+                    ? <img src={ props.logo.fields.file.url } style={{ display: "block", width: "100%" }} />
+                    : <h3>{props.name}</h3>
+                }
+              </div>
+              <div className="column col-6 text-center">
+                <ul className="text-center">
+                  <li><b>{props.track}</b></li>
+                  <li>{moment(props.date).format('MMMM Do, YYYY')}</li>
+                  <li style={{ marginTop: "0.5rem", fontSize: "0.6rem" }}>{props.laps} laps ({props.duration})</li>
+                  <li style={{ fontSize: "0.6rem" }}>{props.cautions} cautions for {props.cautionLaps} laps</li>
+                  <li style={{ fontSize: "0.6rem" }}>{props.leadChanges} lead changes between {props.leaders} drivers</li>
+                </ul>
+              </div>
+              <div className="column col-3 text-left">
+                <img src="https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/phoenix/2014/logo.jpg"/>
+              </div>
+            </div>
+    
+        		<table>
+              <thead>
+                <tr>
+                  <th width="2%">F</th>
+                  <th width="2%">S</th>
+                  <th>Driver</th>
+                  <th width="7%">Points</th>
+                  <th width="7%">Interval</th>
+                  <th width="7%">Laps</th>
+                  <th width="7%">Led</th>
+                  <th width="7%">Fastest</th>
+                  <th width="7%">Average</th>
+                  <th width="7%">Incidents</th>
+                  <th width="7%">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+        		  { 
+        			props.results
+        			  .sort((a, b) => parseInt(a.finish, 10) > parseInt(b.finish, 10))
+        			  .map(props => (
+                  <tr key={props.id}>
+                    <td>{props.finish}</td>
+                    <td>{props.start}</td>
+                    <td><DriverChip {...props.driver}/></td>
+                    <td>{parseInt(props.points, 10) + parseInt(props.bonus, 10) + parseInt(props.penalty, 10)}</td>
+                    <td>{props.interval}</td>
+                    <td>{props.completed}</td>
+                    <td>{props.led}</td>
+                    <td>{props.fastest}</td>
+                    <td>{props.average}</td>
+                    <td>{props.incidents}</td>
+                    <td>{props.status}</td>
+                  </tr>
+                )) 
+        		  }
+              </tbody>
+        		</table>
+      
+            { props.broadcast && <Video src={props.broadcast} style={{ marginTop: "3rem" }}/> }
+
+            <div style={{ marginTop: "2rem" }}>
+              { props.media && props.media.map(image => renderImage(image)) }
+            </div>
+            
+          </div>
+        </div>
+		  
+  	  </main>
+
+  	</div>
   )
 }
 
@@ -121,7 +130,7 @@ export async function getStaticProps({ params }) {
     .filter(result => result.id)
     .map(async (result) => {
       const driver = await client.getEntry(result.id);
-      return { ...result, ...driver.fields };
+      return { ...result, driver };
     }));
   return { props: { ...entry.fields }};
 };

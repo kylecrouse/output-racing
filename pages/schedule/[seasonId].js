@@ -1,7 +1,7 @@
 import Head from 'next/head'
-import styles from '../../styles/Home.module.css'
 import { createClient } from 'contentful'
 import moment from 'moment';
+import Navbar from '../../components/Navbar'
 
 const client = createClient({
   space: '38idy44jf6uy',
@@ -10,51 +10,49 @@ const client = createClient({
 
 export default function Schedule(props) {
   return (
-	<div className={styles.container}>
-	  <Head>
-		<title>Output Racing</title>
-		<link rel="icon" href="/favicon.ico" />
-	  </Head>
+	  <div>
+  	  <Head>
+    		<title>Output Racing | {props.name}</title>
+    		<link rel="icon" href="/favicon.ico" />
+  	  </Head>
 
-	  <div className={styles.navBar}>
-  		<h1 className={styles.header}>Output Racing</h1>
-      <ul className={styles.nav}>
-        <li><a href="/drivers.html">Drivers</a></li>
-        <li><a href="/schedule/10398.html">Schedule</a></li>
-        <li><a href="/standings/10398.html">Standings</a></li>
-      </ul>
-	  </div>
-	  
-	  <main className={styles.main} style={{ marginTop: "5rem" }}>
-	
-    	<h2 style={{ marginTop: "5rem" }}>Schedule</h2>
+      <Navbar/>
+      
+	    <main className="container">
+	  	  <div className="columns">
+          <div className="column col-8 col-mx-auto">
 
-  		<table border="1" cellPadding="10" style={{margin: "2rem 0 5rem"}}>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Event</th>
-            <th>Track</th>
-            <th>Laps</th>
-          </tr>
-        </thead>
-  		  <tbody>
-    			{ props.schedule.filter(({ raceNo }) => raceNo !== "").map((race) => (
-        		  <tr key={props.custId}>
-                <td>{moment(race.date).format('MMM D, YYYY')}</td>
-          			<td>
-                  { race.raceId 
-                      ? <a href={`/race/${race.raceId}.html`}>{race.name}</a>
-                      : race.name
-                  }
-                </td>
-          			<td>{race.track}</td>
-                <td>{race.laps}</td>
-        		  </tr>
-        		)) 
-    			}
-  		  </tbody>
-  		</table>
+          	<h2>Schedule</h2>
+
+        		<table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Event</th>
+                  <th>Track</th>
+                  <th>Laps</th>
+                </tr>
+              </thead>
+        		  <tbody>
+          			{ props.schedule.filter(({ raceNo }) => raceNo !== "").map((race) => (
+              		  <tr key={props.raceNo}>
+                      <td>{moment(race.date).format('MMM D, YYYY')}</td>
+                			<td>
+                        { race.raceId 
+                            ? <a href={`/race/${race.raceId}.html`}>{race.name}</a>
+                            : race.name
+                        }
+                      </td>
+                			<td>{race.track}</td>
+                      <td>{race.laps}</td>
+              		  </tr>
+              		)) 
+          			}
+        		  </tbody>
+        		</table>
+            
+          </div>
+        </div>
 		  
 	  </main>
 
@@ -72,6 +70,14 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const season = await client.getEntry(params.seasonId);
+  const races = await client.getEntries({ content_type: "race" });
   const drivers = await client.getEntries({ content_type: "driver" });
-  return { props: { ...season.fields, drivers: drivers.items }};
+  return { props: { 
+    ...season.fields,
+    schedule: season.fields.schedule.map((schedule) => {
+      const race = races.items.find(({ sys }) => sys.id === schedule.raceId);
+      return race ? { ...schedule, ...race.fields } : schedule;
+    }), 
+    drivers: drivers.items 
+  }};
 };

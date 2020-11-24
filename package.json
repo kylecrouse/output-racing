@@ -18,7 +18,8 @@
     "moment": "^2.29.1",
     "next": "10.0.1",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "spectre.css": "^0.5.9"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",

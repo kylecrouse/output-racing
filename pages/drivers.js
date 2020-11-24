@@ -1,6 +1,6 @@
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
 import { createClient } from 'contentful'
+import Navbar from '../components/Navbar'
 
 const client = createClient({
   space: '38idy44jf6uy',
@@ -9,41 +9,79 @@ const client = createClient({
 
 export default function Drivers(props) {
   return (
-	<div className={styles.container}>
+	<div>
 	  <Head>
-		<title>Output Racing</title>
-		<link rel="icon" href="/favicon.ico" />
+  		<title>Output Racing | Drivers</title>
+  		<link rel="icon" href="/favicon.ico" />
 	  </Head>
 
-    <div className={styles.navBar}>
-    <h1 className={styles.header}>Output Racing</h1>
-    <ul className={styles.nav}>
-      <li><a href="/drivers.html">Drivers</a></li>
-      <li><a href="/schedule/10398.html">Schedule</a></li>
-      <li><a href="/standings/10398.html">Standings</a></li>
-    </ul>
-    </div>
-	  
-	  <main className={styles.main} style={{ marginTop: "5rem" }}>
+    <Navbar/>
     
-    <h2 style={{ marginTop: "5rem" }}>Drivers</h2>
+    <main className="container">
+  	  <div className="columns">
+        <div className="column col-8 col-mx-auto">
+    
+          <h2>Drivers</h2>
 
-		<table border="1" cellPadding="10" style={{margin: "2rem 0 5rem"}}>
-		  <tbody>
-			{ props.drivers.map(({ fields: props }) => (
-          <tr key={props.custId}>
-            <td>
-              { props.numberArt
-                  ? <img src={ props.numberArt.fields.file.url } style={{ width: "50px" }}/>
-                  : props.number
-              }
-            </td>
-            <td style={{ fontSize: "1.5rem" }}>{props.name}</td>
-          </tr>
-        )) 
-			}
-		  </tbody>
-		</table>
+          <style jsx>{`
+            td {
+              font-size: 0.8rem;
+              text-align: center;
+              width: 10%;
+            }
+            td span {
+              color: #999;
+            }
+            .name {
+              font-size: 1.5rem;
+              padding: 0 20px;
+              text-align: left; 
+              width: auto;
+            }
+            .number {
+              font-size: 2rem;
+              color: #ccc;
+            }
+            .numberArt {
+              display: block;
+              width: 60%;
+              margin: 0 auto; 
+            }
+          `}</style>
+      		<table>
+            <thead>
+              <tr>
+                <th colSpan="2"></th>
+                <th>Starts</th>
+                <th>Wins</th>
+                <th>Top 5s</th>
+                <th>Poles</th>
+              </tr>
+            </thead>
+      		  <tbody>
+        			{ props.drivers.map(({ sys, fields: props }) => (
+                  <tr key={props.custId}>
+                    <td className="number">
+                      { props.numberArt
+                          ? <img src={ props.numberArt.fields.file.url } className="numberArt"/>
+                          : props.number
+                      }
+                    </td>
+                    <td className="name">
+                      <a href={`/driver/${sys.id}.html`}>{props.nickname || props.name}</a>
+                    </td>
+                    <td>{props.leagueStats.starts || 0}</td>
+                    <td>{props.leagueStats.wins || 0} <span>({props.leagueStats.winPercentage || 0})</span></td>
+                    <td>{props.leagueStats.top5s || 0} <span>({props.leagueStats.top5Percentage || 0})</span></td>
+                    <td>{props.leagueStats.poles || 0} <span>({((props.leagueStats.poles || 0) / (props.leagueStats.starts || 1) * 100).toFixed(0)}%)</span></td>
+                  </tr>
+                )) 
+        			}
+      		  </tbody>
+      		</table>
+          
+        </div>
+      </div>
 		  
 	  </main>
 
@@ -52,12 +90,19 @@ export default function Drivers(props) {
 }
 
 export async function getStaticProps() {
-  const entries = await client.getEntries({ 
-  	content_type: "driver"
-  });
+  const entries = await client.getEntries({ content_type: "driver" });
+  // TODO: Convert to full league status
+  const season = await client.getEntry(10398);
   return { props: {
     drivers: entries.items
       .filter(({ fields }) => fields.active)
       .sort((a, b) => parseInt(a.fields.number, 10) - parseInt(b.fields.number, 10))
+      .map(({ sys, fields }) => ({ 
+        sys, 
+        fields: { 
+          ...fields, 
+          leagueStats: season.fields.stats.find(({ driver }) => driver === fields.name) || {}
+        }
+      }))
   }};
 }

@@ -1,0 +1,20 @@
+.navbar {
+  background: black;
+  margin-bottom: 2rem;
+  padding: 1rem 0;
+}
+
+.navbarContent {
+  display: flex;
+}
+
+.logo {
+  display: block;
+  height: 50px;
+  position: relative;
+  top: 2px;
+}
+
+.navItem {
+  color: #f4a913 !important;
+}

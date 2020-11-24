@@ -81,6 +81,7 @@ const seasonId = process.argv[2];
         date: new Date(record['Race Date']),
         offWeek: record['Off Week'] === 'Yes',
         uploaded: record['Results Uploaded'] === 'Yes',
+        counts: record['Points Count'] === 'Yes',
         raceId: events.find(({ date }) => date === record['Race Date']).id,
         name: `${record['Event Name'].replace('Sponsor: ', '') || 'Output Racing'} ${record['Track Type'] === 'Short Track' ? record['Laps'] : parseInt(record['Distance (Miles)'])}`,
         track: record['Track'],

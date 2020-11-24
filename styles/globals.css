@@ -9,3 +9,28 @@ body {
 * {
   box-sizing: border-box;
 }
+
+main.container {
+  margin-bottom: 2rem;
+}
+
+table {
+  border: 0;
+  width: 100%;
+  font-family: monospace;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #f1f1f1;
+}
+
+th {
+  font-size: 0.6rem;
+  line-height: 1.2;
+  vertical-align: bottom;
+}
+
+td { 
+  font-size: 0.7rem;
+  padding: 5px 10px; 
+}
