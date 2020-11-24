@@ -33,19 +33,24 @@ export default function Home(props) {
                     <h6 class="panel-title">Race Review</h6>
                   </div>
                   <div class="panel-body">
-                    <h4 className="text-center"><a href={`/race/${props.lastRace.raceId}.html`}>{props.lastRace.name}</a></h4>
                     { props.lastRace.broadcast &&
                       <Video src={props.lastRace.broadcast}/>
                     }
-                    <div class="columns col-gapless" style={{ alignItems: "center", margin: "0.5rem 0" }}>
-                      <div class="column col-4">
-                        <img src="https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/phoenix/2014/logo.jpg" style={{ width: "100%" }}/>
+                    <div class="columns col-gapless" style={{ alignItems: "center", margin: "1rem 0", position: "relative", left: "15px" }}>
+                      <div className="column col-2 text-right">
+                        { props.lastRace.logo
+                            ? <img src={ props.lastRace.logo.fields.file.url } style={{ display: "block", width: "100%" }} />
+                            : <h4>{props.name}</h4>
+                        }
                       </div>
-                      <div class="column col-8">
+                      <div className="column col-7 text-center" style={{ paddingLeft: "30px" }}>
                         <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-                          <li style={{ marginTop: 0 }}><b>{props.lastRace.track}</b></li>
+                          <li style={{ marginTop: 0, lineHeight: 1.2 }}><b>{props.lastRace.track}</b></li>
                           <li style={{ marginTop: 0 }}>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</li>
                         </ul>
+                      </div>
+                      <div className="column col-3 text-left">
+                        <img src="https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/phoenix/2014/logo.jpg" style={{ display: "block", width: "100%" }}/>
                       </div>
                     </div>
                     <table>
