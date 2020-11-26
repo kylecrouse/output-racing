@@ -42,13 +42,13 @@ export default function Race(props) {
           <div className="column col-8 col-mx-auto">
           
             <div className="columns col-gapless" style={{ alignItems: "center" }}>
-              <div className="column col-3 text-right">
+              <div className="column col-4">
                 { props.logo
-                    ? <img src={ props.logo.fields.file.url } style={{ display: "block", width: "100%" }} />
+                    ? <img src={ props.logo.fields.file.url } style={{ display: "block", height: "100%", maxHeight: "150px", marginLeft: "auto" }} />
                     : <h3>{props.name}</h3>
                 }
               </div>
-              <div className="column col-6 text-center">
+              <div className="column col-4 text-center">
                 <ul className="text-center">
                   <li><b>{props.track}</b></li>
                   <li>{moment(props.date).format('MMMM Do, YYYY')}</li>
@@ -57,8 +57,8 @@ export default function Race(props) {
                   <li style={{ fontSize: "0.6rem" }}>{props.leadChanges} lead changes between {props.leaders} drivers</li>
                 </ul>
               </div>
-              <div className="column col-3 text-left">
-                <img src="https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/phoenix/2014/logo.jpg"/>
+              <div className="column col-4">
+                <img src="https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/phoenix/2014/logo.jpg" style={{ display: "block", height: "100%", maxHeight: "150px", marginRight: "auto" }} />
               </div>
             </div>
     
