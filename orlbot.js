@@ -48,6 +48,14 @@ discord.on('message', async (message) => {
           await mapAttachmentsToEntries(message.content, crossPost.attachments);
           didUpdateEntries = true;
         }
+
+        // Handle embeds on cross-posted message
+        if (crossPost.embeds.length > 0) {        
+          console.log("Adding cross-posted embeds...");
+          await mapEmbedsToEntries(message.content, crossPost.embeds);
+          didUpdateEntries = true;
+        } 
+  
       }
 
       // Handle attachments on message
@@ -57,6 +65,13 @@ discord.on('message', async (message) => {
         didUpdateEntries = true;
       } 
       
+      // Handle embeds on message
+      if (message.embeds.length > 0) {        
+        console.log("Adding embeds...");
+        await mapEmbedsToEntries(message.content, message.embeds);
+        didUpdateEntries = true;
+      } 
+
       // If something got updated, build & deploy
       if (didUpdateEntries) {
         console.log("Building and deploying website...");
@@ -79,11 +94,31 @@ discord.on('message', async (message) => {
 discord.login(discordToken);
 
 async function mapAttachmentsToEntries(content, attachments) {
+  //TODO: How do we distinguish between attachment types and where they save to?
   const assets = await uploadAttachments(attachments); 
+  return mapFieldsToEntries(
+    content, 
+    { media: assets.map(asset => localize(link(asset.sys.id))) }
+  );
+}
+
+function mapEmbedsToEntries(content, embeds) {
+  return mapFieldsToEntries(
+    content,
+    { broadcast: embeds
+        // Only handle links to YouTube for now
+        .filter(({ video, url }) => video && url.match(/^https:\/\/www.youtube.com\//))
+        .map(({ url }) => localize(`https://www.youtube.com/embed/${url.match(/v=(\w+)&/)[1]}`))
+        .shift()
+    }
+  );
+}
+
+function mapFieldsToEntries(content, fields) {
   return Promise.all(getHashtags(content).map(async (hashtag) => {
     const entry = await getEntryForHashtag(hashtag);
-    if (entry) await updateEntryWithAssets(entry, assets);
-    else throw new Error(`Couldn't match ${hashtag}.`);
+    if (entry) await updateEntry(entry, fields);
+    else throw new Error(`Couln't match ${hashtag}`);
   }));
 }
 
@@ -138,10 +173,28 @@ async function getEntries(params) {
   return await environment.getEntries(params);
 }
 
-function updateEntryWithAssets(entry, assets) {
-  const media = entry.fields.media || { 'en-US': [] };
-  entry.fields.media = { 'en-US': media['en-US'].concat(assets.map(asset => link(asset.sys.id))) };
+function updateEntry(entry, fields) {
+  // Loop through provided fields
+  for (const [key, val] of Object.entries(fields)) {
+    // If the field is an existing array, merge them together
+    if (fieldIsArray(entry, key)) mergeArrayFields(entry, key, val);
+    // Otherwise set the field to the new value
+    else entry.fields[key] = val;
+  }
+  // Update and publish the entry
   return entry.update().then(entry => entry.publish());
+}
+
+function fieldExists(entry, key) {
+  return entry.fields[key];
+}
+
+function fieldIsArray(entry, key) {
+  return fieldExists(entry, key) && Array.isArray(entry.fields[key]['en-US']);
+}
+
+function mergeArrayFields(entry, field, value) {
+  return entry.fields[field] = localize(entry.fields[field]['en-US'].concat(value['en-US']));
 }
 
 async function getLastRace() {
@@ -168,6 +221,16 @@ function getHashtags(message) {
 
 function link(id) {
   return { sys: { type: "Link", linkType: "Asset", id }}
+}
+
+function localize(val) {
+  if (typeof val === 'object') {
+    for (key in val)
+      val[key] = { 'en-US' : val[key] }
+  } else {
+    val = { 'en-US': val }
+  }
+  return val
 }
 
 async function deploy() {
