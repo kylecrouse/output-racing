@@ -14,7 +14,7 @@ const client = contentful.createClient({
 (async () => {
 	const space = await client.getSpace('38idy44jf6uy');
 	const environment = await space.getEnvironment('master');
-	const entries = await environment.getEntries({ content_type: "driver" });
+	const entries = await environment.getEntries({ content_type: "driver", limit: 500 });
 	
 	console.log('🏎 Connecting to iRacing...');
 	const browser = await puppeteer.launch();
@@ -144,7 +144,7 @@ const client = contentful.createClient({
 				
 				spinners[member.custID].text = `Retrieving existing data for ${chalk.magenta(member.displayName)}...`;
 				const driver = entries.items.splice(
-					entries.items.findIndex(driver => isFieldEqual(driver.fields.custId, member.custID)), 
+					entries.items.findIndex(driver => isFieldEqual(driver.fields.custId, member.custID) || isFieldEqual(driver.fields.name, member.displayName)), 
 					1
 				);
 				if (driver.length > 0) {

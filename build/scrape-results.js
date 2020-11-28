@@ -4,7 +4,7 @@ const { exec } = require('child_process');
 const fetch = require('node-fetch');
 const parse = require('csv-parse');
 const chalk = require('chalk');
-const Logger = require('./Logger');
+const { tracks } = require('../constants');
 
 const client = contentful.createClient({
   accessToken: process.env.CONTENTFUL_ACCESS_TOKEN
@@ -16,7 +16,7 @@ const raceId = process.argv[2];
 (async () => {
   const space = await client.getSpace('38idy44jf6uy');
   const environment = await space.getEnvironment('master');
-  const drivers = await environment.getEntries({ content_type: "driver" });
+  const drivers = await environment.getEntries({ content_type: "driver", limit: 500 });
   
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
@@ -58,7 +58,7 @@ const raceId = process.argv[2];
         // series: output[1],
         // season: output[2],
         date: new Date(output[3]),
-        track: output[4],
+        track: output[4],//tracks.find(track => output[4].indexOf(track.name) >= 0).id.toString(),
         laps: parseInt(output[5], 10),
         duration: output[6],
         cautions: parseInt(output[7], 10),
@@ -123,7 +123,7 @@ const raceId = process.argv[2];
     if (entry) {
       // Don't overwrite the name of existing events, to prevent changing manual edits.
       const { name, ...rest } = race;
-      entry.fields = localize({ ...rest, results });
+      entry.fields = Object.assign({}, entry.fields, localize({ ...rest, results }));
       const updatedEntry = await entry.update();
       await updatedEntry.publish();
       console.log(`${chalk.bold('Updated results')} for race ID ${chalk.magenta(raceId)}.`);

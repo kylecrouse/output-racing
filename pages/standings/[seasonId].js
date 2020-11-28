@@ -23,7 +23,7 @@ export default function Schedule(props) {
 	  	  <div className="columns">
           <div className="column col-8 col-mx-auto">
 	
-    		<h2>Standings</h2>
+        		<h2>Standings</h2>
 
             <table>
               <thead>
@@ -72,6 +72,28 @@ export default function Schedule(props) {
               </tbody>
             </table> 
             
+            <h3 style={{ marginTop: "3rem" }}>Other Seasons</h3>
+
+        		<table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Champion</th>
+                </tr>
+              </thead>
+        		  <tbody>
+          			{ props.seasons.map(season => (
+              		  <tr key={season.sys.id}>
+                      <td><a href={`/schedule/${season.sys.id}.html`}>{season.fields.name}</a></td>
+                			<td>
+                        <DriverChip {...props.drivers.find(driver => driver.fields.name === season.fields.standings.find(driver => driver.position === '1').driver)}/>
+                      </td>
+              		  </tr>
+              		)) 
+          			}
+        		  </tbody>
+        		</table>
+            
           </div>
         </div>           
 		  
@@ -90,11 +112,18 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
+  const seasons = await client.getEntries({ content_type: 'season' });
   const season = await client.getEntry(params.seasonId);
-  const drivers = await client.getEntries({ content_type: "driver" });
+  const drivers = await client.getEntries({ content_type: "driver", limit: 500 });
   return { props: { 
-    standings: season.fields.standings.map(record => {
-      return { ...record, driver: drivers.items.find(driver => driver.fields.name === record.driver) };
-    }) 
+    standings: season.fields.standings
+      .map(record => {
+        return { ...record, driver: drivers.items.find(driver => driver.fields.name === record.driver) };
+      })
+      .filter(record => record.driver !== undefined),
+    seasons: seasons.items
+      .filter(season => season.sys.id !== params.seasonId)
+      .sort((a, b) => moment(b.fields.schedule[0].date).diff(a.fields.schedule[0].date)),
+    drivers: drivers.items 
   }};
 };

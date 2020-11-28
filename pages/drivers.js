@@ -90,7 +90,7 @@ export default function Drivers(props) {
 }
 
 export async function getStaticProps() {
-  const entries = await client.getEntries({ content_type: "driver" });
+  const entries = await client.getEntries({ content_type: "driver", limit: 500 });
   // TODO: Convert to full league status
   const season = await client.getEntry(10398);
   return { props: {

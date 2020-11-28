@@ -10,7 +10,7 @@ const client = contentful.createClient({
 (async () => {
   const space = await client.getSpace('38idy44jf6uy');
   const environment = await space.getEnvironment('master');
-  const drivers = await environment.getEntries({ content_type: "driver" });
+  const drivers = await environment.getEntries({ content_type: "driver", limit: 500 });
   
   const browser = await puppeteer.launch();
   const page = await browser.newPage();

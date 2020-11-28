@@ -4,6 +4,7 @@ import moment from 'moment'
 import Navbar from '../../components/Navbar'
 import Video from '../../components/Video'
 import DriverChip from '../../components/DriverChip'
+import { tracks } from '../../constants'
 
 const client = createClient({
   space: '38idy44jf6uy',
@@ -41,8 +42,8 @@ export default function Race(props) {
 	  	  <div className="columns">
           <div className="column col-8 col-mx-auto">
           
-            <div className="columns col-gapless" style={{ alignItems: "center" }}>
-              <div className="column col-4">
+            <div className="columns" style={{ alignItems: "center" }}>
+              <div className="column col-4 text-center">
                 { props.logo
                     ? <img src={ props.logo.fields.file.url } style={{ display: "block", height: "100%", maxHeight: "150px", marginLeft: "auto" }} />
                     : <h3>{props.name}</h3>
@@ -58,7 +59,7 @@ export default function Race(props) {
                 </ul>
               </div>
               <div className="column col-4">
-                <img src="https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/phoenix/2014/logo.jpg" style={{ display: "block", height: "100%", maxHeight: "150px", marginRight: "auto" }} />
+                <img src={tracks.find(({ name }) => props.track.indexOf(name) >= 0).logo} style={{ display: "block", height: "100%", maxHeight: "150px", marginRight: "auto", maxWidth: "100%" }} />
               </div>
             </div>
     
@@ -83,7 +84,7 @@ export default function Race(props) {
         			props.results
         			  .sort((a, b) => parseInt(a.finish, 10) > parseInt(b.finish, 10))
         			  .map(props => (
-                  <tr key={props.id}>
+                  <tr key={props.id} style={{ opacity: props.driver.fields.active ? 1 : 0.3 }}>
                     <td>{props.finish}</td>
                     <td>{props.start}</td>
                     <td><DriverChip {...props.driver}/></td>
@@ -117,7 +118,7 @@ export default function Race(props) {
 }
 
 export async function getStaticPaths() {
-  const entries = await client.getEntries({ content_type: 'race' });
+  const entries = await client.getEntries({ content_type: 'race', limit: 500 });
   return {
     paths: entries.items.map(entry => ({ params: { raceId: entry.sys.id }})),
     fallback: false,

@@ -6,6 +6,7 @@ const fetch = require('node-fetch');
 const parse = require('csv-parse');
 const log = require('log-update');
 const chalk = require('chalk');
+const { tracks } = require('../constants');
 
 const client = contentful.createClient({
   accessToken: process.env.CONTENTFUL_ACCESS_TOKEN
@@ -17,7 +18,7 @@ const seasonId = process.argv[2];
 (async () => {
   const space = await client.getSpace('38idy44jf6uy');
   const environment = await space.getEnvironment('master');
-  const drivers = await environment.getEntries({ content_type: "driver" });
+  const drivers = await environment.getEntries({ content_type: "driver", limit: 500 });
   
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
@@ -32,7 +33,10 @@ const seasonId = process.argv[2];
           headers: req._headers
         }));
       }
-      req.continue();
+      // Add a new header for navigation request.
+      const headers = req.headers();
+      headers['Cookie'] = "tzid=54";
+      req.continue({ headers });
     });
   });
 
@@ -41,15 +45,8 @@ const seasonId = process.argv[2];
   await page.goto(`http://www.danlisa.com/scoring/season_schedule.php?season_id=${seasonId}`);
 
   const events = await page.$$eval(
-    '#sched_table [id^=sch_] td:nth-child(2), #sched_table [id^=sch_] td:nth-child(8)', 
-    cells => cells
-      .map(cell => cell.innerHTML)
-      .reduce((acc, cur, idx, src) => { 
-        cur !== '&nbsp;' && idx % 2 === 0 
-          && acc.push({ date: cur, id: src[idx+1].toString().match(/race_id=(\d+)/) }); 
-        return acc; 
-      }, [])
-      .map(({ date, id }) => ({ date, id: id ? id.pop() : null }))
+    '#sched_table [id^=sch_].bgGray a[href^="season_race.php"]', 
+    cells => cells.map(cell => cell.href.split('=').pop())
   );
   
   // TODO: build an error handler for non-200 responses
@@ -82,8 +79,14 @@ const seasonId = process.argv[2];
         offWeek: record['Off Week'] === 'Yes',
         uploaded: record['Results Uploaded'] === 'Yes',
         counts: record['Points Count'] === 'Yes',
-        raceId: events.find(({ date }) => date === record['Race Date']).id,
-        name: `${record['Event Name'].replace('Sponsor: ', '') || 'Output Racing'} ${record['Track Type'] === 'Short Track' ? record['Laps'] : parseInt(record['Distance (Miles)'])}`,
+        raceId: record['Results Uploaded'] === 'Yes'
+          ? events.shift()
+          : null,
+        name: record['Off Week'] !== 'Yes'
+          ? record['Event Name']
+            ? record['Event Name']
+            : `Ouput Racing ${record['Track Type'] === 'Short Track' ? record['Laps'] : parseInt(record['Distance (Miles)'])}`
+          : 'Off Week',
         track: record['Track'],
         type: record['Track Type'],
         time: record['Time'],
@@ -96,7 +99,7 @@ const seasonId = process.argv[2];
     });
   });
   
-  console.log(`${chalk.bold('Processing results')} for season ID ${chalk.magenta(seasonId)}...`);
+  console.log(`${chalk.bold('Processing results')} for season ID ${chalk.magenta(seasonId)}...`, schedule);
   const colors = {
     waiting: 'gray',
     working: 'white',
@@ -128,10 +131,10 @@ const seasonId = process.argv[2];
         };
         const yarn = spawn('yarn', ['race', event.raceId, event.name]);
         yarn.stdout.on('data', (data) => { 
-          spinners[event.raceId].text = data.toString(); 
+          spinners[event.raceId].text = data.toString().replace(/\r?\n|\r/g, ''); 
         });
         yarn.stderr.on('data', (data) => { 
-          spinners[event.raceId] = { state: "error", text: `[${event.raceId}] ${data.toString()}` }; 
+          spinners[event.raceId] = { state: "error", text: `[${event.raceId}] ${data.toString().replace(/\r?\n|\r/g, '')}` }; 
         });
         yarn.on('close', (code) => {
           results.push(link(event.raceId));
@@ -150,7 +153,7 @@ const seasonId = process.argv[2];
   console.log(`${chalk.bold('Saving')} season ID ${chalk.magenta(seasonId)}...`);
   try {
     const entry = await environment.getEntry(seasonId);
-    entry.fields = localize({ ...season, schedule, results });
+    entry.fields = Object.assign({}, entry.fields, localize({ ...season, schedule, results }));
     const updatedEntry = await entry.update();
     await updatedEntry.publish();
     console.log(`${chalk.bold('Updated')} season ID ${chalk.magenta(seasonId)}.`);
@@ -169,10 +172,10 @@ const seasonId = process.argv[2];
   await new Promise((resolve, reject) => {
     const yarn = spawn('yarn', ['standings', seasonId]);
     yarn.stdout.on('data', (data) => { 
-      console.log(data.toString());
+      console.log(data.toString().replace(/\r?\n|\r/g, ''));
     });
     yarn.stderr.on('data', (data) => { 
-      console.error(data.toString());
+      console.error(data.toString().replace(/\r?\n|\r/g, ''));
     });
     yarn.on('close', (code) => {
       resolve();
@@ -182,10 +185,10 @@ const seasonId = process.argv[2];
   await new Promise((resolve, reject) => {
     const yarn = spawn('yarn', ['stats', 'season_id', seasonId]);
     yarn.stdout.on('data', (data) => { 
-      console.log(data.toString());
+      console.log(data.toString().replace(/\r?\n|\r/g, ''));
     });
     yarn.stderr.on('data', (data) => { 
-      console.error(data.toString());
+      console.error(data.toString().replace(/\r?\n|\r/g, ''));
     });
     yarn.on('close', (code) => {
       resolve();

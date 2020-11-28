@@ -151,7 +151,7 @@ export default function Home(props) {
 
 export async function getStaticProps() {
   const entries = await client.getEntries({ content_type: "season", include: 1, limit: 1 });
-  const drivers = await client.getEntries({ content_type: "driver" });
+  const drivers = await client.getEntries({ content_type: "driver", limit: 500 });
   
   let nextRace = entries.items[0].fields.schedule
     .filter(race => !race.offWeek && !race.uploaded && moment().isSameOrBefore(race.date, 'day'))
