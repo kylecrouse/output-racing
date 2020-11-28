@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import { createClient } from 'contentful'
+import moment from 'moment';
 import Navbar from '../../components/Navbar';
 
 const client = createClient({
@@ -17,6 +18,13 @@ export default function Driver(props) {
   	  </Head>
       
       <Navbar/>
+      
+      <style jsx>{`
+        th {
+          width: 8.33%;
+        }
+      `}</style>
+
   
   	  <main className="container">
 
@@ -42,7 +50,7 @@ export default function Driver(props) {
 
             { props.careerStats &&
               <>
-                <h4 className="text-center" style={{ marginTop: "3rem" }}>iRacing Career Stats</h4>
+                <h4 className="text-center" style={{ margin: "3rem 0 1.5rem" }}>iRacing Career Stats</h4>
                 <table>
                   <thead>
                     <tr>
@@ -80,10 +88,51 @@ export default function Driver(props) {
               </>
             }
             
+            { props.leagueStats &&
+              <>
+                <h4 className="text-center" style={{ margin: "3rem 0 1.5rem" }}>{props.league.name} Career Stats</h4>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Starts</th>
+                      <th>Wins</th>
+                      <th>Top 5s</th>
+                      <th>Poles</th>
+                      <th>Avg Start</th>
+                      <th>Avg Finish</th>
+                      <th>Total Laps</th>
+                      <th>Laps Led</th>
+                      <th>Inc/Race</th>
+                      <th>Win %</th>
+                      <th>Top 5 %</th>
+                      <th>Led %</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{props.leagueStats.starts}</td>
+                      <td>{props.leagueStats.wins}</td>
+                      <td>{props.leagueStats.top5s}</td>
+                      <td>{props.leagueStats.poles}</td>
+                      <td>{props.leagueStats.avgStart}</td>
+                      <td>{props.leagueStats.avgFinish}</td>
+                      <td>{props.leagueStats.laps}</td>
+                      <td>{props.leagueStats.lapsLed}</td>
+                      <td>{props.leagueStats.incidentsRace}</td>
+                      <td>{props.leagueStats.winPercentage}</td>
+                      <td>{props.leagueStats.top5Percentage}</td>
+                      <td>{((parseInt(props.leagueStats.lapsLed.replace(',','')) / parseInt((props.leagueStats.laps || '0').replace(',',''))) * 100).toFixed(0)}%</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </>
+            }
+            
+            <h4 className="text-center" style={{ margin: "3rem 0 -.5rem" }}>{props.league.name} Season Stats</h4>
             { props.seasonStats &&
                 props.seasonStats.map((season, index) => (
-                  <div key={`stats${index}`} style={{ marginTop: "3rem" }}>
-                    <h4 className="text-center" style={{ marginBottom: "1rem" }}>{season.name} Stats</h4>
+                  <div key={`stats${index}`}>
+                    <h6 className="text-center" style={{ margin: "2rem 0 1.5rem" }}>{season.name}</h6>
                     <table>
                       <thead>
                         <tr>
@@ -142,13 +191,16 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   const entry = await client.getEntry(params.driverId);
   const seasons = await client.getEntries({ content_type: "season" });
+  const league = await client.getEntry(1710);
   const seasonStats = seasons.items
     .filter(({ fields }) => fields.stats.find(({ driver }) => driver === entry.fields.name))
+    .sort((a, b) => moment(b.fields.schedule[0].date).diff(a.fields.schedule[0].date))
     .map(({ fields }) => {
       return {
         name: fields.name,
         ...fields.stats.find(({ driver }) => driver === entry.fields.name)
       }
     });
-  return { props: { ...entry.fields, seasonStats }};
+  const leagueStats = league.fields.stats.find(({ driver }) => driver === entry.fields.name);
+  return { props: { ...entry.fields, league: league.fields, seasonStats, leagueStats }};
 };

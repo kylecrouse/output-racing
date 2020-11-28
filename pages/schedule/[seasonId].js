@@ -24,7 +24,7 @@ export default function Schedule(props) {
 	  	  <div className="columns">
           <div className="column col-8 col-mx-auto">
 
-          	<h2>{props.name}</h2>
+          	<h2>{props.name} Schedule</h2>
             
             { props.cars && 
                 <div className="columns col-gapless" style={{ margin: "2rem 0" }}>
@@ -74,15 +74,23 @@ export default function Schedule(props) {
               <thead>
                 <tr>
                   <th></th>
-                  <th>Champion</th>
+                  <th width="20%">1st</th>
+                  <th width="20%">2nd</th>
+                  <th width="20%">3rd</th>
                 </tr>
               </thead>
         		  <tbody>
           			{ props.seasons.map(season => (
-              		  <tr key={season.sys.id}>
-                      <td><a href={`/schedule/${season.sys.id}.html`}>{season.fields.name}</a></td>
+              		  <tr key={season.id}>
+                      <td><a href={`/schedule/${season.id}.html`}>{season.name}</a></td>
                 			<td>
-                        <DriverChip {...props.drivers.find(driver => driver.fields.name === season.fields.standings.find(driver => driver.position === '1').driver)}/>
+                        <DriverChip {...season.standings[0].driver}/>
+                      </td>
+                			<td>
+                        <DriverChip {...season.standings[1].driver}/>
+                      </td>
+                			<td>
+                        <DriverChip {...season.standings[2].driver}/>
                       </td>
               		  </tr>
               		)) 
@@ -122,5 +130,16 @@ export async function getStaticProps({ params }) {
     seasons: seasons.items
       .filter(season => season.sys.id !== params.seasonId)
       .sort((a, b) => moment(b.fields.schedule[0].date).diff(a.fields.schedule[0].date))
+      .map(season => ({
+        id: season.sys.id,
+        name: season.fields.name,
+        standings: season.fields.standings
+          .filter(record => parseInt(record.position) <= 3)
+          .sort((a, b) => parseInt(a.position) - parseInt(b.position))
+          .map(record => ({
+            ...record,
+            driver: drivers.items.find(driver => driver.fields.name === record.driver)
+          }))
+      }))
   }};
 };

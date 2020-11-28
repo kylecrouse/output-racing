@@ -23,7 +23,7 @@ const client = contentful.createClient({
   // TODO: build an error handler for non-200 responses
   await page.goto(`http://www.danlisa.com/scoring/league_stats.php?${statsKey}=${statsVal}`);
   
-  const statsName = await page.$eval('.pageTitleRight', el => el.innerHTML.replace(/Output Racing<br>/i, '').replace('<br>', ' '));
+  const statsName = await page.$eval('.pageTitleRight', el => el.innerHTML.replace(/<br>/g, ' '));
 
   console.log(`${chalk.bold('Parsing')} stats for ${chalk.magenta(statsName)}...`);
   const stats = await page.evaluate(() => {
@@ -61,13 +61,27 @@ const client = contentful.createClient({
   try {
     const entry = await environment.getEntry(statsVal);
     entry.fields.stats = { 'en-US': stats };
-    const updatedEntry = await entry.update();
-    await updatedEntry.publish();
+    await entry.update().then(entry => entry.publish());
     console.log(`${chalk.bold('Updated')} stats for ${chalk.magenta(statsName)}.`);
   } catch(err) {
-    console.error(err);
+    if (err.name === 'NotFound') {
+      const entry = await environment.createEntryWithId(
+        statsKey === 'league_id' ? 'league' : 'season', 
+        statsVal, 
+        { fields: localize({ name: statsName, stats }) });
+      await entry.publish();
+      console.log(`${chalk.bold('Added')} ${statsKey === 'league_id' ? 'league' : 'season'} ${chalk.magenta(statsName)}.`);
+    } else {
+      console.error(err);
+    }
   }
   
   await browser.close();
     
 })().catch((e) => console.error(e));
+
+function localize(obj) {
+  for (key in obj)
+    obj[key] = { 'en-US' : obj[key] }
+  return obj
+}
