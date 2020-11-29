@@ -29,31 +29,45 @@ export default function Home(props) {
   
             <div className="columns">
               <div className="column col-7">
-                <div class="panel">
-                  <div class="panel-header">
-                    <h6 class="panel-title">Race Review</h6>
+                <div className="panel">
+                  <div className="panel-header">
+                    <h6 className="panel-title">Last Race</h6>
                   </div>
-                  <div class="panel-body">
+                  <div className="panel-body">
                     { props.lastRace.broadcast &&
                       <Video src={props.lastRace.broadcast}/>
                     }
-                    <div class="columns col-gapless" style={{ alignItems: "center", margin: "1rem 0", position: "relative", left: "15px" }}>
-                      <div className="column col-3 text-center">
-                        { props.lastRace.logo
-                            ? <img src={ props.lastRace.logo.fields.file.url } style={{ display: "block", margin: "0 auto", maxHeight: "80px", height: "100%" }} />
-                            : <h4>{props.lastRace.name}</h4>
-                        }
-                      </div>
-                      <div className="column col-6 text-center" style={{ paddingLeft: "30px" }}>
-                        <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-                          <li style={{ marginTop: 0, lineHeight: 1.2 }}><b>{props.lastRace.track}</b></li>
-                          <li style={{ marginTop: 0 }}>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</li>
-                        </ul>
-                      </div>
-                      <div className="column col-3 text-center">
-                        <img src="https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/phoenix/2014/logo.jpg" style={{ display: "block", margin: "0 auto", maxHeight: "80px", height: "100%" }}/>
-                      </div>
-                    </div>
+                    { props.lastRace.logo
+                      ? ( <div className="columns col-gapless" style={{ alignItems: "center", margin: "1rem 0", position: "relative", left: "15px" }}>
+                            <div className="column col-3 text-center">
+                              <img src={ props.lastRace.logo.fields.file.url } style={{ display: "block", margin: "0 auto", maxHeight: "80px", height: "100%" }} />
+                            </div>
+                            <div className="column col-6 text-center" style={{ paddingLeft: "30px" }}>
+                              <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
+                                <li style={{ marginTop: 0, lineHeight: 1.2 }}><b>{props.lastRace.track}</b></li>
+                                <li style={{ marginTop: 0 }}>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</li>
+                              </ul>
+                            </div>
+                            <div className="column col-3 text-center">
+                              <img src={tracks.find(({ name }) => props.lastRace.track.indexOf(name) >= 0).logo} style={{ display: "block", margin: "0 auto", maxHeight: "80px", height: "100%" }}/>
+                            </div>
+                          </div>
+                      )
+                      : ( <div className="columns col-gapless" style={{ alignItems: "center", margin: "1rem 0", padding: "0 0 0 30px" }}>
+                            <div className="column col-6">
+                              <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
+                                <li><h4>{props.lastRace.name}</h4></li>
+                                <li style={{ marginTop: 0, lineHeight: 1.2 }}><b>{props.lastRace.track}</b></li>
+                                <li style={{ marginTop: 0 }}>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</li>
+                              </ul>
+                            </div>
+                            <div className="column col-6">
+                              <img src={tracks.find(({ name }) => props.lastRace.track.indexOf(name) >= 0).logo} style={{ display: "block", margin: "0 auto", maxHeight: "150px", height: "100%" }}/>
+                            </div>
+                          </div>  
+                      )
+                      
+                    }
                     <table>
                       <thead>
                         <tr>
@@ -81,18 +95,18 @@ export default function Home(props) {
                       </tbody>
                     </table>
                   </div>
-                  <div class="panel-footer">
+                  <div className="panel-footer">
                     
                   </div>
                 </div>
               </div>
                 
               <div className="column col-5">
-                <div class="panel">
-                  <div class="panel-header">
-                    <h6 class="panel-title">Current Standings</h6>
+                <div className="panel">
+                  <div className="panel-header">
+                    <h6 className="panel-title">Current Standings</h6>
                   </div>
-                  <div class="panel-body">
+                  <div className="panel-body">
                     <table>
                       <thead>
                         <tr>
@@ -135,10 +149,28 @@ export default function Home(props) {
                       </tbody>
                     </table>    
                   </div>
-                  <div class="panel-footer">
+                  <div className="panel-footer">
                   
                   </div>  
                 </div>        
+
+                { props.nextRace &&
+                  <div className="panel" style={{ marginTop: "1rem" }}>
+                    <div className="panel-header">
+                      <h6 className="panel-title">Next Race</h6>
+                    </div>
+                    <div className="panel-body text-center">
+                      <h4>{props.nextRace.name}</h4>
+                      <img src={tracks.find(({ name }) => props.nextRace.track.indexOf(name) >= 0).logo} style={{ display: "block", margin: "0 auto", width: "50%" }}/>
+                      <p style={{ margin: 0 }}>{props.nextRace.track}</p>
+                      <p style={{ margin: 0 }}>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</p>
+                    </div>
+                    <div className="panel-footer">
+                    
+                    </div>  
+                  </div>   
+                }
+
               </div>
             </div>
           </div>
