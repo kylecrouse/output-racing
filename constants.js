@@ -153,5 +153,17 @@ module.exports = {
     { name: '[Legacy] Texas Motor Speedway - 2009',
       logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/texas/tle_logo_tms.jpg'
     },
+    { name: 'Eldora Speedway',
+      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/eldora/logo.jpg'
+    },
+    { name: 'World Wide Technology Raceway',
+      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/gateway/logo.jpg'
+    },
+    { name: 'Canadian Tire Motorsports Park',
+      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/mosport/logo.jpg'
+    },
+    { name: 'The Milwaukee Mile',
+      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/milmile/tle_logo_tmm.jpg'
+    },
   ]
 }

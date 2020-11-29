@@ -32,7 +32,7 @@ export default function Schedule(props) {
                       const car = cars.find(car => car.name === name);
                       return (
                         <figure key={car.id} className={`col-${(12/props.cars.length).toFixed(0)} col-mx-auto text-center`}>
-                          <img src={car.image} alt={car.name} style={{ width: "100%" }}/>
+                          <img src={car.image} alt={car.name} style={{ maxHeight: "150px", maxWidth: "100%" }}/>
                           <figcaption style={{ fontSize: "0.6rem" }}>{car.name}</figcaption>
                         </figure>
                       );

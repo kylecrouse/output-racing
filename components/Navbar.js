@@ -3,7 +3,7 @@ import styles from '../styles/Navbar.module.css';
 export default function Navbar(props) {
   return (
     <header className={`navbar ${styles.navbar}`}>
-      <div class="container">
+      <div className="container">
         <div className="columns col-gapless">
           <div className={`column col-8 col-mx-auto ${styles.navbarContent}`}>
             <section className="navbar-section">

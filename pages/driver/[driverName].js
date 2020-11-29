@@ -184,7 +184,9 @@ export default function Driver(props) {
 export async function getStaticPaths() {
   const entries = await client.getEntries({ content_type: 'driver', limit: 500 });
   return {
-    paths: entries.items.map(entry => ({ params: { driverId: entry.sys.id }})),
+    paths: entries.items.map(entry => ({ params: { 
+      driverName: entry.fields.name.replace(/\s/g, '-').toLowerCase()
+    }})),
     fallback: false,
   }
 }
@@ -195,20 +197,23 @@ export async function getStaticProps({ params }) {
     'sys.id': leagueId, 
     include: 2 
   });
-  const entry = await client.getEntry(params.driverId);
+  const entry = await client.getEntries({ 
+    content_type: 'driver', 
+    'fields.name[match]': params.driverName.replace(/-/g, ' '),
+  });
   const seasons = leagues.items[0].fields.seasons;
   const seasonStats = seasons
-    .filter(({ fields }) => fields.stats.find(({ driver }) => driver === entry.fields.name))
+    .filter(({ fields }) => fields.stats.find(({ driver }) => driver === entry.items[0].fields.name))
     .sort((a, b) => moment(b.fields.schedule[0].date).diff(a.fields.schedule[0].date))
     .map(({ fields }) => {
       return {
         name: fields.name,
-        ...fields.stats.find(({ driver }) => driver === entry.fields.name)
+        ...fields.stats.find(({ driver }) => driver === entry.items[0].fields.name)
       }
     });
-  const leagueStats = leagues.items[0].fields.stats.find(({ driver }) => driver === entry.fields.name);
+  const leagueStats = leagues.items[0].fields.stats.find(({ driver }) => driver === entry.items[0].fields.name);
   return { props: { 
-    ...entry.fields, 
+    ...entry.items[0].fields, 
     league: leagues.items[0].fields, 
     seasonStats, 
     leagueStats 
