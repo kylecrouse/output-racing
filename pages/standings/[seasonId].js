@@ -24,7 +24,8 @@ export default function Schedule(props) {
 	  	  <div className="columns">
           <div className="column col-8 col-mx-auto">
 	
-        		<h2>{props.name} Standings</h2>
+        		<h2 className="text-center">{props.name} Standings</h2>
+            <h6 className="text-center" style={{ margin: "1rem 0 2rem" }}>After {props.completed} of {props.races} Races</h6>
 
             <table>
               <thead>
@@ -128,6 +129,8 @@ export async function getStaticProps({ params }) {
   return { props: {
     league: league.fields,
     name: season.fields.name,
+    races: season.fields.schedule.length,
+    completed: season.fields.results.length,
     standings: season.fields.standings
       .map(record => {
         return { ...record, driver: drivers.items.find(driver => driver.fields.name === record.driver) };
@@ -147,6 +150,6 @@ export async function getStaticProps({ params }) {
             driver: drivers.items.find(driver => driver.fields.name === record.driver)
           }))
       })),
-    drivers: drivers.items 
+    drivers: drivers.items
   }};
 };

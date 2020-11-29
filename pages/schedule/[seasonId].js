@@ -24,7 +24,7 @@ export default function Schedule(props) {
 	  	  <div className="columns">
           <div className="column col-8 col-mx-auto">
 
-          	<h2>{props.name} Schedule</h2>
+          	<h2 className="text-center">{props.name} Schedule</h2>
             
             { props.cars && 
                 <div className="columns col-gapless" style={{ margin: "2rem 0" }}>
@@ -44,10 +44,10 @@ export default function Schedule(props) {
         		<table>
               <thead>
                 <tr>
-                  <th>Date</th>
+                  <th width="12%">Date</th>
                   <th>Event</th>
-                  <th>Track</th>
-                  <th>Laps</th>
+                  <th width="40%">Track</th>
+                  <th width="5%">Laps</th>
                 </tr>
               </thead>
         		  <tbody>

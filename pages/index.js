@@ -5,7 +5,7 @@ import moment from 'moment';
 import Navbar from '../components/Navbar';
 import Video from '../components/Video';
 import DriverChip from '../components/DriverChip';
-import { leagueId } from '../constants';
+import { leagueId, tracks } from '../constants';
 
 const client = createClient({
   space: '38idy44jf6uy',
@@ -38,20 +38,20 @@ export default function Home(props) {
                       <Video src={props.lastRace.broadcast}/>
                     }
                     <div class="columns col-gapless" style={{ alignItems: "center", margin: "1rem 0", position: "relative", left: "15px" }}>
-                      <div className="column col-2 text-right">
+                      <div className="column col-3 text-center">
                         { props.lastRace.logo
-                            ? <img src={ props.lastRace.logo.fields.file.url } style={{ display: "block", width: "100%" }} />
-                            : <h4>{props.name}</h4>
+                            ? <img src={ props.lastRace.logo.fields.file.url } style={{ display: "block", margin: "0 auto", maxHeight: "80px", height: "100%" }} />
+                            : <h4>{props.lastRace.name}</h4>
                         }
                       </div>
-                      <div className="column col-7 text-center" style={{ paddingLeft: "30px" }}>
+                      <div className="column col-6 text-center" style={{ paddingLeft: "30px" }}>
                         <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
                           <li style={{ marginTop: 0, lineHeight: 1.2 }}><b>{props.lastRace.track}</b></li>
                           <li style={{ marginTop: 0 }}>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</li>
                         </ul>
                       </div>
-                      <div className="column col-3 text-left">
-                        <img src="https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/phoenix/2014/logo.jpg" style={{ display: "block", width: "100%" }}/>
+                      <div className="column col-3 text-center">
+                        <img src="https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/phoenix/2014/logo.jpg" style={{ display: "block", margin: "0 auto", maxHeight: "80px", height: "100%" }}/>
                       </div>
                     </div>
                     <table>
@@ -157,7 +157,6 @@ export async function getStaticProps() {
     include: 2 
   });
   const season = leagues.items[0].fields.activeSeason;
-  console.log(season);
   const drivers = await client.getEntries({ content_type: "driver", limit: 500 });
   
   let nextRace = season.fields.schedule
@@ -187,9 +186,7 @@ export async function getStaticProps() {
   return { props: { 
     league: leagues.items[0].fields,
     standings, 
-    nextRace: nextRace 
-      ? Object.assign({}, nextRace, season.fields.results.find(entry => entry.sys.id === nextRace.raceId).fields) 
-      : null, 
+    nextRace, 
     lastRace: lastRace || null,
     drivers: drivers.items
   }};
