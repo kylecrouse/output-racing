@@ -45,7 +45,7 @@ export default function Race(props) {
             <div className="columns" style={{ alignItems: "center" }}>
               <div className="column col-4 text-center">
                 { props.logo
-                    ? <img src={ props.logo.fields.file.url } style={{ display: "block", height: "100%", maxHeight: "150px", marginLeft: "auto" }} />
+                    ? <img src={ props.logo.fields.file.url } style={{ display: "block", height: "100%", maxHeight: "150px", margin: "0 auto" }} />
                     : <h3>{props.name}</h3>
                 }
               </div>
@@ -59,7 +59,7 @@ export default function Race(props) {
                 </ul>
               </div>
               <div className="column col-4">
-                <img src={tracks.find(({ name }) => props.track.indexOf(name) >= 0).logo} style={{ display: "block", height: "100%", maxHeight: "150px", marginRight: "auto", maxWidth: "100%" }} />
+                <img src={tracks.find(({ name }) => props.track.indexOf(name) >= 0).logo} style={{ display: "block", height: "100%", maxHeight: "150px", margin: "0 auto", maxWidth: "100%" }} />
               </div>
             </div>
     
@@ -135,7 +135,7 @@ export async function getStaticProps({ params }) {
       const driver = drivers.items.find(driver => driver.sys.id === result.id);
       return { ...result, driver };
     }));
-  return { props: { ...entry.fields }};
+  return { props: { league: league.fields, ...entry.fields }};
 };
 
 function renderImage(image) {

@@ -56,7 +56,7 @@ export default function Schedule(props) {
                       <td>{moment(race.date).format('MMM D, YYYY')}</td>
                 			<td>
                         { race.raceId 
-                            ? <a href={`/race/${race.raceId}.html`}>{race.name}</a>
+                            ? <a href={`/race/${race.raceId}/`}>{race.name}</a>
                             : race.name
                         }
                       </td>
@@ -82,7 +82,7 @@ export default function Schedule(props) {
         		  <tbody>
           			{ props.seasons.map(season => (
               		  <tr key={season.id}>
-                      <td><a href={`/schedule/${season.id}.html`}>{season.name}</a></td>
+                      <td><a href={`/schedule/${season.id}/`}>{season.name}</a></td>
                 			<td>
                         <DriverChip {...season.standings[0].driver}/>
                       </td>

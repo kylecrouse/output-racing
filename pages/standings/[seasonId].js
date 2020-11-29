@@ -87,7 +87,7 @@ export default function Schedule(props) {
         		  <tbody>
           			{ props.seasons.map(season => (
               		  <tr key={season.id}>
-                      <td><a href={`/schedule/${season.id}.html`}>{season.name}</a></td>
+                      <td><a href={`/schedule/${season.id}/`}>{season.name}</a></td>
                 			<td>
                         <DriverChip {...season.standings[0].driver}/>
                       </td>

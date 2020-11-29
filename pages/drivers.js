@@ -69,7 +69,7 @@ export default function Drivers(props) {
                       }
                     </td>
                     <td className="name">
-                      <a href={`/driver/${sys.id}.html`}>{props.nickname || props.name}</a>
+                      <a href={`/driver/${sys.id}/`}>{props.nickname || props.name}</a>
                     </td>
                     <td>{props.leagueStats.starts || 0}</td>
                     <td>{props.leagueStats.wins || 0} <span>({props.leagueStats.winPercentage || 0})</span></td>

@@ -119,7 +119,7 @@ export default function Home(props) {
                                   }
                                 </td>
                                 <td>
-                                  <a href={`/driver/${driver.driver.sys.id}.html`} style={{ whiteSpace: "nowrap" }}>
+                                  <a href={`/driver/${driver.driver.sys.id}/`} style={{ whiteSpace: "nowrap" }}>
                                     { driver.driver.fields.numberArt &&
                                       <div style={{ display: "inline-block", marginRight: "6px", width: "22px", height: "22px", position: "relative", top: "6px", marginTop: "-6px" }}>
                                         <img src={ driver.driver.fields.numberArt.fields.file.url } style={{ width: "100%" }} />
