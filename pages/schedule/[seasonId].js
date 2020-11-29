@@ -14,11 +14,11 @@ export default function Schedule(props) {
   return (
 	  <div>
   	  <Head>
-    		<title>Output Racing | {props.name}</title>
+    		<title>{props.league.name} | {props.name}</title>
     		<link rel="icon" href="/favicon.ico" />
   	  </Head>
 
-      <Navbar/>
+      <Navbar seasonId={props.league.activeSeason.sys.id}/>
       
 	    <main className="container">
 	  	  <div className="columns">

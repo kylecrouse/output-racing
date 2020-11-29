@@ -12,11 +12,11 @@ export default function Drivers(props) {
   return (
 	<div>
 	  <Head>
-  		<title>Output Racing | Drivers</title>
+  		<title>{props.league.name} | Drivers</title>
   		<link rel="icon" href="/favicon.ico" />
 	  </Head>
 
-    <Navbar/>
+    <Navbar seasonId={props.league.activeSeason.sys.id}/>
     
     <main className="container">
   	  <div className="columns">
@@ -94,6 +94,7 @@ export async function getStaticProps() {
   const league = await client.getEntry(leagueId);
   const entries = await client.getEntries({ content_type: "driver", limit: 500 });
   return { props: {
+    league: league.fields,
     drivers: entries.items
       .filter(({ fields }) => fields.active)
       .sort((a, b) => parseInt(a.fields.number, 10) - parseInt(b.fields.number, 10))

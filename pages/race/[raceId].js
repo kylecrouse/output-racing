@@ -4,7 +4,7 @@ import moment from 'moment'
 import Navbar from '../../components/Navbar'
 import Video from '../../components/Video'
 import DriverChip from '../../components/DriverChip'
-import { tracks } from '../../constants'
+import { leagueId, tracks } from '../../constants'
 
 const client = createClient({
   space: '38idy44jf6uy',
@@ -16,11 +16,11 @@ export default function Race(props) {
   return (
   	<div>
   	  <Head>
-    		<title>Output Racing | {props.name}</title>
+    		<title>{props.league.name} | {props.name}</title>
     		<link rel="icon" href="/favicon.ico" />
   	  </Head>
     
-      <Navbar/>
+      <Navbar seasonId={props.league.activeSeason.sys.id}/>
       
       <style jsx>{`
         ul {
@@ -126,6 +126,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
+  const league = await client.getEntry(leagueId);
   const entry = await client.getEntry(params.raceId);
   const drivers = await client.getEntries({ content_type: "driver", limit: 500 });
   entry.fields.results = await Promise.all(entry.fields.results

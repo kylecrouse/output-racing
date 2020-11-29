@@ -5,6 +5,7 @@ import moment from 'moment';
 import Navbar from '../components/Navbar';
 import Video from '../components/Video';
 import DriverChip from '../components/DriverChip';
+import { leagueId } from '../constants';
 
 const client = createClient({
   space: '38idy44jf6uy',
@@ -15,11 +16,11 @@ export default function Home(props) {
   return (
     <div>
       <Head>
-        <title>Output Racing</title>
+        <title>{props.league.name}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Navbar/>
+      <Navbar seasonId={props.league.activeSeason.sys.id}/>
       
       <div className="container">
         
@@ -150,22 +151,28 @@ export default function Home(props) {
 }
 
 export async function getStaticProps() {
-  const entries = await client.getEntries({ content_type: "season", include: 1, limit: 1 });
+  const leagues = await client.getEntries({ 
+    content_type: 'league', 
+    'sys.id': leagueId, 
+    include: 2 
+  });
+  const season = leagues.items[0].fields.activeSeason;
+  console.log(season);
   const drivers = await client.getEntries({ content_type: "driver", limit: 500 });
   
-  let nextRace = entries.items[0].fields.schedule
+  let nextRace = season.fields.schedule
     .filter(race => !race.offWeek && !race.uploaded && moment().isSameOrBefore(race.date, 'day'))
     .sort((a,b) => moment(a.date).diff(b.date))
     .shift();
     
-  let lastRace = entries.items[0].fields.schedule
+  let lastRace = season.fields.schedule
     .filter(race => !race.offWeek && race.uploaded && moment().isSameOrAfter(race.date, 'day'))
     .sort((a,b) => moment(a.date).diff(b.date))
     .pop();
   if (lastRace) {
     lastRace = { 
       ...lastRace, 
-      ...entries.includes.Entry.find(entry => entry.sys.id === lastRace.raceId).fields
+      ...season.fields.results.find(entry => entry.sys.id === lastRace.raceId).fields
     };
     lastRace.results = lastRace.results
       .sort((a,b) => a.finish - b.finish)
@@ -173,14 +180,15 @@ export async function getStaticProps() {
       .splice(0,5);
   }
     
-  const standings = entries.items[0].fields.standings
+  const standings = season.fields.standings
     .splice(0,10)
     .map(record => ({ ...record, driver: drivers.items.find(driver => driver.fields.name === record.driver) }))
 
   return { props: { 
+    league: leagues.items[0].fields,
     standings, 
     nextRace: nextRace 
-      ? Object.assign({}, nextRace, entries.includes.Entry.find(entry => entry.sys.id === nextRace.raceId).fields) 
+      ? Object.assign({}, nextRace, season.fields.results.find(entry => entry.sys.id === nextRace.raceId).fields) 
       : null, 
     lastRace: lastRace || null,
     drivers: drivers.items

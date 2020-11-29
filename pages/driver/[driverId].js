@@ -14,11 +14,11 @@ export default function Driver(props) {
   return (
   	<div>
   	  <Head>
-    		<title>Output Racing | {props.nickname || props.name}</title>
+    		<title>{props.league.name} | {props.nickname || props.name}</title>
     		<link rel="icon" href="/favicon.ico" />
   	  </Head>
       
-      <Navbar/>
+      <Navbar seasonId={props.league.activeSeason.sys.id}/>
       
       <style jsx>{`
         th {
