@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import { createClient } from 'contentful'
 import Navbar from '../components/Navbar'
+import { leagueId } from '../constants'
 
 const client = createClient({
   space: '38idy44jf6uy',
@@ -90,9 +91,8 @@ export default function Drivers(props) {
 }
 
 export async function getStaticProps() {
+  const league = await client.getEntry(leagueId);
   const entries = await client.getEntries({ content_type: "driver", limit: 500 });
-  // TODO: Convert to full league status
-  const season = await client.getEntry(10398);
   return { props: {
     drivers: entries.items
       .filter(({ fields }) => fields.active)
@@ -101,7 +101,7 @@ export async function getStaticProps() {
         sys, 
         fields: { 
           ...fields, 
-          leagueStats: season.fields.stats.find(({ driver }) => driver === fields.name) || {}
+          leagueStats: league.fields.stats.find(({ driver }) => driver === fields.name) || {}
         }
       }))
   }};

@@ -13,8 +13,8 @@ export default function Navbar(props) {
             </section>
             <section className="navbar-section">
               <a href="/drivers.html" className={`btn btn-link ${styles.navItem}`}>Drivers</a>
-              <a href="/schedule/10398.html" className={`btn btn-link ${styles.navItem}`}>Schedule</a>
-              <a href="/standings/10398.html" className={`btn btn-link ${styles.navItem}`}>Standings</a>
+              <a href={`/schedule/${props.seasonId}.html`} className={`btn btn-link ${styles.navItem}`}>Schedule</a>
+              <a href={`/standings/${props.seasonId}.html`} className={`btn btn-link ${styles.navItem}`}>Standings</a>
             </section>
           </div>
         </div>

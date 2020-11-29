@@ -2,6 +2,7 @@ import Head from 'next/head'
 import { createClient } from 'contentful'
 import moment from 'moment';
 import Navbar from '../../components/Navbar';
+import { leagueId } from '../../constants'
 
 const client = createClient({
   space: '38idy44jf6uy',
@@ -189,10 +190,14 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
+  const leagues = await client.getEntries({ 
+    content_type: 'league', 
+    'sys.id': leagueId, 
+    include: 2 
+  });
   const entry = await client.getEntry(params.driverId);
-  const seasons = await client.getEntries({ content_type: "season" });
-  const league = await client.getEntry(1710);
-  const seasonStats = seasons.items
+  const seasons = leagues.items[0].fields.seasons;
+  const seasonStats = seasons
     .filter(({ fields }) => fields.stats.find(({ driver }) => driver === entry.fields.name))
     .sort((a, b) => moment(b.fields.schedule[0].date).diff(a.fields.schedule[0].date))
     .map(({ fields }) => {
@@ -201,6 +206,11 @@ export async function getStaticProps({ params }) {
         ...fields.stats.find(({ driver }) => driver === entry.fields.name)
       }
     });
-  const leagueStats = league.fields.stats.find(({ driver }) => driver === entry.fields.name);
-  return { props: { ...entry.fields, league: league.fields, seasonStats, leagueStats }};
+  const leagueStats = leagues.items[0].fields.stats.find(({ driver }) => driver === entry.fields.name);
+  return { props: { 
+    ...entry.fields, 
+    league: leagues.items[0].fields, 
+    seasonStats, 
+    leagueStats 
+  }};
 };

@@ -3,6 +3,7 @@ import { createClient } from 'contentful'
 import moment from 'moment';
 import Navbar from '../../components/Navbar'
 import DriverChip from '../../components/DriverChip'
+import { leagueId } from '../../constants'
 
 const client = createClient({
   space: '38idy44jf6uy',
@@ -13,11 +14,11 @@ export default function Schedule(props) {
   return (
   	<div>
   	  <Head>
-    		<title>Output Racing | Standings</title>
+    		<title>{props.league.name} | Standings</title>
     		<link rel="icon" href="/favicon.ico" />
   	  </Head>
 
-      <Navbar/>
+      <Navbar seasonId={props.league.activeSeason.sys.id}/>
 	    
       <main className="container">
 	  	  <div className="columns">
@@ -46,7 +47,7 @@ export default function Schedule(props) {
                 { props.standings &&
                     props.standings
                       .map((driver, index) => (
-                        <tr style={{opacity: driver.driver.fields.active ? 1 : 0.3}}>
+                        <tr key={index} style={{opacity: driver.driver.fields.active ? 1 : 0.3}}>
                           <td><b>{index + 1}</b></td>
                           <td>
                           { parseInt(driver.change, 10) > 0
@@ -120,17 +121,19 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const seasons = await client.getEntries({ content_type: 'season' });
-  const season = await client.getEntry(params.seasonId);
+  const league = await client.getEntry(leagueId);
+  const seasons = league.fields.seasons;
+  const season = seasons.find(season => season.sys.id === params.seasonId);
   const drivers = await client.getEntries({ content_type: "driver", limit: 500 });
-  return { props: { 
+  return { props: {
+    league: league.fields,
     name: season.fields.name,
     standings: season.fields.standings
       .map(record => {
         return { ...record, driver: drivers.items.find(driver => driver.fields.name === record.driver) };
       })
       .filter(record => record.driver !== undefined),
-    seasons: seasons.items
+    seasons: seasons
       .filter(season => season.sys.id !== params.seasonId)
       .sort((a, b) => moment(b.fields.schedule[0].date).diff(a.fields.schedule[0].date))
       .map(season => ({

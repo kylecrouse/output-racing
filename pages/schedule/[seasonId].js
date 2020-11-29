@@ -3,7 +3,7 @@ import { createClient } from 'contentful'
 import moment from 'moment';
 import Navbar from '../../components/Navbar'
 import DriverChip from '../../components/DriverChip'
-import { cars } from '../../constants'
+import { leagueId, cars } from '../../constants'
 
 const client = createClient({
   space: '38idy44jf6uy',
@@ -116,18 +116,23 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const seasons = await client.getEntries({ content_type: 'season' });
-  const season = seasons.items.find(season => season.sys.id === params.seasonId);
-  const races = await client.getEntries({ content_type: "race", limit: 500 });
+  const leagues = await client.getEntries({ 
+    content_type: 'league', 
+    'sys.id': leagueId, 
+    include: 2 
+  });
+  const seasons = leagues.items[0].fields.seasons;
+  const season = seasons.find(season => season.sys.id === params.seasonId);
   const drivers = await client.getEntries({ content_type: "driver", limit: 500 });
   return { props: { 
+    league: leagues.items[0].fields,
     ...season.fields,
     schedule: season.fields.schedule.map((schedule) => {
-      const race = races.items.find(({ sys }) => sys.id === schedule.raceId);
+      const race = season.fields.results.find(({ sys }) => sys.id === schedule.raceId);
       return race ? { ...schedule, ...race.fields } : schedule;
     }), 
     drivers: drivers.items,
-    seasons: seasons.items
+    seasons: seasons
       .filter(season => season.sys.id !== params.seasonId)
       .sort((a, b) => moment(b.fields.schedule[0].date).diff(a.fields.schedule[0].date))
       .map(season => ({

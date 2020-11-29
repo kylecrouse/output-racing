@@ -127,10 +127,11 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const entry = await client.getEntry(params.raceId);
+  const drivers = await client.getEntries({ content_type: "driver", limit: 500 });
   entry.fields.results = await Promise.all(entry.fields.results
     .filter(result => result.id)
-    .map(async (result) => {
-      const driver = await client.getEntry(result.id);
+    .map(result => {
+      const driver = drivers.items.find(driver => driver.sys.id === result.id);
       return { ...result, driver };
     }));
   return { props: { ...entry.fields }};

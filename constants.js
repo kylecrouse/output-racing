@@ -1,4 +1,5 @@
 module.exports = {
+  leagueId: 1710,
   cars: [
     { id: 45,
       name: '[Legacy] NASCAR Cup Chevrolet SS - 2013',
