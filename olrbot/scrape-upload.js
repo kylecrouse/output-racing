@@ -31,7 +31,11 @@ const client = contentful.createClient({
 		.pop();
 
 	console.log('🏎 Connecting to iRacing...');
-	const browser = await puppeteer.launch();
+	const browser = await puppeteer.launch({ 
+		executablePath: '/usr/bin/google-chrome-stable', 
+		headless: true, 
+		args: ['--no-sandbox', '--disable-setuid-sandbox']
+	});
 	const page = await browser.newPage();
 	await page.goto('https://members.iracing.com/membersite/login.jsp');
 	

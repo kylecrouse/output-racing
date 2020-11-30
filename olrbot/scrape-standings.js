@@ -15,7 +15,11 @@ const seasonId = process.argv[2];
 	const environment = await space.getEnvironment(process.env.CONTENTFUL_ENVIRONMENT_ID);
   const drivers = await environment.getEntries({ content_type: "driver", limit: 500 });
   
-  const browser = await puppeteer.launch();
+	const browser = await puppeteer.launch({ 
+		executablePath: '/usr/bin/google-chrome-stable', 
+		headless: true, 
+		args: ['--no-sandbox', '--disable-setuid-sandbox']
+	});
   const page = await browser.newPage();
   
   console.log(`${chalk.bold('Loading')} standings for season ID ${chalk.magenta(seasonId)}...`);
