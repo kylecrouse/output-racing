@@ -1,3 +1,4 @@
+const http = require('http');
 const Discord = require('discord.js');
 const discord = new Discord.Client();
 const contentful = require('contentful-management');
@@ -249,3 +250,31 @@ async function deploy() {
   await exec('yarn export');
   return s3.uploadDirectory({ path: './out' });
 }
+
+const server = http.createServer((req, res) => {
+  if (req.method === 'POST') {
+    var body = '';
+
+    req.on('data', (chunk) => { body += chunk; });
+
+    req.on('end', function() {
+      if (req.url === '/') {
+        // log('Received message: ' + body);
+      } else if (req.url = '/scheduled') {
+        // log('Received task ' + req.headers['x-aws-sqsd-taskname'] + ' scheduled at ' + req.headers['x-aws-sqsd-scheduled-at']);
+      }
+
+      res.writeHead(200, 'OK', {'Content-Type': 'text/plain'});
+      res.end();
+    });
+  } else {
+    res.writeHead(200, 'OK', {'Content-Type': 'text/plain'});
+    res.end();
+  }
+});
+
+const port = process.env.PORT || 3000;
+// Listen on port 3000, IP defaults to 127.0.0.1
+server.listen(port);
+// Put a friendly message on the terminal
+console.log('Health check server running at http://127.0.0.1:' + port + '/');
