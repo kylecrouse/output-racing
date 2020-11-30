@@ -4,8 +4,8 @@ import Navbar from '../components/Navbar'
 import { leagueId } from '../constants'
 
 const client = createClient({
-  space: '38idy44jf6uy',
-  accessToken: 'hnJokTLzykmhsacKuzCdXre6Uf0LHDTMQ418DC2oZEc'
+  space: process.env.CONTENTFUL_SPACE_ID,
+  accessToken: process.env.CONTENTFUL_WEB_ACCESS_TOKEN
 })
 
 export default function Drivers(props) {
@@ -69,7 +69,7 @@ export default function Drivers(props) {
                       }
                     </td>
                     <td className="name">
-                      <a href={`/driver/${sys.id}/`}>{props.nickname || props.name}</a>
+                      <a href={`/driver/${props.name.replace(/\s/g, '-').toLowerCase()}/`}>{props.nickname || props.name}</a>
                     </td>
                     <td>{props.leagueStats.starts || 0}</td>
                     <td>{props.leagueStats.wins || 0} <span>({props.leagueStats.winPercentage || 0})</span></td>

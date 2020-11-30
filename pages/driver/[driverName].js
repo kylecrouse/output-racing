@@ -5,9 +5,9 @@ import Navbar from '../../components/Navbar';
 import { leagueId } from '../../constants'
 
 const client = createClient({
-  space: '38idy44jf6uy',
-  environment: 'master',
-  accessToken: 'hnJokTLzykmhsacKuzCdXre6Uf0LHDTMQ418DC2oZEc'
+  space: process.env.CONTENTFUL_SPACE_ID,
+  environment: process.env.CONTENTFUL_ENVIRONMENT_ID,
+  accessToken: process.env.CONTENTFUL_WEB_ACCESS_TOKEN
 })
 
 export default function Driver(props) {
@@ -33,11 +33,11 @@ export default function Driver(props) {
           <div className="col-8 col-mx-auto">
 
             <div className="columns" style={{ display: "flex", alignItems: "center" }}>
-              { props.numberArt &&
-                  <div className="column col-6">
+              <div className="column col-6">
+                { props.numberArt &&
                     <img src={ props.numberArt.fields.file.url } style={{ display: "block", width: "200px", margin: "0 20px 0 auto" }}/>
-                  </div>
-              }
+                }
+              </div>
               <div className="column col-6 col-mx-auto">
                 <h2>{props.nickname || props.name}</h2>
                 { props.license &&
@@ -129,47 +129,50 @@ export default function Driver(props) {
               </>
             }
             
-            <h4 className="text-center" style={{ margin: "3rem 0 -.5rem" }}>{props.league.name} Season Stats</h4>
-            { props.seasonStats &&
-                props.seasonStats.map((season, index) => (
-                  <div key={`stats${index}`}>
-                    <h6 className="text-center" style={{ margin: "2rem 0 1.5rem" }}>{season.name}</h6>
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Starts</th>
-                          <th>Wins</th>
-                          <th>Top 5s</th>
-                          <th>Poles</th>
-                          <th>Avg Start</th>
-                          <th>Avg Finish</th>
-                          <th>Total Laps</th>
-                          <th>Laps Led</th>
-                          <th>Inc/Race</th>
-                          <th>Win %</th>
-                          <th>Top 5 %</th>
-                          <th>Led %</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>{season.starts}</td>
-                          <td>{season.wins}</td>
-                          <td>{season.top5s}</td>
-                          <td>{season.poles}</td>
-                          <td>{season.avgStart}</td>
-                          <td>{season.avgFinish}</td>
-                          <td>{season.laps}</td>
-                          <td>{season.lapsLed}</td>
-                          <td>{season.incidentsRace}</td>
-                          <td>{season.winPercentage}</td>
-                          <td>{season.top5Percentage}</td>
-                          <td>{((parseInt(season.lapsLed) / parseInt((season.laps || '0').replace(',',''))) * 100).toFixed(0)}%</td>
-                        </tr>
-                      </tbody>
-                    </table>            
-                  </div>
-                ))
+            { props.seasonStats.length > 0 &&
+                <>
+                  <h4 className="text-center" style={{ margin: "3rem 0 -.5rem" }}>{props.league.name} Season Stats</h4>
+                  { props.seasonStats.map((season, index) => (
+                      <div key={`stats${index}`}>
+                        <h6 className="text-center" style={{ margin: "2rem 0 1.5rem" }}>{season.name}</h6>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Starts</th>
+                              <th>Wins</th>
+                              <th>Top 5s</th>
+                              <th>Poles</th>
+                              <th>Avg Start</th>
+                              <th>Avg Finish</th>
+                              <th>Total Laps</th>
+                              <th>Laps Led</th>
+                              <th>Inc/Race</th>
+                              <th>Win %</th>
+                              <th>Top 5 %</th>
+                              <th>Led %</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>{season.starts}</td>
+                              <td>{season.wins}</td>
+                              <td>{season.top5s}</td>
+                              <td>{season.poles}</td>
+                              <td>{season.avgStart}</td>
+                              <td>{season.avgFinish}</td>
+                              <td>{season.laps}</td>
+                              <td>{season.lapsLed}</td>
+                              <td>{season.incidentsRace}</td>
+                              <td>{season.winPercentage}</td>
+                              <td>{season.top5Percentage}</td>
+                              <td>{((parseInt(season.lapsLed) / parseInt((season.laps || '0').replace(',',''))) * 100).toFixed(0)}%</td>
+                            </tr>
+                          </tbody>
+                        </table>            
+                      </div>
+                    ))
+                  }
+                </>
             }
         
           </div>
@@ -182,11 +185,17 @@ export default function Driver(props) {
 }
 
 export async function getStaticPaths() {
-  const entries = await client.getEntries({ content_type: 'driver', limit: 500 });
+  const entries = await client.getEntries({ 
+    content_type: 'driver', 
+    'fields.active': true, 
+    limit: 500 
+  });
   return {
-    paths: entries.items.map(entry => ({ params: { 
-      driverName: entry.fields.name.replace(/\s/g, '-').toLowerCase()
-    }})),
+    paths: entries.items
+      .filter(entry => entry.fields.active)
+      .map(entry => ({ params: { 
+        driverName: entry.fields.name.replace(/\s/g, '-').toLowerCase()
+      }})),
     fallback: false,
   }
 }
@@ -216,6 +225,6 @@ export async function getStaticProps({ params }) {
     ...entry.items[0].fields, 
     league: leagues.items[0].fields, 
     seasonStats, 
-    leagueStats 
+    leagueStats: leagueStats || null
   }};
 };

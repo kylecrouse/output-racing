@@ -4,14 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "babel-node ./build/scrape-drivers.js && next build && next export",
-    "race": "babel-node ./build/scrape-results.js",
-    "season": "babel-node ./build/scrape-season.js",
-    "standings": "babel-node ./build/scrape-standings.js",
-    "stats": "babel-node ./build/scrape-stats.js",
-    "drivers": "babel-node ./build/scrape-drivers.js",
-    "export": "next build && next export",
-    "start": "next start"
+    "build": "next build && next export",
+    "server": "next start",
+    "start": "node ./olrbot/index.js",
+    "race": "babel-node ./olrbot/scrape-results.js",
+    "season": "babel-node ./olrbot/scrape-season.js",
+    "standings": "babel-node ./olrbot/scrape-standings.js",
+    "stats": "babel-node ./olrbot/scrape-stats.js",
+    "drivers": "babel-node ./olrbot/scrape-drivers.js",
+    "upload": "babel-node ./olrbot/scrape-upload.js"
   },
   "dependencies": {
     "contentful": "^7.14.13",
@@ -21,9 +22,7 @@
     "next": "10.0.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "spectre.css": "^0.5.9"
-  },
-  "devDependencies": {
+    "spectre.css": "^0.5.9",
     "@babel/core": "^7.12.3",
     "@babel/node": "^7.12.6",
     "aws-sdk": "^2.799.0",

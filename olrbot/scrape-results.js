@@ -14,8 +14,8 @@ const client = contentful.createClient({
 const raceId = process.argv[2];
 
 (async () => {
-  const space = await client.getSpace('38idy44jf6uy');
-  const environment = await space.getEnvironment('master');
+	const space = await client.getSpace(process.env.CONTENTFUL_SPACE_ID);
+	const environment = await space.getEnvironment(process.env.CONTENTFUL_ENVIRONMENT_ID);
   const drivers = await environment.getEntries({ content_type: "driver", limit: 500 });
   
   const browser = await puppeteer.launch();

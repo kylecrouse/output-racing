@@ -7,9 +7,9 @@ import DriverChip from '../../components/DriverChip'
 import { leagueId, tracks } from '../../constants'
 
 const client = createClient({
-  space: '38idy44jf6uy',
-  environment: 'master',
-  accessToken: 'hnJokTLzykmhsacKuzCdXre6Uf0LHDTMQ418DC2oZEc'
+  space: process.env.CONTENTFUL_SPACE_ID,
+  environment: process.env.CONTENTFUL_ENVIRONMENT_ID,
+  accessToken: process.env.CONTENTFUL_WEB_ACCESS_TOKEN
 })
 
 export default function Race(props) {

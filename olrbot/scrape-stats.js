@@ -1,15 +1,14 @@
 const puppeteer = require('puppeteer');
 const contentful = require('contentful-management');
 const chalk = require('chalk');
-const Logger = require('./Logger');
 
 const client = contentful.createClient({
   accessToken: process.env.CONTENTFUL_ACCESS_TOKEN
 });
 
 (async () => {
-  const space = await client.getSpace('38idy44jf6uy');
-  const environment = await space.getEnvironment('master');
+	const space = await client.getSpace(process.env.CONTENTFUL_SPACE_ID);
+	const environment = await space.getEnvironment(process.env.CONTENTFUL_ENVIRONMENT_ID);
   const drivers = await environment.getEntries({ content_type: "driver", limit: 500 });
   
   const browser = await puppeteer.launch();

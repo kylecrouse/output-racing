@@ -16,8 +16,8 @@ const client = contentful.createClient({
 const seasonId = process.argv[2];
 
 (async () => {
-  const space = await client.getSpace('38idy44jf6uy');
-  const environment = await space.getEnvironment('master');
+	const space = await client.getSpace(process.env.CONTENTFUL_SPACE_ID);
+	const environment = await space.getEnvironment(process.env.CONTENTFUL_ENVIRONMENT_ID);
   const drivers = await environment.getEntries({ content_type: "driver", limit: 500 });
   
   const browser = await puppeteer.launch();
@@ -49,6 +49,11 @@ const seasonId = process.argv[2];
     cells => cells.map(cell => cell.href.split('=').pop())
   );
   
+  const scheduleIds = await page.$$eval(
+    '#sched_table tr[id^=sch_]', 
+    cells => cells.map(cell => cell.id.replace(/sch_/, ''))
+  );
+  
   // TODO: build an error handler for non-200 responses
   await page.goto(`http://www.danlisa.com/scoring/season_schedule_export.php?season_id=${seasonId}`);
 
@@ -75,6 +80,7 @@ const seasonId = process.argv[2];
       from_line: 4,
       on_record: (record, context) => ({
         raceNo: record['Race #'],
+        scheduleId: scheduleIds.shift(),
         date: new Date(record['Race Date']),
         offWeek: record['Off Week'] === 'Yes',
         uploaded: record['Results Uploaded'] === 'Yes',

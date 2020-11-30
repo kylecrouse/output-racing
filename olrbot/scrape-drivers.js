@@ -12,8 +12,8 @@ const client = contentful.createClient({
 });
 
 (async () => {
-	const space = await client.getSpace('38idy44jf6uy');
-	const environment = await space.getEnvironment('master');
+	const space = await client.getSpace(process.env.CONTENTFUL_SPACE_ID);
+	const environment = await space.getEnvironment(process.env.CONTENTFUL_ENVIRONMENT_ID);
 	const entries = await environment.getEntries({ content_type: "driver", limit: 500 });
 	
 	console.log('🏎 Connecting to iRacing...');

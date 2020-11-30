@@ -6,13 +6,11 @@ const fetch = require('node-fetch');
 const moment = require('moment');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-const s3 = require('./build/s3');
+const s3 = require('./s3');
 
 const discordToken = process.env.DISCORD_ACCESS_TOKEN;
 
-const cms = contentful.createClient({
-  accessToken: process.env.CONTENTFUL_ACCESS_TOKEN
-});
+const cms = contentful.createClient({ accessToken: process.env.CONTENTFUL_ACCESS_TOKEN });
   
 discord.on('ready', () => {
   console.log(`Logged in as ${discord.user.tag}!`);
@@ -71,6 +69,15 @@ discord.on('message', async (message) => {
         await mapEmbedsToEntries(message.content, message.embeds);
         didUpdateEntries = true;
       } 
+      
+      // Handle upload actions
+      if (message.content.indexOf('!upload') >= 0) {
+        //TODO: Parse for hashtags to allow specific races, but for now
+        //      treat everything as "#latest"
+        console.log("Uploading latest race results...");
+        await uploadLatestResults();
+        didUpdateEntries = true;
+      }
 
       // If something got updated, build & deploy
       if (didUpdateEntries) {
@@ -98,7 +105,7 @@ async function mapAttachmentsToEntries(content, attachments) {
   const assets = await uploadAttachments(attachments); 
   return mapFieldsToEntries(
     content, 
-    { media: assets.map(asset => localize(link(asset.sys.id))) }
+    { media: { 'en-US': assets.map(asset => link(asset.sys.id))  }}
   );
 }
 
@@ -150,8 +157,8 @@ async function uploadAttachments(attachments) {
 }
 
 async function uploadFile(attachment) {
-  const space = await cms.getSpace('38idy44jf6uy');
-  const environment = await space.getEnvironment('master');
+	const space = await cms.getSpace(process.env.CONTENTFUL_SPACE_ID);
+	const environment = await space.getEnvironment(process.env.CONTENTFUL_ENVIRONMENT_ID);
   const asset = await environment.createAssetFromFiles({
     fields: {
       title: { 'en-US': attachment.name },
@@ -168,8 +175,8 @@ async function uploadFile(attachment) {
 }
 
 async function getEntries(params) {
-  const space = await cms.getSpace('38idy44jf6uy');
-  const environment = await space.getEnvironment('master');
+	const space = await cms.getSpace(process.env.CONTENTFUL_SPACE_ID);
+	const environment = await space.getEnvironment(process.env.CONTENTFUL_ENVIRONMENT_ID);
   return await environment.getEntries(params);
 }
 
@@ -177,11 +184,12 @@ function updateEntry(entry, fields) {
   // Loop through provided fields
   for (const [key, val] of Object.entries(fields)) {
     // If the field is an existing array, merge them together
-    if (fieldIsArray(entry, key)) mergeArrayFields(entry, key, val);
+    if (fieldIsArray(entry, key)) entry.fields[key] = mergeArrayFields(entry, key, val);
     // Otherwise set the field to the new value
     else entry.fields[key] = val;
   }
   // Update and publish the entry
+  console.log(entry.fields);
   return entry.update().then(entry => entry.publish());
 }
 
@@ -194,11 +202,11 @@ function fieldIsArray(entry, key) {
 }
 
 function mergeArrayFields(entry, field, value) {
-  return entry.fields[field] = localize(entry.fields[field]['en-US'].concat(value['en-US']));
+  return localize(entry.fields[field]['en-US'].concat(value['en-US']));
 }
 
 async function getLastRace() {
-  const entries = await getEntries({ content_type: 'race' });
+  const entries = await getEntries({ content_type: 'race', limit: 500 });
   const races = entries.items
     .filter(race => moment().isSameOrAfter(race.fields.date['en-US'], 'day'))
     .sort((a, b) => moment(a.fields.date['en-US']).diff(b.fields.date['en-US']));
@@ -206,7 +214,7 @@ async function getLastRace() {
 }
 
 async function getEntryByTrackName(query) {
-  const entries = await getEntries({ content_type: 'race' });
+  const entries = await getEntries({ content_type: 'race', limit: 500 });
   const races = entries.items
     .filter(race => moment().isSameOrAfter(race.fields.date['en-US'], 'day') && race.fields.track['en-US'].indexOf(query) >= 0)
     .sort((a, b) => moment(a.fields.date['en-US']).diff(b.fields.date['en-US']));
@@ -217,6 +225,10 @@ function getHashtags(message) {
   return message.split(' ')
     .filter(text => text.substr(0,1) === '#')
     .map(hashtag => hashtag.substr(1));
+}
+
+function uploadLatestResults() {
+  return exec('yarn upload');
 }
 
 function link(id) {
