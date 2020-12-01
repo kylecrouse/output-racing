@@ -8,6 +8,7 @@ const moment = require('moment');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const s3 = require('./s3');
+const puppeteer = require('puppeteer');
 
 const discordToken = process.env.DISCORD_ACCESS_TOKEN;
 
@@ -26,7 +27,7 @@ discord.on('message', async (message) => {
   
     // Don't do anything if the guild member isn't an administrator (or the dev's user)
     if (!msg.member.hasPermission('ADMINISTRATOR') && msg.member.user.id !== '697817102534311996') {
-      return msg.react('🙅‍♀️');
+      return message.react('🙅‍♀️');
     }
     
     console.log('Mention received!');
@@ -78,6 +79,15 @@ discord.on('message', async (message) => {
         console.log("Uploading latest race results...");
         await uploadLatestResults();
         didUpdateEntries = true;
+      }
+      
+      // Handle health check action
+      if (message.content.indexOf('!health') >= 0) {
+        console.log("Running puppeteer health check...");
+        const response = await puppeteerHealthCheck();
+        console.log("Done.");
+        if (response.ok()) message.react('👍');
+        else message.reply(await response.text());
       }
 
       // If something got updated, build & deploy
@@ -278,3 +288,17 @@ const port = process.env.PORT || 3000;
 server.listen(port);
 // Put a friendly message on the terminal
 console.log('Health check server running at http://127.0.0.1:' + port + '/');
+
+async function puppeteerHealthCheck() {
+	const browser = await puppeteer.launch({ 
+		executablePath: '/usr/bin/google-chrome-stable', 
+		headless: true, 
+		args: ['--no-sandbox', '--disable-setuid-sandbox']
+	});
+	const page = await browser.newPage();
+	const [response] = await Promise.all([
+		page.waitForResponse(response => response.ok()),
+		page.goto(`http://127.0.0.1:${port}/`)
+	])
+	return response;
+}
