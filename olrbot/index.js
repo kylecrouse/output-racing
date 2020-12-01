@@ -278,9 +278,10 @@ function localize(val) {
 
 async function deploy() {
   await exec('npm run build');
-  return process.env.NODE_ENV === 'production'
-    ? exec('aws s3 sync ./out s3://output-racing/')
-    : s3.uploadDirectory({ path: './out' });
+  return exec('aws s3 sync ./out s3://output-racing/');
+  // return process.env.NODE_ENV === 'production'
+  //   ? exec('aws s3 sync ./out s3://output-racing/')
+  //   : s3.uploadDirectory({ path: './out' });
 }
 
 const server = http.createServer((req, res) => {
