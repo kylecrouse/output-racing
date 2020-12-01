@@ -23,10 +23,10 @@ discord.on('message', async (message) => {
   
   // If bot is mentioned, interpret and handle the message.
   // Ignore DMs to ensure guild permissions available
-  if (message.mentions.has(discord.user) && msg.guild) {
+  if (message.mentions.has(discord.user) && message.guild) {
   
     // Don't do anything if the guild member isn't an administrator (or the dev's user)
-    if (!msg.member.hasPermission('ADMINISTRATOR') && msg.member.user.id !== '697817102534311996') {
+    if (!message.member.hasPermission('ADMINISTRATOR') && message.member.user.id !== '697817102534311996') {
       return message.react('🙅‍♀️');
     }
     
