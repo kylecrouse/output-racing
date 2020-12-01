@@ -23,12 +23,12 @@ discord.on('message', async (message) => {
   
   // If bot is mentioned, interpret and handle the message.
   // Ignore DMs to ensure guild permissions available
-  if (!message.mentions.everyone && message.mentions.has(discord.user)/* && message.guild*/) {
+  if (!message.mentions.everyone && message.mentions.has(discord.user) && message.guild) {
   
     // Don't do anything if the guild member isn't an administrator (or the dev's user)
-    // if (!message.member.hasPermission('ADMINISTRATOR') && message.member.id !== '697817102534311996') {
-    //   return message.react('🙅‍♀️');
-    // }
+    if (!message.member.hasPermission('ADMINISTRATOR') && message.member.id !== '697817102534311996') {
+      return message.react('🙅‍♀️');
+    }
     
     console.log('Mention received!');
     
@@ -109,7 +109,7 @@ discord.on('message', async (message) => {
           // Find driver matching current car number
           const drivers = await getEntries({ content_type: 'driver', 'fields.number[match]': number });
           // Set discordId for matched driver
-          driver.items[0].fields.discordId = { 'en-US': message.author.id };
+          driver.items[0].fields.discordId = { 'en-US': message.member.id };
           // Update record
           await driver.items[0].update().then(entry => entry.publish());          
           console.log("Done.");
@@ -155,7 +155,7 @@ function getEntryFromMessage(message) {
   for (var i = hashtags.length; i--;) {
     const hashtag = hashtags[i];
     if (hashtag === 'me') {
-      entry = getEntryByMember(message.author); 
+      entry = getEntryByMember(message.member); 
     }
     else if (hashtag === 'logo') {
       // This is a field-level hashtag. Ignore.
