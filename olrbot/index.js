@@ -107,7 +107,7 @@ discord.on('message', async (message) => {
           // Get hashtag in format #60
           const [number] = getHashtags(message.content);
           // Find driver matching current car number
-          const drivers = await getEntries({ content_type: 'driver', 'fields.number[match]': number });
+          const drivers = await getEntries({ content_type: 'driver', 'fields.number': number });
           // Set discordId for matched driver
           drivers.items[0].fields.discordId = { 'en-US': message.member.id };
           // Update record
