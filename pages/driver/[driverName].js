@@ -48,6 +48,14 @@ export default function Driver(props) {
                 }
               </div>
             </div>
+            
+            { props.media && 
+                <div style={{ marginTop: "2rem" }}>
+                  { props.media.slice(-1).map(image => renderImage(image)) }
+                </div>
+            }
+            
+
 
             { props.careerStats &&
               <>
@@ -228,3 +236,11 @@ export async function getStaticProps({ params }) {
     leagueStats: leagueStats || null
   }};
 };
+
+function renderImage(image) {
+  if (image && image.fields.file) {
+    return <img src={ image.fields.file.url } style={{ width: "100%", marginBottom: "2rem" }} />
+  } else {
+    return null
+  }
+}
