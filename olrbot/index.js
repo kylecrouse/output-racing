@@ -103,7 +103,7 @@ discord.on('message', async (message) => {
         }
         
         // Handle register actions
-        else if (message.content.indexOf('!register') >= 0) {
+        else if (message.content.indexOf('!link') >= 0) {
           // Get hashtag in format #60
           const [number] = getHashtags(message.content);
           // Find driver matching current car number
