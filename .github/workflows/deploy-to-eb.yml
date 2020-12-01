@@ -34,3 +34,7 @@ jobs:
 
       - name: Deploy new ElasticBeanstalk Application Version
         run: aws elasticbeanstalk update-environment --environment-name Orldiscordbot-env --version-label "ver-${{ github.sha }}"
+        
+      - name: Delete package from S3 bucket
+        run: aws s3 rm s3://output-racing/deploy_package.zip
+
