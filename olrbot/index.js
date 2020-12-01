@@ -109,9 +109,9 @@ discord.on('message', async (message) => {
           // Find driver matching current car number
           const drivers = await getEntries({ content_type: 'driver', 'fields.number[match]': number });
           // Set discordId for matched driver
-          driver.items[0].fields.discordId = { 'en-US': message.member.id };
+          drivers.items[0].fields.discordId = { 'en-US': message.member.id };
           // Update record
-          await driver.items[0].update().then(entry => entry.publish());          
+          await drivers.items[0].update().then(entry => entry.publish());          
           console.log("Done.");
           message.react('👍');
         }
