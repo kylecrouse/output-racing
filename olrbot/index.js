@@ -23,83 +23,90 @@ discord.on('message', async (message) => {
   
   // If bot is mentioned, interpret and handle the message.
   // Ignore DMs to ensure guild permissions available
-  if (message.mentions.has(discord.user) && message.guild) {
+  if (!message.mentions.everyone && message.mentions.has(discord.user)/* && message.guild*/) {
   
     // Don't do anything if the guild member isn't an administrator (or the dev's user)
-    if (!message.member.hasPermission('ADMINISTRATOR') && message.member.user.id !== '697817102534311996') {
-      return message.react('🙅‍♀️');
-    }
+    // if (!message.member.hasPermission('ADMINISTRATOR') && message.member.id !== '697817102534311996') {
+    //   return message.react('🙅‍♀️');
+    // }
     
     console.log('Mention received!');
     
-    // Set a flag for whether deployment is needed
-    let didUpdateEntries = false;
-  
     try {
+      
+      // Resolve entry to update
+      const entry = await getEntryFromMessage(message);
+      
+      // Handle entry-based actions
+      if (entry) {
+        
+        // Set a placeholder for new field data
+        let fields = {};
 
-      // Handle attachments on cross-posted message
-      if (message.reference) {
-        // Fetch the cross-posted message
-        const crossPost = await message.channel.messages.fetch(message.reference.messageID);
+        // Fetch cross-posted message, if present
+        const crossPost = message.reference 
+          ? await message.channel.messages.fetch(message.reference.messageID)
+          : null;
 
-        // Handle cross-posted attachments
-        if (crossPost.attachments.size > 0) {
-          console.log("Adding cross-posted attachments...");
-          await mapAttachmentsToEntries(message.content, crossPost.attachments);
-          didUpdateEntries = true;
+        // Handle attachments on message
+        if (message.attachments.size > 0 || (crossPost && crossPost.attachments.size > 0)) {
+          fields[isTagged(message.content, 'logo') ? 'logo' : 'media'] = await prepareAttachments(
+            (crossPost && crossPost.attachments) || message.attachments
+          );
+        }
+        
+        // Handle embeds on message
+        if (message.embeds.length > 0 || (crossPost && crossPost.embeds.length > 0)) {
+          fields['broadcast'] = prepareEmbeds((crossPost && crossPost.embeds) || message.embeds);
+        } 
+        
+        // If something wants to be updated, build & deploy
+        if (Object.keys(fields).length > 0) {
+          console.log("Updating content entries...");
+          await updateEntry(entry, fields);
+          
+          console.log("Building and deploying website...");
+          await deploy();
+          
+          console.log("Done.");
+          message.react('👍');
+        }
+        else throw new Error(`Couldn't resolve message: "${message.content}"`);
+        
+      }
+      
+      // Handle non entry-based actions
+      else {
+        
+        // Handle health check action
+        if (message.content.indexOf('!health') >= 0) {
+          console.log("Running puppeteer health check...");
+          const response = await puppeteerHealthCheck();
+
+          console.log("Done.");
+          if (response.ok()) message.react('👍');
+          else message.reply(await response.text());
+        }
+        
+        // Handle upload actions
+        else if (message.content.indexOf('!upload') >= 0) {
+          //TODO: Parse for hashtags to allow specific races, but for now
+          //      treat everything as "#latest"
+          console.log("Uploading latest race results...");
+          await uploadLatestResults();
+
+          console.log("Building and deploying website...");
+          await deploy();
+          
+          console.log("Done.");
+          message.react('👍');
+        }
+        
+        // Just sayin' hi!   
+        else {
+          message.react('👋');
         }
 
-        // Handle embeds on cross-posted message
-        if (crossPost.embeds.length > 0) {        
-          console.log("Adding cross-posted embeds...");
-          await mapEmbedsToEntries(message.content, crossPost.embeds);
-          didUpdateEntries = true;
-        } 
-  
-      }
-
-      // Handle attachments on message
-      if (message.attachments.size > 0) {        
-        console.log("Adding attachments...");
-        await mapAttachmentsToEntries(message.content, message.attachments);
-        didUpdateEntries = true;
-      } 
-      
-      // Handle embeds on message
-      if (message.embeds.length > 0) {        
-        console.log("Adding embeds...");
-        await mapEmbedsToEntries(message.content, message.embeds);
-        didUpdateEntries = true;
-      } 
-      
-      // Handle upload actions
-      if (message.content.indexOf('!upload') >= 0) {
-        //TODO: Parse for hashtags to allow specific races, but for now
-        //      treat everything as "#latest"
-        console.log("Uploading latest race results...");
-        await uploadLatestResults();
-        didUpdateEntries = true;
-      }
-      
-      // Handle health check action
-      if (message.content.indexOf('!health') >= 0) {
-        console.log("Running puppeteer health check...");
-        const response = await puppeteerHealthCheck();
-        console.log("Done.");
-        if (response.ok()) message.react('👍');
-        else message.reply(await response.text());
-      }
-
-      // If something got updated, build & deploy
-      if (didUpdateEntries) {
-        console.log("Building and deploying website...");
-        await deploy();
-        message.react('👍');
-        console.log("Done.");
-      }
-      // Just sayin' hi!   
-      else {
-        message.react('👋');
       }
 
     } catch(err) {
@@ -111,58 +118,53 @@ discord.on('message', async (message) => {
 
 discord.login(discordToken);
 
-async function mapAttachmentsToEntries(content, attachments) {
-  //TODO: How do we distinguish between attachment types and where they save to?
-  const assets = await uploadAttachments(attachments); 
-  return mapFieldsToEntries(
-    content, 
-    { media: { 'en-US': assets.map(asset => link(asset.sys.id))  }}
-  );
+async function prepareAttachments(attachments) {
+  console.log("Adding attachments...");
+  const assets = await uploadAttachments(attachments);
+  return assets.map(asset => linkAsset(asset.sys.id));
 }
 
-function mapEmbedsToEntries(content, embeds) {
-  return mapFieldsToEntries(
-    content,
-    { broadcast: embeds
-        // Only handle links to YouTube for now
-        .filter(({ video, url }) => video && url.match(/^https:\/\/www.youtube.com\//))
-        .map(({ url }) => localize(`https://www.youtube.com/embed/${url.match(/v=(\w+)&/)[1]}`))
-        .shift()
-    }
-  );
+function prepareEmbeds(embeds) {
+  console.log("Adding embeds...");
+  // Only handle links to YouTube for now
+  return embeds
+    .filter(({ video, url }) => video && url.match(/^https:\/\/www.youtube.com\//))
+    .map(({ url }) => localize(`https://www.youtube.com/embed/${url.match(/v=(\w+)&/)[1]}`))
+    .shift();
 }
 
-function mapFieldsToEntries(content, fields) {
-  return Promise.all(getHashtags(content).map(async (hashtag) => {
-    const entry = await getEntryForHashtag(hashtag);
-    if (entry) await updateEntry(entry, fields);
-    else throw new Error(`Couln't match ${hashtag}`);
-  }));
-}
-
-async function getEntryForHashtag(hashtag) {
+function getEntryFromMessage(message) {
+  const hashtags = getHashtags(message.content);
   let entry = null;
-  switch(hashtag) {
-    case "profile":
-      // Find user and attach to profile
-    break;
-    case "logo":
-      // Find next race and associate logo
-    break;
-    case "latest":
-      // Find latest race and associate asset
-      entry = await getLastRace();
-    break;
-    default:
-      // Query track names matching hashtag
-      entry = await getEntryByTrackName(hashtag);
-    break;
+  
+  // Resolve the entry to update
+  for (var i = hashtags.length; i--;) {
+    const hashtag = hashtags[i];
+    if (hashtag === 'me') {
+      entry = getEntryByMember(message.author); 
+    }
+    else if (hashtag === 'logo') {
+      // This is a field-level hashtag. Ignore.
+    }
+    else if (hashtag === 'latest') {
+      entry = getLastRace();
+    }
+    else {
+      entry = getEntryByTrackName(hashtag);
+    }
   }
+  
   return entry;
 }
 
+function isTagged(string, tag) {
+  const hashtags = getHashtags(string);
+  return hashtags.indexOf(tag) >= 0;
+}
+  
 async function uploadAttachments(attachments) {
   let promises = [];
+  // Use forEach->push instead of map because attachments is a Map, not an Array
   attachments.forEach(attachment => promises.push(uploadFile(attachment)));
   return await Promise.all(promises);
 }
@@ -182,25 +184,24 @@ async function uploadFile(attachment) {
       }
     }
   });
-  return await asset.processForAllLocales().then(asset => asset.publish());
+  return asset.processForAllLocales().then(asset => asset.publish());
 }
 
 async function getEntries(params) {
 	const space = await cms.getSpace(process.env.CONTENTFUL_SPACE_ID);
 	const environment = await space.getEnvironment(process.env.CONTENTFUL_ENVIRONMENT_ID);
-  return await environment.getEntries(params);
+  return environment.getEntries(params);
 }
 
 function updateEntry(entry, fields) {
   // Loop through provided fields
   for (const [key, val] of Object.entries(fields)) {
     // If the field is an existing array, merge them together
-    if (fieldIsArray(entry, key)) entry.fields[key] = mergeArrayFields(entry, key, val);
+    if (fieldIsArray(entry, key)) entry.fields[key] = { 'en-US': mergeArrayFields(entry, key, val) };
     // Otherwise set the field to the new value
-    else entry.fields[key] = val;
+    else entry.fields[key] = { 'en-US': val };
   }
   // Update and publish the entry
-  console.log(entry.fields);
   return entry.update().then(entry => entry.publish());
 }
 
@@ -213,7 +214,7 @@ function fieldIsArray(entry, key) {
 }
 
 function mergeArrayFields(entry, field, value) {
-  return localize(entry.fields[field]['en-US'].concat(value['en-US']));
+  return entry.fields[field]['en-US'].concat(value);
 }
 
 async function getLastRace() {
@@ -232,6 +233,11 @@ async function getEntryByTrackName(query) {
   return races.pop();
 }
 
+async function getEntryByMember(member) {
+  const entries = await getEntries({ content_type: 'driver', 'fields.discordId[match]': member.id });
+  return entries.items[0];
+}
+
 function getHashtags(message) {
   return message.split(' ')
     .filter(text => text.substr(0,1) === '#')
@@ -242,7 +248,7 @@ function uploadLatestResults() {
   return exec('yarn upload');
 }
 
-function link(id) {
+function linkAsset(id) {
   return { sys: { type: "Link", linkType: "Asset", id }}
 }
 
@@ -257,8 +263,10 @@ function localize(val) {
 }
 
 async function deploy() {
-  await exec('yarn export');
-  return s3.uploadDirectory({ path: './out' });
+  await exec('yarn build');
+  return process.env.NODE_ENV === 'production'
+    ? exec('aws s3 sync ./out s3://output-racing/')
+    : s3.uploadDirectory({ path: './out' });
 }
 
 const server = http.createServer((req, res) => {
@@ -283,7 +291,7 @@ const server = http.createServer((req, res) => {
   }
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 // Listen on port 3000, IP defaults to 127.0.0.1
 server.listen(port);
 // Put a friendly message on the terminal
