@@ -259,7 +259,7 @@ function getHashtags(message) {
 }
 
 function uploadLatestResults() {
-  return exec('yarn upload');
+  return exec('npm run upload');
 }
 
 function linkAsset(id) {
@@ -277,7 +277,7 @@ function localize(val) {
 }
 
 async function deploy() {
-  await exec('yarn build');
+  await exec('npm run build');
   return process.env.NODE_ENV === 'production'
     ? exec('aws s3 sync ./out s3://output-racing/')
     : s3.uploadDirectory({ path: './out' });
