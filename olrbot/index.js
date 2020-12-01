@@ -102,6 +102,20 @@ discord.on('message', async (message) => {
           message.react('👍');
         }
         
+        // Handle register actions
+        else if (message.content.indexOf('!register') >= 0) {
+          // Get hashtag in format #60
+          const [number] = getHashtags(message.content);
+          // Find driver matching current car number
+          const drivers = await getEntries({ content_type: 'driver', 'fields.number[match]': number });
+          // Set discordId for matched driver
+          driver.items[0].fields.discordId = { 'en-US': message.author.id };
+          // Update record
+          await driver.items[0].update().then(entry => entry.publish());          
+          console.log("Done.");
+          message.react('👍');
+        }
+        
         // Just sayin' hi!   
         else {
           message.react('👋');
