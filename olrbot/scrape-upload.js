@@ -4,7 +4,7 @@ const log = require('log-update');
 const chalk = require('chalk');
 const moment = require('moment');
 const { spawn } = require('child_process');
-const fs = require('fs/promises');
+const fs = require('fs').promises;
 
 const leagueId = process.env.DANLISA_LEAGUE_ID;
 
