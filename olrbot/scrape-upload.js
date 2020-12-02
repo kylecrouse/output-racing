@@ -97,7 +97,7 @@ const client = contentful.createClient({
   await Promise.all([
 		// Parse new race results
 		new Promise((resolve, reject) => {
-	    const yarn = spawn('yarn', ['race', raceId]);
+	    const yarn = spawn('npm', ['race', raceId]);
 	    yarn.stdout.on('data', (data) => { 
 	      console.log(data.toString().replace(/\r?\n|\r/g, ''));
 	    });
@@ -111,7 +111,7 @@ const client = contentful.createClient({
 	  }),	
 		// Update season standings
 		new Promise((resolve, reject) => {
-	    const yarn = spawn('yarn', ['standings', season.sys.id]);
+	    const yarn = spawn('npm', ['standings', season.sys.id]);
 	    yarn.stdout.on('data', (data) => { 
 	      console.log(data.toString().replace(/\r?\n|\r/g, ''));
 	    });
@@ -129,7 +129,7 @@ const client = contentful.createClient({
   await Promise.all([
 		// Update season stats
 	  new Promise((resolve, reject) => {
-	    const yarn = spawn('yarn', ['stats', 'season_id', season.sys.id]);
+	    const yarn = spawn('npm', ['stats', 'season_id', season.sys.id]);
 	    yarn.stdout.on('data', (data) => { 
 	      console.log(data.toString().replace(/\r?\n|\r/g, ''));
 	    });
@@ -143,7 +143,7 @@ const client = contentful.createClient({
 	  }),
 		// Update league stats
 	  new Promise((resolve, reject) => {
-	    const yarn = spawn('yarn', ['stats', 'league_id', leagueId]);
+	    const yarn = spawn('npm', ['stats', 'league_id', leagueId]);
 	    yarn.stdout.on('data', (data) => { 
 	      console.log(data.toString().replace(/\r?\n|\r/g, ''));
 	    });
