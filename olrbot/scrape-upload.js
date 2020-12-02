@@ -97,28 +97,28 @@ const client = contentful.createClient({
   await Promise.all([
 		// Parse new race results
 		new Promise((resolve, reject) => {
-	    const yarn = spawn('npm', ['race', raceId]);
-	    yarn.stdout.on('data', (data) => { 
+	    const childProcess = spawn('npm', ['race', raceId]);
+	    childProcess.stdout.on('data', (data) => { 
 	      console.log(data.toString().replace(/\r?\n|\r/g, ''));
 	    });
-	    yarn.stderr.on('data', (data) => { 
+	    childProcess.stderr.on('data', (data) => { 
 	      console.error(data.toString().replace(/\r?\n|\r/g, ''));
 	    });
-	    yarn.on('close', (code) => {
+	    childProcess.on('close', (code) => {
 				console.log('Closed race results process.');
 	      resolve();
 	    });
 	  }),	
 		// Update season standings
 		new Promise((resolve, reject) => {
-	    const yarn = spawn('npm', ['standings', season.sys.id]);
-	    yarn.stdout.on('data', (data) => { 
+	    const childProcess = spawn('npm', ['standings', season.sys.id]);
+	    childProcess.stdout.on('data', (data) => { 
 	      console.log(data.toString().replace(/\r?\n|\r/g, ''));
 	    });
-	    yarn.stderr.on('data', (data) => { 
+	    childProcess.stderr.on('data', (data) => { 
 	      console.error(data.toString().replace(/\r?\n|\r/g, ''));
 	    });
-	    yarn.on('close', (code) => {
+	    childProcess.on('close', (code) => {
 				console.log('Closed standings process.');
 	      resolve();
 	    });
@@ -129,28 +129,28 @@ const client = contentful.createClient({
   await Promise.all([
 		// Update season stats
 	  new Promise((resolve, reject) => {
-	    const yarn = spawn('npm', ['stats', 'season_id', season.sys.id]);
-	    yarn.stdout.on('data', (data) => { 
+	    const childProcess = spawn('npm', ['stats', 'season_id', season.sys.id]);
+	    childProcess.stdout.on('data', (data) => { 
 	      console.log(data.toString().replace(/\r?\n|\r/g, ''));
 	    });
-	    yarn.stderr.on('data', (data) => { 
+	    childProcess.stderr.on('data', (data) => { 
 	      console.error(data.toString().replace(/\r?\n|\r/g, ''));
 	    });
-	    yarn.on('close', (code) => {
+	    childProcess.on('close', (code) => {
 				console.log('Closed season stats process.');
 	      resolve();
 	    });
 	  }),
 		// Update league stats
 	  new Promise((resolve, reject) => {
-	    const yarn = spawn('npm', ['stats', 'league_id', leagueId]);
-	    yarn.stdout.on('data', (data) => { 
+	    const childProcess = spawn('npm', ['stats', 'league_id', leagueId]);
+	    childProcess.stdout.on('data', (data) => { 
 	      console.log(data.toString().replace(/\r?\n|\r/g, ''));
 	    });
-	    yarn.stderr.on('data', (data) => { 
+	    childProcess.stderr.on('data', (data) => { 
 	      console.error(data.toString().replace(/\r?\n|\r/g, ''));
 	    });
-	    yarn.on('close', (code) => {
+	    childProcess.on('close', (code) => {
 				console.log('Closed league stats process.');
 	      resolve();
 	    });

@@ -7,10 +7,12 @@ const fetch = require('node-fetch');
 const moment = require('moment');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-const s3 = require('./s3');
+const spawn = util.promisify(require('child_process').spawn);
+// const s3 = require('./s3');
 const puppeteer = require('puppeteer');
 
 const discordToken = process.env.DISCORD_ACCESS_TOKEN;
+const discordWebsiteChannelId = '780929708484329512';
 
 const cms = contentful.createClient({ accessToken: process.env.CONTENTFUL_ACCESS_TOKEN });
   
@@ -19,91 +21,101 @@ discord.on('ready', () => {
 });
 
 discord.on('message', async (message) => {
-  // console.log(message);
+  console.log(message);
   
   // If bot is mentioned, interpret and handle the message.
   // Ignore DMs to ensure guild permissions available
   if (!message.mentions.everyone && message.mentions.has(discord.user) && message.guild) {
   
-    // Don't do anything if the guild member isn't an administrator (or the dev's user)
-    if (!message.member.hasPermission('ADMINISTRATOR') && message.member.id !== '697817102534311996') {
-      return message.react('🙅‍♀️');
-    }
-    
     console.log('Mention received!');
     
     try {
       
-      // Resolve entry to update
-      const entry = await getEntryFromMessage(message);
-      
-      // Handle entry-based actions
-      if (entry) {
+      // Only let admins run important things
+      if (message.member.hasPermission('ADMINISTRATOR') || message.member.id === '697817102534311996') {
+    
+        // Resolve entry to update
+        const entry = await getEntryFromMessage(message);
         
-        // Set a placeholder for new field data
-        let fields = {};
-
-        // Fetch cross-posted message, if present
-        const crossPost = message.reference 
-          ? await message.channel.messages.fetch(message.reference.messageID)
-          : null;
-
-        // Handle attachments on message
-        if (message.attachments.size > 0 || (crossPost && crossPost.attachments.size > 0)) {
-          fields[isTagged(message.content, 'logo') ? 'logo' : 'media'] = await prepareAttachments(
-            (crossPost && crossPost.attachments) || message.attachments
-          );
+        // Handle entry-based actions
+        if (entry) {
+          
+          // Set a placeholder for new field data
+          let fields = {};
+  
+          // Fetch cross-posted message, if present
+          const crossPost = message.reference 
+            ? await message.channel.messages.fetch(message.reference.messageID)
+            : null;
+  
+          // Handle attachments on message
+          if (message.attachments.size > 0 || (crossPost && crossPost.attachments.size > 0)) {
+            fields[isTagged(message.content, 'logo') ? 'logo' : 'media'] = await prepareAttachments(
+              (crossPost && crossPost.attachments) || message.attachments
+            );
+          }
+          
+          // Handle embeds on message
+          if (message.embeds.length > 0 || (crossPost && crossPost.embeds.length > 0)) {
+            fields['broadcast'] = prepareEmbeds((crossPost && crossPost.embeds) || message.embeds);
+          } 
+          
+          // If something wants to be updated, build & deploy
+          if (Object.keys(fields).length > 0) {
+            console.log("Updating content entries...");
+            await updateEntry(entry, fields);
+            
+            console.log("Building and deploying website...");
+            await deploy();
+            
+            console.log("Done.");
+            message.react('👍');
+          }
+          else throw new Error(`Couldn't resolve message: "${message.content}"`);
+          
         }
         
-        // Handle embeds on message
-        if (message.embeds.length > 0 || (crossPost && crossPost.embeds.length > 0)) {
-          fields['broadcast'] = prepareEmbeds((crossPost && crossPost.embeds) || message.embeds);
-        } 
-        
-        // If something wants to be updated, build & deploy
-        if (Object.keys(fields).length > 0) {
-          console.log("Updating content entries...");
-          await updateEntry(entry, fields);
+        // Handle non entry-based actions
+        else {
           
-          console.log("Building and deploying website...");
-          await deploy();
+          // Handle health check action
+          if (message.content.indexOf('!health') >= 0) {
+            console.log("Running puppeteer health check...");
+            const response = await puppeteerHealthCheck();
+  
+            console.log("Done.");
+            if (response.ok()) message.react('👍');
+            else message.reply(await response.text());
+          }
           
-          console.log("Done.");
-          message.react('👍');
+          // Handle upload actions
+          else if (message.content.indexOf('!upload') >= 0) {
+            //TODO: Parse for hashtags to allow specific races, but for now
+            //      treat everything as "#latest"
+            console.log("Uploading latest race results...");
+            await uploadLatestResults();
+  
+            console.log("Building and deploying website...");
+            await deploy();
+            
+            console.log("Done.");
+            message.react('👍');
+          }
+                    
+          // Just sayin' hi!   
+          else {
+            message.react('👋');
+          }
+  
         }
-        else throw new Error(`Couldn't resolve message: "${message.content}"`);
         
       }
       
-      // Handle non entry-based actions
+      // Actions that anyone can run
       else {
         
-        // Handle health check action
-        if (message.content.indexOf('!health') >= 0) {
-          console.log("Running puppeteer health check...");
-          const response = await puppeteerHealthCheck();
-
-          console.log("Done.");
-          if (response.ok()) message.react('👍');
-          else message.reply(await response.text());
-        }
-        
-        // Handle upload actions
-        else if (message.content.indexOf('!upload') >= 0) {
-          //TODO: Parse for hashtags to allow specific races, but for now
-          //      treat everything as "#latest"
-          console.log("Uploading latest race results...");
-          await uploadLatestResults();
-
-          console.log("Building and deploying website...");
-          await deploy();
-          
-          console.log("Done.");
-          message.react('👍');
-        }
-        
         // Handle register actions
-        else if (message.content.indexOf('!link') >= 0) {
+        if (message.content.indexOf('!link') >= 0) {
           // Get hashtag in format #60
           const [number] = getHashtags(message.content);
           // Find driver matching current car number
@@ -116,11 +128,24 @@ discord.on('message', async (message) => {
           message.react('👍');
         }
         
+        // Repost driver profile uploads to admin channel for moderation
+        else if (isTagged(message.content, 'me')) {
+          
+          // const embed = new Discord.MessageEmbed()
+	        //   .setColor('#f4a913')
+          // 	.setAuthor(message.member.displayName, message.member.user.defaultAvatarURL)
+          // 	.setDescription('Please approve my profile image')
+          // 	.setImage('https://i.imgur.com/wSTFkRM.png')
+          // 	.setTimestamp()
+          // 	.setFooter('Some footer text here', 'https://i.imgur.com/wSTFkRM.png');
+            
+        }
+        
         // Just sayin' hi!   
         else {
           message.react('👋');
         }
-
+        
       }
 
     } catch(err) {
@@ -259,7 +284,20 @@ function getHashtags(message) {
 }
 
 function uploadLatestResults() {
-  return exec('npm run upload');
+  return new Promise((resolve, reject) => {
+    const childProcess = spawn('npm', ['upload']);
+    childProcess.stdout.on('data', (data) => { 
+      console.log(data.toString().replace(/\r?\n|\r/g, ''));
+    });
+    childProcess.stderr.on('data', (data) => { 
+      console.error(data.toString().replace(/\r?\n|\r/g, ''));
+    });
+    childProcess.on('close', (code) => {
+			console.log('Closed upload results process.');
+      resolve();
+    });
+  });
+  // return exec('npm run upload');
 }
 
 function linkAsset(id) {
