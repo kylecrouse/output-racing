@@ -1,7 +1,7 @@
 const fs = require('fs');
 const discord = require('discord.js');
 const http = require('http');
-const { prefix, token, superUsers } = require('./config.json');
+const { prefix, superUsers } = require('./config.json');
 
 const client = new discord.Client();
 
@@ -57,7 +57,7 @@ client.on('message', async (message) => {
   
 });
 
-client.login(token);
+client.login(process.env.DISCORD_ACCESS_TOKEN);
 
   
   // // If bot is mentioned, interpret and handle the message.
