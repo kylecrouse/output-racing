@@ -1,4 +1,6 @@
 const importer = require(`${process.cwd()}/lib/scraper/results`);
+const REACTION_SUCCESS = '✅';
+const REACTION_FAILURE = '😢';
 
 module.exports = {
 	name: 'results',
@@ -7,7 +9,14 @@ module.exports = {
   usage: '<race_id from danlisa.com>',
 	execute: async (message, args) => {
 
-    message.reply(await importer(args[0]));
+    try {
+      await importer(args[0]);
+      message.reply(REACTION_SUCCESS);
+    }
+    catch(error) {
+      console.log(error);
+      message.reply(REACTION_FAILURE);
+    }
 
 	},
 };
