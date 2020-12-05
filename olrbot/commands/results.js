@@ -11,11 +11,11 @@ module.exports = {
 
     try {
       await importer(args[0]);
-      message.reply(REACTION_SUCCESS);
+      message.react(REACTION_SUCCESS);
     }
     catch(error) {
       console.log(error);
-      message.reply(REACTION_FAILURE);
+      message.react(REACTION_FAILURE);
     }
 
 	},
