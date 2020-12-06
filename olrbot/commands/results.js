@@ -12,18 +12,26 @@ module.exports = {
 	execute: async (message, args) => {
 
     const race = await getResults(args[0]);
+    
+    const results = race.fields.results['en-US'].sort((a,b) => a.position - b.position).slice(0,5);
+    let finish = results.map(item => item.position).join('\u000a');
+    let start = results.map(item=> item.start).join('\u000a');
+    let driver = results.map(item=> item.name).join('\u000a');
+    let interval = results.map(item=> item.interval).join('\u000a');
+    let led = results.map(item=> item.led).join('\u000a');
+    let incidents = results.map(item=> item.incidents).join('\u000a');
 
     const embed = new Discord.MessageEmbed()
     	.setTitle(race.fields.name['en-US'])
     	.setURL(`http://dnhi063vpnzuy.cloudfront.net/race/${args[0]}/`)
     	.setThumbnail(tracks.find(({ name }) => race.fields.track['en-US'].indexOf(name) >= 0).logo)
     	.addFields(
-    		{ name: 'F', value: 'Some value here', inline: true },
-    		{ name: 'S', value: 'Some value here', inline: true },
-    		{ name: 'Driver', value: 'Some value here', inline: true },
-    		{ name: 'Interval', value: 'Some value here', inline: true },
-    		{ name: 'Laps Led', value: 'Some value here', inline: true },
-    		{ name: 'Incidents', value: 'Some value here', inline: true },
+    		{ name: 'F', value: finish, inline: true },
+    		{ name: 'S', value: start, inline: true },
+    		{ name: 'Driver', value: driver, inline: true },
+    		{ name: 'Interval', value: interval, inline: true },
+    		{ name: 'Laps Led', value: led, inline: true },
+    		{ name: 'Incidents', value: incidents, inline: true },
     	)
     	.setTimestamp()
       
