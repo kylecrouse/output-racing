@@ -6,7 +6,7 @@ const REACTION_FAILURE = '😢';
 
 module.exports = {
 	name: 'results',
-	description: 'Import a specific race result from danlisa.com, optionally providing event name, broadcast URL from YouTube and attaching event logo image',
+	description: 'Import a specific race result from danlisa.com, optionally providing event name, broadcast URL from YouTube and attaching screenshot image',
   args: true,
   usage: '<race_id from danlisa.com> <event name> <broadcast url>',
 	execute: async (message, args) => {
@@ -28,7 +28,7 @@ module.exports = {
       	.setURL(`http://dnhi063vpnzuy.cloudfront.net/race/${args[0]}/`)
       	.setThumbnail(tracks.find(({ name }) => race.fields.track['en-US'].indexOf(name) >= 0).logo)
       	.addFields(
-      		{ name: '', value: driver, inline: true },
+      		{ name: '\u200b', value: driver, inline: true },
       		{ name: 'Int', value: interval, inline: true },
       		{ name: 'Led', value: led, inline: true },
       		{ name: 'Inc', value: incidents, inline: true },
