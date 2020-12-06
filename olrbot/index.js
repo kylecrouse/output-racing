@@ -29,7 +29,7 @@ client.on('message', async (message) => {
   if (!(message.guild || superUsers.includes(message.author.id))) return;
     
   // Get message command (i.e., !command) and args
-  const args = message.content.slice(prefix.length).trim().split(/ +/);
+  const args = message.content.slice(prefix.length).trim().split(/[^\s"]+|"([^"]*)"/gi);
   const commandName = args.shift().toLowerCase();
 
   // If the command is not recognized, exit.  
