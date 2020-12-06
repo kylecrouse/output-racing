@@ -14,12 +14,16 @@ module.exports = {
     const race = await getResults(args[0]);
 
     const embed = new Discord.MessageEmbed()
-    	.setTitle(race.name)
+    	.setTitle(race.fields.name['en-US'])
     	.setURL(`http://dnhi063vpnzuy.cloudfront.net/race/${args[0]}/`)
-    	.setThumbnail(tracks.find(({ name }) => race.track.indexOf(name) >= 0).logo)
+    	.setThumbnail(tracks.find(({ name }) => race.fields.track['en-US'].indexOf(name) >= 0).logo)
     	.addFields(
-    		{ name: 'Inline field title', value: 'Some value here', inline: true },
-    		{ name: 'Inline field title', value: 'Some value here', inline: true },
+    		{ name: 'F', value: 'Some value here', inline: true },
+    		{ name: 'S', value: 'Some value here', inline: true },
+    		{ name: 'Driver', value: 'Some value here', inline: true },
+    		{ name: 'Interval', value: 'Some value here', inline: true },
+    		{ name: 'Laps Led', value: 'Some value here', inline: true },
+    		{ name: 'Incidents', value: 'Some value here', inline: true },
     	)
     	.setTimestamp()
       
