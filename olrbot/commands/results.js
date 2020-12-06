@@ -13,8 +13,8 @@ module.exports = {
 
     const race = await getResults(args[0]);
     
-    const results = race.fields.results['en-US'].sort((a,b) => a.position - b.position).slice(0,5);
-    let finish = results.map(item => item.position).join('\u000a');
+    const results = race.fields.results['en-US'].sort((a,b) => a.finish - b.finish).slice(0,5);
+    let finish = results.map(item => item.finish).join('\u000a');
     let start = results.map(item=> item.start).join('\u000a');
     let driver = results.map(item=> item.name).join('\u000a');
     let interval = results.map(item=> item.interval).join('\u000a');
