@@ -13,8 +13,8 @@ module.exports = {
 
     try {
       let overrides = {};
-      if (args[1]) overrides.name = args[1];
-      if (args[2]) overrides.broadcast = args[2];
+      if (args.length > 1) overrides.name = args[1];
+      if (args.length > 2) overrides.broadcast = args[2];
       
       const race = await getResults(args[0], overrides);
       

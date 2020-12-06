@@ -20,7 +20,7 @@ client.on('ready', () => {
 });
 
 client.on('message', async (message) => {
-  console.log(message);
+  // console.log(message);
   
   // Exit if there is no command or message is from a bot.
   if (!message.content.startsWith(prefix) || message.author.bot) return;
