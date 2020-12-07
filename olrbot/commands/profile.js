@@ -16,7 +16,10 @@ module.exports = {
       const [driver] = await cms.get({ content_type: 'driver', 'fields.discordId': message.author.id });
       
       // Get out of here if a driver wasn't matched.
-      if (!driver) return;
+      if (!driver) {
+        message.reply("I don't know which driver profile is yours. Use `!link <your car number>` and then try again.");
+        return;
+      }
       
       // // Save the attachments to the entry
       driver.fields.media = { 'en-US': (driver.fields.media)

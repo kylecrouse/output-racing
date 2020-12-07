@@ -18,8 +18,8 @@ module.exports = {
 
     // If message is from an admin, approve it right away
     // Otherwise moderate the message and wait for response
-    const approved = /*isAuthorized(message.author, message.channel) 
-      || */await moderate(message, embed.description);
+    const approved = isAuthorized(message.author, message.channel) 
+      || await moderate(message, embed.description);
     
     if (approved) {
       
