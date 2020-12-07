@@ -29,7 +29,15 @@ client.on('message', async (message) => {
   if (!(message.guild || superUsers.includes(message.author.id))) return;
     
   // Get message command (i.e., !command) and args
-  const args = message.content.slice(prefix.length).trim().split(/[^\s"]+|"([^"]*)"/);
+  // Use regex that doesn't split inside quotes but doesn't match them either
+  const regex = /[^\s"]+|"([^"]*)"/gi;
+  const string = message.content.slice(prefix.length).trim();
+  let args = [];
+  do {
+    //Each call to exec returns the next regex match as an array
+    const match = regex.exec(string);
+    if (match) args.push(match[1] ? match[1] : match[0]);
+  } while (match != null);
   const commandName = args.shift().toLowerCase();
 
   // If the command is not recognized, exit.  
