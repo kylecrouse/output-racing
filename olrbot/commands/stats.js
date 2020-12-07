@@ -1,4 +1,3 @@
-const Discord = require('discord.js');
 const getStats = require(`${process.cwd()}/lib/scraper/stats`);
 const REACTION_SUCCESS = '✅';
 const REACTION_FAILURE = '😢';
