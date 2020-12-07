@@ -15,6 +15,8 @@ module.exports = {
       let overrides = {};
       if (args.length > 1) overrides.name = args[1];
       if (args.length > 2) overrides.broadcast = args[2];
+      // TODO: Allow attachment to be sent through as a "media" override,
+      //       though this requires merging arrays on the cms.update end
       
       const race = await getResults(args[0], overrides);
       
@@ -25,7 +27,7 @@ module.exports = {
       	.setURL(`http://dnhi063vpnzuy.cloudfront.net/race/${args[0]}/`)
       	.setThumbnail(tracks.find(({ name }) => race.fields.track['en-US'].indexOf(name) >= 0).logo)
       	.addFields(
-      		{ name: 'Pos.', value: results.map(item => item.finish).join('\u000a'), inline: true },
+      		{ name: 'P', value: results.map(item => item.finish).join('\u000a'), inline: true },
       		{ name: 'Driver', value: results.map(item=> item.name).join('\u000a'), inline: true },
       		{ name: 'Interval', value: results.map(item=> item.interval).join('\u000a'), inline: true },
       	)
