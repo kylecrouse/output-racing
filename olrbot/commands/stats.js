@@ -26,7 +26,10 @@ module.exports = {
         
         const { fields: driver } = league.findDriver({ field: "discordId", value: user.id });
         
-        if (!driver) return message.reply(`@${user.username} has not linked their driver profile.`);
+        if (!driver) {
+          message.reply("I don't know which driver profile is yours. Use `!link <your car number>` and then try again.");
+          return;
+        }
         
         const stats = league.getStats(driver.name['en-US']);
         
