@@ -15,7 +15,7 @@ module.exports = {
 
     const embed = new Discord.MessageEmbed()
     	.setTitle('Current Standings')
-    	// .setURL(`http://dnhi063vpnzuy.cloudfront.net/standings/`)
+    	.setURL(`http://dnhi063vpnzuy.cloudfront.net/standings/${season.id['en-US']}/`)
       .setDescription(`After ${season.results['en-US'].length} of ${season.schedule['en-US'].length} races`)
       .setThumbnail('http://output-racing.s3-website.us-west-2.amazonaws.com/logo.png')
     	.addFields(
