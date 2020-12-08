@@ -120,14 +120,17 @@ export default function Race(props) {
 export async function getStaticPaths() {
   const entries = await client.getEntries({ content_type: 'race', limit: 500 });
   return {
-    paths: entries.items.map(entry => ({ params: { raceId: entry.sys.id }})),
+    paths: entries.items
+      .filter(entry => entry.fields.raceId)
+      .map(entry => ({ params: { raceId: entry.fields.raceId.toString() }})),
     fallback: false,
   }
 }
 
 export async function getStaticProps({ params }) {
   const league = await client.getEntry(leagueId);
-  const entry = await client.getEntry(params.raceId);
+  const entries = await client.getEntries({ content_type: 'race', 'fields.raceId': params.raceId });
+  const [entry] = entries.items;
   const drivers = await client.getEntries({ content_type: "driver", limit: 500 });
   entry.fields.results = await Promise.all(entry.fields.results
     .filter(result => result.id)

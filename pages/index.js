@@ -192,18 +192,18 @@ export async function getStaticProps() {
   const drivers = await client.getEntries({ content_type: "driver", limit: 500 });
   
   let nextRace = season.fields.schedule
-    .filter(race => !race.offWeek && !race.uploaded && moment().isSameOrBefore(race.date, 'day'))
+    .filter(race => !race.offWeek && !race.uploaded && moment().isSameOrBefore(race.date, 'week'))
     .sort((a,b) => moment(a.date).diff(b.date))
     .shift();
     
   let lastRace = season.fields.schedule
-    .filter(race => !race.offWeek && race.uploaded && moment().isSameOrAfter(race.date, 'day'))
+    .filter(race => !race.offWeek && race.uploaded && moment().isSameOrAfter(race.date, 'week'))
     .sort((a,b) => moment(a.date).diff(b.date))
     .pop();
   if (lastRace) {
     lastRace = { 
       ...lastRace, 
-      ...season.fields.results.find(entry => entry.sys.id === lastRace.raceId).fields
+      ...season.fields.results.find(entry => entry.fields.raceId == lastRace.raceId).fields
     };
     lastRace.results = lastRace.results
       .sort((a,b) => a.finish - b.finish)

@@ -128,7 +128,9 @@ export async function getStaticProps({ params }) {
     league: leagues.items[0].fields,
     ...season.fields,
     schedule: season.fields.schedule.map((schedule) => {
-      const race = season.fields.results.find(({ sys }) => sys.id === schedule.raceId);
+      console.log({ schedule });
+      const race = season.fields.results.find(({ fields }) => fields.raceId == schedule.raceId);
+      console.log({ schedule, race });
       return race ? { ...schedule, ...race.fields } : schedule;
     }), 
     drivers: drivers.items,
