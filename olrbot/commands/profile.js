@@ -1,5 +1,5 @@
 const { handleAttachment } = require('../lib/attachments');
-const cms = require(`${process.cwd()}/lib/contentful`);
+const league = require(`${process.cwd()}/lib/league`);
 
 module.exports = {
 	name: 'profile',
@@ -10,10 +10,12 @@ module.exports = {
     // Save resolved asset to requested race results
     async (asset) => {
       // Ensure dependencies are initialized
-      await cms.init();
+      await league.init();
       
       // Get the driver entry for the message author
-      const [driver] = await cms.get({ content_type: 'driver', 'fields.discordId': message.author.id });
+      const driver = await league.findDriver(
+        { field: 'discordId', value: message.author.id }
+      );
       
       // Get out of here if a driver wasn't matched.
       if (!driver) {
@@ -21,14 +23,8 @@ module.exports = {
         return;
       }
       
-      // // Save the attachments to the entry
-      driver.fields.media = { 'en-US': (driver.fields.media)
-        ? driver.fields.media['en-US'].concat(await cms.createAsset(asset))
-        : [await cms.createAsset(asset)]
-      };
-      
       // Publish changes
-      return cms.update(driver);
+      return league.updateDriver(driver, { media: asset });
     }, 
     // Configure moderation message
     { description: 'Can my new profile image be approved?'}

@@ -1,4 +1,4 @@
-const cms = require(`${process.cwd()}/lib/contentful`);
+const league = require(`${process.cwd()}/lib/league`);
 
 module.exports = {
 	name: 'link',
@@ -8,18 +8,17 @@ module.exports = {
 	execute: async (message, args) => {
 
     // Ensure dependencies are initialized
-    await cms.init();
+    await league.init();
 
     // Find driver matching current car number
-    const [driver] = await cms.get({ content_type: 'driver', 'fields.number': args[0] });
+    const driver = await league.findDriver(
+      { field: 'number', value: args[0] }
+    );
     
     if (!driver) return message.react('🤷‍♀️');
 
     // Set discordId for matched driver
-    driver.fields.discordId = { 'en-US': message.author.id };
-    
-    // Publish changes
-    await cms.update(driver);
+    await league.updateDriver(driver, { discordId: message.author.id });
 
     message.react('👍');
 
