@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const { exec } = require('child_process');
 const getLatestResults = require(`${process.cwd()}/lib/scraper/latest`);
 const getResults = require(`${process.cwd()}/lib/scraper/results`);
 const getSeason = require(`${process.cwd()}/lib/scraper/season`);
@@ -45,6 +46,8 @@ module.exports = {
         message.react(REACTION_FAILURE);
         throw new Error(`I don\'t know how to do that. (${JSON.stringify(args)})`);
     }
+    
+    await exec('npm run build && aws s3 sync ./out s3://output-racing/');
 
 	},
 };

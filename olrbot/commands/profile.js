@@ -1,3 +1,4 @@
+const { exec } = require('child_process');
 const { handleAttachment } = require('../lib/attachments');
 const league = require(`${process.cwd()}/lib/league`);
 
@@ -24,7 +25,10 @@ module.exports = {
       }
       
       // Publish changes
-      return league.updateDriver(driver, { media: asset });
+      await league.updateDriver(driver, { media: asset });
+      
+      // Rebuild and deploy website
+      await exec('npm run build && aws s3 sync ./out s3://output-racing/');
     }, 
     // Configure moderation message
     { description: 'Can my new profile image be approved?'}
