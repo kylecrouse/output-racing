@@ -14,7 +14,7 @@ module.exports = {
 	name: 'import',
 	description: 'Import schedule, results, stats and standings from danlisa.com',
   args: true,
-  usage: '<latest | results | season | standings | stats> <id>',
+  usage: '<latest | results | season | standings | stats> [<id>]',
 	execute: async (message, args) => {
     
     if (!isAuthorized(message.author, message.channel)) return;

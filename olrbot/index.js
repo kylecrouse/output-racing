@@ -40,11 +40,12 @@ client.on('message', async (message) => {
   } while (match);
   const commandName = args.shift().toLowerCase();
 
-  // If the command is not recognized, exit.  
-  if (!client.commands.has(commandName)) return;
-  
   // Get the requested command
-  const command = client.commands.get(commandName);
+  const command = client.commands.get(commandName)
+    || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));;
+  
+  // If the command is not recognized, exit.  
+  if (!command) return;
   
   // Validate required args or exit with proper usage
   if (command.args && !args.length) {
