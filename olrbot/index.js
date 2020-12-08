@@ -60,7 +60,7 @@ client.on('message', async (message) => {
   	command.execute(message, args);
   } catch (error) {
   	console.error(error);
-  	message.react('🤷‍♀️');
+    message.reply('```' + JSON.stringify(error) + '```');
   }
   
 });
