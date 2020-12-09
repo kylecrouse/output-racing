@@ -192,7 +192,7 @@ export async function getStaticProps() {
   const drivers = await client.getEntries({ content_type: "driver", limit: 500 });
   
   let nextRace = season.fields.schedule
-    .filter(race => !race.offWeek && !race.uploaded && moment().isSameOrBefore(race.date, 'week'))
+    .filter(race => !race.offWeek && !race.uploaded)
     .sort((a,b) => moment(a.date).diff(b.date))
     .shift();
     
