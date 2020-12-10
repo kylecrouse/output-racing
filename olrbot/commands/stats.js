@@ -50,7 +50,10 @@ async function getStats(user) {
   const embed = new Discord.MessageEmbed()
   	.setAuthor(
       user.displayName || user.username,
-      user.displayAvatarURL()
+      // If user is a guild member, dig down one layer to get avatar
+      user.guild 
+        ? user.user.displayAvatarURL() 
+        : user.displayAvatarURL()
     )
   	.setTitle('Output Racing League Career Stats')
   	.setURL(`http://dnhi063vpnzuy.cloudfront.net/driver/${driver.name['en-US'].replace(/\s/g, '-').toLowerCase()}/`)
