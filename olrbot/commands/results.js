@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const moment = require('moment');
 const league = require(`${process.cwd()}/lib/league`);
 const cms = require(`${process.cwd()}/lib/contentful`);
 const { tracks } = require ('../../constants');
@@ -18,11 +19,12 @@ module.exports = {
     
     if (!race) return;
     
-    const results = race.fields.results['en-US'].sort((a,b) => a.finish - b.finish);
+    const results = race.results.sort((a,b) => a.finish - b.finish);
 
     const embed = new Discord.MessageEmbed()
-    	.setTitle(race.fields.name['en-US'])
+    	.setTitle(race.name)
     	.setURL(`http://dnhi063vpnzuy.cloudfront.net/race/${args[0]}/`)
+      .addField(moment(race.date).format('dddd, MMMM Do YYYY'), `${race.track}\u000a${race.laps} laps (${race.cautions} cautions for ${race.cautionLaps} laps)`)
     	.addFields(
     		{ name: 'P', value: results.map(item => item.finish).join('\u000a'), inline: true },
     		{ name: 'Driver', value: results.map(item=> item.name).join('\u000a'), inline: true },
@@ -30,22 +32,22 @@ module.exports = {
     	)
     	.setTimestamp()
       
-    if (race.fields.logo) {
-      const logo = await cms.getAsset(race.fields.logo['en-US'].sys.id);
+    if (race.logo) {
+      const logo = await cms.getAsset(race.logo.sys.id);
       embed.setThumbnail(`https:${logo.fields.file['en-US'].url}`);
     } else {
       embed.setThumbnail(
-        tracks.find(({ name }) => race.fields.track['en-US'].indexOf(name) >= 0).logo
+        tracks.find(({ name }) => race.track.indexOf(name) >= 0).logo
       );
     }
     
-    if (race.fields.media) {
-      const asset = race.fields.media['en-US'].shift();
+    if (race.media) {
+      const asset = race.media.shift();
       const media = await cms.getAsset(asset.sys.id);
       embed.setImage(`https:${media.fields.file['en-US'].url}`);
     }
       
-    message.react(REACTION_SUCCESS);
+    // message.react(REACTION_SUCCESS);
       
     message.channel.send(embed);      
 
