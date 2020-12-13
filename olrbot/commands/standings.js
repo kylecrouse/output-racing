@@ -9,14 +9,12 @@ module.exports = {
     
     await league.init();
     
-    const { fields: season } = league.season;
-    
-    const standings = season.standings['en-US'].sort((a,b) => a.position - b.position);
+    const standings = league.season.standings.sort((a,b) => a.position - b.position);
 
     const embed = new Discord.MessageEmbed()
     	.setTitle('Current Standings')
-    	.setURL(`http://dnhi063vpnzuy.cloudfront.net/standings/${season.id['en-US']}/`)
-      .addField(season.name['en-US'], `After ${season.results['en-US'].length} of ${season.schedule['en-US'].length} races`)
+    	.setURL(`http://dnhi063vpnzuy.cloudfront.net/standings/${league.season.id}/`)
+      .addField(league.season.name, `After ${league.season.results.length} of ${league.season.schedule.length} races`)
       .setThumbnail('http://output-racing.s3-website.us-west-2.amazonaws.com/logo.png')
     	.addFields(
     		{ name: 'Pos.', value: standings.map(item => `${item.position} ${item.change !== '-' ? '(' + item.change + ')' : ''}`).join('\u000a'), inline: true },
