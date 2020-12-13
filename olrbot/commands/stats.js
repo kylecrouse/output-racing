@@ -39,13 +39,11 @@ async function getStats(user) {
   // Ensure data is ready
   await league.init();
   
-  const { fields: driver } = league.findDriver(
-    { field: "discordId", value: user.id }
-  );
+  const driver = league.drivers.find(driver => driver.discordId === user.id);
     
   if (!driver) return undefined;
   
-  const stats = league.getStats(driver.name['en-US']);
+  const stats = league.getStats(driver.name);
   
   const embed = new Discord.MessageEmbed()
   	.setAuthor(
@@ -56,7 +54,7 @@ async function getStats(user) {
         : user.displayAvatarURL()
     )
   	.setTitle('Output Racing League Career Stats')
-  	.setURL(`http://dnhi063vpnzuy.cloudfront.net/driver/${driver.name['en-US'].replace(/\s/g, '-').toLowerCase()}/`)
+  	.setURL(`http://dnhi063vpnzuy.cloudfront.net/driver/${driver.name.replace(/\s/g, '-').toLowerCase()}/`)
   	.addFields(
   		{ name: 'Starts', value: stats.starts, inline: true },
   		{ name: 'Wins', value: `${stats.wins} (${stats.winPercentage})`, inline: true },
@@ -68,7 +66,7 @@ async function getStats(user) {
   	.setTimestamp();
     
   if (driver.numberArt) {
-    const numberArt = await cms.getAsset(driver.numberArt['en-US'].sys.id);
+    const numberArt = await cms.getAsset(driver.numberArt.sys.id);
     if (numberArt.fields.file['en-US'].contentType === 'image/svg+xml') {
       const response = await fetch(`https:${numberArt.fields.file['en-US'].url}`);
       const buffer = await response.buffer();
@@ -80,7 +78,7 @@ async function getStats(user) {
   }
   
   if (driver.media) {
-    const asset = driver.media['en-US'].pop();
+    const asset = driver.media.pop();
     const media = await cms.getAsset(asset.sys.id);
     embed.setImage(`https:${media.fields.file['en-US'].url}`);
   }

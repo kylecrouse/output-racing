@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const { exec } = require('child_process');
+const getDrivers = require(`${process.cwd()}/lib/scraper/drivers`);
 const getLatestResults = require(`${process.cwd()}/lib/scraper/latest`);
 const getResults = require(`${process.cwd()}/lib/scraper/results`);
 const getSeason = require(`${process.cwd()}/lib/scraper/season`);
@@ -16,12 +17,16 @@ module.exports = {
 	name: 'import',
 	description: 'Import schedule, results, stats and standings from danlisa.com',
   args: true,
-  usage: '<latest | results | season | standings | stats> [<id>]',
+  usage: '<drivers | latest | results | season | standings | stats> [<id>]',
 	execute: async (message, args) => {
     
     if (!isAuthorized(message.author, message.channel)) return;
     
     switch(args[0]) {
+      case 'drivers':
+        await handleDrivers(message, args);
+      break;
+      
       case 'latest':
         await handleLatest(message, args);
       break;
@@ -52,6 +57,13 @@ module.exports = {
 	},
 };
 
+async function handleDrivers(message, args) {
+  // Update all drivers from active roster
+  // TODO: Store the leagueid in CMS and fetch from guild?
+  await getDrivers(2732);
+  message.react(REACTION_SUCCESS);
+}
+
 async function handleLatest(message, args) {
 
   // Ensure data is primed
@@ -63,11 +75,13 @@ async function handleLatest(message, args) {
   // Import the latest results from iRacing to danlisa.com
   const race = await getLatestResults();
 
+  // Update season data (schedule, standings, stats) from danlisa
   await getSeason(seasonId);
-  await getStandings(seasonId);
-  await getStats('season', seasonId);
+  
+  // Update league stats
   await getStats('league', league.id);
 
+  // Import the new results from danlisa
   await handleResults(message, [
     null, 
     race.raceId, 
