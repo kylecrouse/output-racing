@@ -124,7 +124,7 @@ async function handleResults(message, args) {
   }
   
   if (race.fields.media) {
-    const asset = race.fields.media['en-US'].shift();
+    const asset = race.fields.media['en-US'].slice(0,1);
     const media = await cms.getAsset(asset.sys.id);
     embed.setImage(`https:${media.fields.file['en-US'].url}`);
   }
