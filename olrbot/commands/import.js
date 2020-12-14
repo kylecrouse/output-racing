@@ -60,8 +60,12 @@ module.exports = {
 async function handleDrivers(message, args) {
   // Update all drivers from active roster
   // TODO: Store the leagueid in CMS and fetch from guild?
-  await getDrivers(2732);
+  const new = await getDrivers(2732);
+  
   message.react(REACTION_SUCCESS);
+
+  if (new.length > 0)
+    message.reply(`Added ${new.join(', ')}.`)
 }
 
 async function handleLatest(message, args) {
