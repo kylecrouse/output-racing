@@ -7,7 +7,7 @@ module.exports = {
 	execute: async (message, args) => {
     
     // Handle embeds on message
-    const embed = message.embeds.length > 0 && message.embeds
+    const broadcast = message.embeds.length > 0 && message.embeds
       .filter(({ video, url }) => video && url.match(/^https:\/\/www.youtube.com\//))
       .map(({ url }) => `https://www.youtube.com/embed/${url.match(/v=(\w+)&/)[1]}`)
       .shift();
@@ -19,7 +19,8 @@ module.exports = {
     await league.init();
   
     // Update the last race with embed
-    await league.addBroadcastToRace(league.getLastRace(), embed);
+    const race = await league.getLastRace();
+    await race.put({ broadcast });
 
     message.react('👍');    
 	},

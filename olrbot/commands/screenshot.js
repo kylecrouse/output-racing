@@ -16,14 +16,14 @@ module.exports = {
       // Ensure dependencies are initialized
       await league.init();
 
-      // Update the matched race with new assets, once ready
-      return league.addAssetToRace(
-        // Resolve race to update from args
-        (args[0] === 'latest')
-          ? league.getLastRace()
-          : league.getLastRace({ track: args[0] }), 
-        asset
-      );
+      // Get the race requested
+      const race = await (args[0] === 'latest')
+        ? league.getLastRace()
+        : league.getLastRace({ track: args[0] });
+        
+      // Update the race with asset
+      await race.put({ media: asset });
+
     }, 
     // Configure moderation message
     { description: `Can my screenshot be posted to the ${args[0]} race?`}
