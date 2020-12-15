@@ -28,7 +28,7 @@ module.exports = {
       await driver.put({ media: asset });
       
       // Rebuild and deploy website
-      await exec('npm run build && aws s3 sync ./out s3://output-racing/');
+      // await exec('npm run build && aws s3 sync ./out s3://output-racing/');
     }, 
     // Configure moderation message
     { description: 'Can my new profile image be approved?'}
