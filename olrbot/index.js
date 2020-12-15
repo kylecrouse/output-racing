@@ -75,10 +75,10 @@ const server = http.createServer((req, res) => {
     req.on('data', (chunk) => { body += chunk; });
 
     req.on('end', function() {
-      if (req.url === '/') {
+      if (req.url === '/apply') {
         // log('Received message: ' + body);
-      } else if (req.url = '/scheduled') {
-        // log('Received task ' + req.headers['x-aws-sqsd-taskname'] + ' scheduled at ' + req.headers['x-aws-sqsd-scheduled-at']);
+        // TODO: Resolve applicant to iRacing driver and fetch stats
+        // TODO: Post data to Google Spreadsheet and notify Discord channel
       }
 
       res.writeHead(200, 'OK', {'Content-Type': 'text/plain'});

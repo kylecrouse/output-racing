@@ -16,6 +16,7 @@ module.exports = {
 
       const embed = new Discord.MessageEmbed()
       	.setTitle('Output Racing League Rulebook')
+        .setURL(`http://dnhi063vpnzuy.cloudfront.net/rules/`)
         .setDescription(`Last updated ${moment().format('MMMM Do, YYYY')}`)
         .setThumbnail('http://output-racing.s3-website.us-west-2.amazonaws.com/logo.png')
         .setTimestamp();

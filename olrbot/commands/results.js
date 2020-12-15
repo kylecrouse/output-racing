@@ -26,9 +26,9 @@ module.exports = {
     	.setURL(`http://dnhi063vpnzuy.cloudfront.net/race/${args[0]}/`)
       .addField(moment(race.date).format('dddd, MMMM Do YYYY'), `${race.track}\u000a${race.laps} laps (${race.cautions} cautions for ${race.cautionLaps} laps)`)
     	.addFields(
-    		{ name: 'P', value: results.map(item => item.finish), inline: true },
-    		{ name: 'Driver', value: results.map(item=> item.name), inline: true },
-    		{ name: 'Interval', value: results.map(item=> item.interval), inline: true },
+    		{ name: 'P', value: results.map(item => `\`${item.finish}\``), inline: true },
+    		{ name: 'Driver', value: results.map(item=> `\`${item.name}\``), inline: true },
+    		{ name: 'Interval', value: results.map(item=> `\`${item.interval}\``), inline: true },
     	)
     	.setTimestamp()
       
