@@ -108,9 +108,9 @@ async function handleResults(message, args) {
   	.setTitle(race.fields.name['en-US'])
   	.setURL(`http://dnhi063vpnzuy.cloudfront.net/race/${args[1]}/`)
   	.addFields(
-  		{ name: 'P', value: results.map(item => item.finish).join('\u000a'), inline: true },
-  		{ name: 'Driver', value: results.map(item=> item.name).join('\u000a'), inline: true },
-  		{ name: 'Interval', value: results.map(item=> item.interval).join('\u000a'), inline: true },
+  		{ name: 'P', value: results.map(item => item.finish), inline: true },
+  		{ name: 'Driver', value: results.map(item=> item.name), inline: true },
+  		{ name: 'Interval', value: results.map(item=> item.interval), inline: true },
   	)
   	.setTimestamp()
     

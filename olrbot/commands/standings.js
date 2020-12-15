@@ -17,9 +17,9 @@ module.exports = {
       .addField(league.season.name, `After ${league.season.results.length} of ${league.season.schedule.length} races`)
       .setThumbnail('http://output-racing.s3-website.us-west-2.amazonaws.com/logo.png')
     	.addFields(
-    		{ name: 'Pos.', value: standings.map(item => `${item.position} ${item.change !== '-' ? '(' + item.change + ')' : ''}`).join('\u000a'), inline: true },
-    		{ name: 'Driver', value: standings.map(item => item.driver).join('\u000a'), inline: true },
-    		{ name: 'Points', value: standings.map((item, index) => `${item.points} ${item.behindNext !== '-' ? '(' + item.behindNext + ')': index > 0 ? '(0)' : ''}`).join('\u000a'), inline: true },
+    		{ name: 'Pos.', value: standings.map(item => `${item.position} ${item.change !== '-' ? '(' + item.change + ')' : ''}`), inline: true },
+    		{ name: 'Driver', value: standings.map(item => item.driver), inline: true },
+    		{ name: 'Points', value: standings.map((item, index) => `${item.points} ${item.behindNext !== '-' ? '(' + item.behindNext + ')': index > 0 ? '(0)' : ''}`), inline: true },
     	)
     	.setTimestamp()
       

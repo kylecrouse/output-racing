@@ -15,7 +15,7 @@ module.exports = {
       message.react(REACTION_SUCCESS);
     }
     catch(error) {
-      console.error(err);
+      console.error(error);
       message.react(REACTION_FAILURE);
     }
 
