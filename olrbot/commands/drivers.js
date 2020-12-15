@@ -16,7 +16,7 @@ module.exports = {
     const embed = new Discord.MessageEmbed()
     	.setTitle('Output Racing League Drivers')
     	.setURL(`http://dnhi063vpnzuy.cloudfront.net/drivers/`)
-      .setThumbnail('http://output-racing.s3-website.us-west-2.amazonaws.com/logo.png')
+      .setThumbnail('http://output-racing.s3-website.us-west-2.amazonaws.com/logo-stacked.png')
     	.addFields(
     		{ name: '#', value: drivers.map(driver => `\`${driver.number}\``), inline: true },
     		{ name: 'Driver', value: drivers.map(driver => `\`${driver.nickname || driver.name}\``), inline: true },
