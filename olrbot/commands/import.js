@@ -52,7 +52,7 @@ module.exports = {
         throw new Error(`I don\'t know how to do that. (${JSON.stringify(args)})`);
     }
     
-    await exec('npm run build && aws s3 sync ./out s3://output-racing/');
+    await exec('npm run build && aws s3 sync ./out s3://output-racing/ && aws cloudfront create-invalidation --distribution-id E2HCYIFSR21K3R');
 
 	},
 };

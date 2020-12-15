@@ -11,7 +11,7 @@ module.exports = {
     if (!isAuthorized(message.author, message.channel)) return;
       
     console.log('Building and deploying website...');
-    const build = spawn('npm run build && aws s3 sync ./out s3://output-racing/');
+    const build = spawn('npm run build && aws s3 sync ./out s3://output-racing/ && aws cloudfront create-invalidation --distribution-id E2HCYIFSR21K3R');
     
     build.on('close', (code) => {
       message.react(REACTION_SUCCESS);
