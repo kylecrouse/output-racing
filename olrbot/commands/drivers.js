@@ -20,7 +20,7 @@ module.exports = {
     	.addFields(
     		{ name: '#', value: drivers.map(driver => `\`${driver.number}\``), inline: true },
     		{ name: 'Driver', value: drivers.map(driver => `\`${driver.nickname || driver.name}\``), inline: true },
-    		{ name: 'License', value: drivers.map(driver => `\`${driver.license.licGroupDisplayName.replace('Class ','')} ${driver.license.srPrime}.${driver.license.srSub} / ${(parseInt(driver.license.iRating)/1000).toFixed(1)}k\``), inline: true },
+    		{ name: 'License', value: drivers.map(driver => `\`${driver.license.licGroupDisplayName.replace('Class ','')} ${driver.license.srPrime}.${driver.license.srSub} / ${(parseInt(driver.license.iRating)/1000).toFixed(1)}k / ${driver.careerStats ? driver.careerStats.avgIncPerRace.toFixed(2) : '?.??'}x\``), inline: true },
     	)
     	.setTimestamp()
       
