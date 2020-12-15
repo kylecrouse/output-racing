@@ -19,7 +19,7 @@ module.exports = {
     
     const embed = new Discord.MessageEmbed()
     	.setTitle('Up Next')
-      .addField(race.name, `${moment(race.date).format('MMM D')} at ${race.track}`)
+      .addField(race.name, `${moment(race.date).format('dddd, MMMM Do YYYY')}\u000a${race.track}\u000a${race.distance}`)
       .setImage(
         tracks.find(({ name }) => race.track.indexOf(name) >= 0).logo
       )    	
