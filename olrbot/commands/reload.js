@@ -1,4 +1,5 @@
 const league = require(`${process.cwd()}/lib/league`);
+const { isAuthorized } = require('../lib/authorization');
 const REACTION_SUCCESS = '✅';
 const REACTION_FAILURE = '😢';
 
@@ -11,6 +12,7 @@ module.exports = {
     if (!isAuthorized(message.author, message.channel)) return;
       
     try {
+      await league.init();
       await league.load();
       message.react(REACTION_SUCCESS);
     }

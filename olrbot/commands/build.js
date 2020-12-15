@@ -1,4 +1,5 @@
 const { spawn } = require('child_process');
+const { isAuthorized } = require('../lib/authorization');
 const REACTION_SUCCESS = '✅';
 const REACTION_FAILURE = '😢';
 
