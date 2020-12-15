@@ -55,13 +55,14 @@ async function getStats(user) {
     )
   	.setTitle('Output Racing League Career Stats')
   	.setURL(`http://dnhi063vpnzuy.cloudfront.net/driver/${driver.name.replace(/\s/g, '-').toLowerCase()}/`)
+    .setDescription(`\`${driver.license.licGroupDisplayName} ${driver.license.srPrime}.${driver.license.srSub} / ${(parseInt(driver.license.iRating)/1000).toFixed(1)}k iR / ${driver.careerStats ? driver.careerStats.avgIncPerRace.toFixed(2) : '?.??'}x per race\``)
   	.addFields(
-  		{ name: 'Starts', value: stats.starts, inline: true },
-  		{ name: 'Wins', value: `${stats.wins} (${stats.winPercentage})`, inline: true },
-  		{ name: 'Top 5s', value: `${stats.top5s} (${stats.top5Percentage})`, inline: true },
-  		{ name: 'Poles', value: `${stats.poles} (${((stats.poles || 0) / (stats.starts || 1) * 100).toFixed(0)}%)`, inline: true },
-  		{ name: 'Laps Led', value: `${stats.lapsLed} (${((parseInt(stats.lapsLed.replace(',','')) / parseInt((stats.laps || '0').replace(',',''))) * 100).toFixed(0)}%)`, inline: true },
-  		{ name: 'Inc/Lap', value: `${stats.incidentsLap}`, inline: true },
+  		{ name: 'Starts', value: `\`${stats.starts}\``, inline: true },
+  		{ name: 'Wins', value: `\`${stats.wins} (${stats.winPercentage})\``, inline: true },
+  		{ name: 'Top 5s', value: `\`${stats.top5s} (${stats.top5Percentage})\``, inline: true },
+  		{ name: 'Poles', value: `\`${stats.poles} (${((stats.poles || 0) / (stats.starts || 1) * 100).toFixed(0)}%)\``, inline: true },
+  		{ name: 'Laps Led', value: `\`${stats.lapsLed} (${((parseInt(stats.lapsLed.replace(',','')) / parseInt((stats.laps || '0').replace(',',''))) * 100).toFixed(0)}%)\``, inline: true },
+  		{ name: 'Inc/Lap', value: `\`${stats.incidentsLap}\``, inline: true },
   	)
   	.setTimestamp();
     
