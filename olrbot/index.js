@@ -66,6 +66,8 @@ client.on('message', async (message) => {
   
 });
 
+client.login(process.env.DISCORD_ACCESS_TOKEN);
+
 const server = http.createServer((req, res) => {
   if (req.method === 'POST') {
     var body = '';
