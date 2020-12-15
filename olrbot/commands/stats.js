@@ -78,8 +78,7 @@ async function getStats(user) {
   }
   
   if (driver.media) {
-    const asset = driver.media.slice(-1);
-    const media = await cms.getAsset(asset.sys.id);
+    const media = await cms.getAsset(driver.media[0].sys.id);
     embed.setImage(`https:${media.fields.file['en-US'].url}`);
   }
   

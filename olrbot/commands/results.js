@@ -42,8 +42,7 @@ module.exports = {
     }
     
     if (race.media) {
-      const asset = race.media.slice(0,1);
-      const media = await cms.getAsset(asset.sys.id);
+      const media = await cms.getAsset(race.media[0].sys.id);
       embed.setImage(`https:${media.fields.file['en-US'].url}`);
     }
       
