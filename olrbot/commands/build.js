@@ -12,9 +12,9 @@ module.exports = {
     if (!isAuthorized(message.author, message.channel)) return;
       
     console.log('Building and deploying website...');
-    const build = spawn('npm run build && aws s3 sync ./out s3://output-racing/ && aws cloudfront create-invalidation --distribution-id E2HCYIFSR21K3R');
+    const build = spawn('npm run build && aws s3 sync ./out s3://output-racing/ && aws cloudfront create-invalidation --distribution-id E2HCYIFSR21K3R', { shell: true });
     
-    build.on('close', (code) => {
+    build.on('exit', (code) => {
       message.react(REACTION_SUCCESS);
     });
     
