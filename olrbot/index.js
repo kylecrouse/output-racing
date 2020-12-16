@@ -1,6 +1,7 @@
 const fs = require('fs');
 const discord = require('discord.js');
 const http = require('http');
+const moment = require('moment');
 const iracing = require(`${process.cwd()}/lib/iracing`);
 const { prefix, superUsers, websiteChannelId } = require('./config.json');
 
@@ -99,9 +100,7 @@ console.log('Health check server running at http://127.0.0.1:' + port + '/');
 async function handleApplication({ namedValues }) {
   try {
     const custId = await iracing.getDriverId(namedValues.Name[0]);
-    console.log(`Matched ${namedValues.Name[0]} to ${custId}...`);
-    const { license = {}, stats = {} } = await iracing.getCareerStats(custId);
-    console.log({ license, stats });
+    const { license = {}, stats = {}, memberSince, clubId } = await iracing.getCareerStats(custId);
     const embed = new discord.MessageEmbed()
     	.setTitle('New Driver Application')
     	.setURL(`https://members.iracing.com/membersite/member/CareerStats.do?custid=${custId}`)
@@ -113,6 +112,7 @@ async function handleApplication({ namedValues }) {
           return fields; 
         }, [])
       )
+      .addField('Member Since', `\`${moment(memberSince).format('MMMM Do, YYYY')}\``)
     	.addFields(
         { name: 'License', value: `\`${license.licGroupDisplayName}\``, inline: true },
         { name: 'SR', value: `\`${license.srPrime}.${license.srSub}\``, inline: true },
