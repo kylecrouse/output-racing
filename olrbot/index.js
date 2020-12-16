@@ -76,9 +76,15 @@ const server = http.createServer((req, res) => {
 
     req.on('end', function() {
       if (req.url === '/apply') {
-        // log('Received message: ' + body);
+        console.log('Received message: ' + body);
+        try {
+          const { namedValues } = JSON.parse(body);
+          client.channels.cache.get('780929708484329512').send(`${namedValues.Name[0]} applied to the league.`);
+        } catch(err) {
+          console.log(err);
+        }
         // TODO: Resolve applicant to iRacing driver and fetch stats
-        // TODO: Post data to Google Spreadsheet and notify Discord channel
+        // TODO: Notify Discord channel
       }
 
       res.writeHead(200, 'OK', {'Content-Type': 'text/plain'});
