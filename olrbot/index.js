@@ -2,7 +2,7 @@ const fs = require('fs');
 const discord = require('discord.js');
 const http = require('http');
 const iracing = require(`${process.cwd()}/lib/iracing`);
-const { prefix, superUsers } = require('./config.json');
+const { prefix, superUsers, websiteChannelId } = require('./config.json');
 
 const client = new discord.Client();
 
@@ -86,6 +86,14 @@ const server = http.createServer((req, res) => {
           	.setTitle('New Driver Application')
           	.setURL(`https://members.iracing.com/membersite/member/CareerStats.do?custid=${custId}`)
             .setDescription(`${namedValues.Name[0]} applied to the league.`)
+            .addFields(
+              namedValues.reduce((fields, value) => { 
+                const [key, val] = Object.entries(value);
+                if (key !== "Name" && key !== "Email" && val[0])
+                  fields.push({ name: key, value: val[0] });
+                return fields; 
+              }, [])
+            )
           	.addFields(
               { name: 'License', value: `\`${license.licGroupDisplayName}\``, inline: true },
               { name: 'SR', value: `\`${license.srPrime}.${license.srSub}\``, inline: true },
@@ -99,7 +107,7 @@ const server = http.createServer((req, res) => {
           	)
           	.setTimestamp()
             
-          client.channels.cache.get('780929708484329512').send(embed);
+          client.channels.cache.get('780928716728959047'/*websiteChannelId*/).send(embed);
           
         } catch(err) {
           console.log(err);
