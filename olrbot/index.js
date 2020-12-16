@@ -88,8 +88,8 @@ const server = http.createServer((req, res) => {
             .setDescription(`${namedValues.Name[0]} applied to the league.`)
           	.addFields(
               { name: 'License', value: `\`${license.licGroupDisplayName}\``, inline: true },
-              { name: 'SR', value: `\`${driver.license.srPrime}.${driver.license.srSub}\``, inline: true },
-              { name: 'iRating', value: `\`${(parseInt(driver.license.iRating)/1000).toFixed(1)}k\``, inline: true },
+              { name: 'SR', value: `\`${license.srPrime}.${license.srSub}\``, inline: true },
+              { name: 'iRating', value: `\`${(parseInt(license.iRating)/1000).toFixed(1)}k\``, inline: true },
               { name: 'Starts', value: `\`${stats.starts}\``, inline: true },
               { name: 'Inc/Race', value: `\`${stats.avgIncPerRace.toFixed(2)}\``, inline: true },
               { name: 'Laps', value: `\`${stats.totalLaps}\``, inline: true },
