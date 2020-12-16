@@ -96,7 +96,7 @@ server.listen(port);
 // Put a friendly message on the terminal
 console.log('Health check server running at http://127.0.0.1:' + port + '/');
 
-function handleApplication({ namedValues }) {
+async function handleApplication({ namedValues }) {
   try {
     const custId = await iracing.getDriverId(namedValues.Name[0]);
     const { license, stats = {} } = await iracing.getCareerStats(custId);
