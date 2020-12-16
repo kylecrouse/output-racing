@@ -102,17 +102,16 @@ async function handleApplication({ namedValues }) {
     const custId = await iracing.getDriverId(namedValues.Name[0]);
     const { license = {}, stats = {}, memberSince, clubId } = await iracing.getCareerStats(custId);
     const embed = new discord.MessageEmbed()
-    	.setTitle('New Driver Application')
-    	.setURL(`https://members.iracing.com/membersite/member/CareerStats.do?custid=${custId}`)
-      .setDescription(`${namedValues.Name[0]} applied to the league.`)
+    	.setTitle('League Application Received')
+      .setDescription(`[${namedValues.Name[0]}](https://members.iracing.com/membersite/member/CareerStats.do?custid=${custId}) applied to the league.`)
       .addFields(
         Object.entries(namedValues).reduce((fields, [name, value]) => { 
-          if (name !== "Name" && name !== "Email" && value[0])
-            fields.push({ name, value: value[0] });
+          if (name !== "Name" && name !== "Email" && name !== "Timestamp" && name !== "Rules" && value[0])
+            fields.push({ name, value: `\`${value[0]}\`` });
           return fields; 
         }, [])
       )
-      .addField('Member Since', `\`${moment(memberSince).format('MMMM Do, YYYY')}\``)
+      .addField('Member Since', `\`${moment(memberSince, "DD-MM-YYYY").format('MMMM Do, YYYY')}\``)
     	.addFields(
         { name: 'License', value: `\`${license.licGroupDisplayName}\``, inline: true },
         { name: 'SR', value: `\`${license.srPrime}.${license.srSub}\``, inline: true },
