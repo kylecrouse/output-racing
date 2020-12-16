@@ -78,42 +78,7 @@ const server = http.createServer((req, res) => {
     req.on('end', async function() {
       if (req.url === '/apply') {
         console.log('Received message: ' + body);
-        try {
-          const { namedValues } = JSON.parse(body);
-          const custId = await iracing.getDriverId(namedValues.Name[0]);
-          const { license, stats = {} } = await iracing.getCareerStats(custId);
-          const embed = new discord.MessageEmbed()
-          	.setTitle('New Driver Application')
-          	.setURL(`https://members.iracing.com/membersite/member/CareerStats.do?custid=${custId}`)
-            .setDescription(`${namedValues.Name[0]} applied to the league.`)
-            .addFields(
-              namedValues.reduce((fields, value) => { 
-                const [key, val] = Object.entries(value);
-                if (key !== "Name" && key !== "Email" && val[0])
-                  fields.push({ name: key, value: val[0] });
-                return fields; 
-              }, [])
-            )
-          	.addFields(
-              { name: 'License', value: `\`${license.licGroupDisplayName}\``, inline: true },
-              { name: 'SR', value: `\`${license.srPrime}.${license.srSub}\``, inline: true },
-              { name: 'iRating', value: `\`${(parseInt(license.iRating)/1000).toFixed(1)}k\``, inline: true },
-              { name: 'Starts', value: `\`${stats.starts}\``, inline: true },
-              { name: 'Inc/Race', value: `\`${stats.avgIncPerRace.toFixed(2)}\``, inline: true },
-              { name: 'Laps', value: `\`${stats.totalLaps}\``, inline: true },
-              { name: 'Win %', value: `\`${stats.winPerc.toFixed(2)}%\``, inline: true },
-              { name: 'Top 5%', value: `\`${stats.top5Perc.toFixed(2)}%\``, inline: true },
-              { name: 'Led %', value: `\`${stats.lapsLedPerc.toFixed(2)}%\``, inline: true },
-          	)
-          	.setTimestamp()
-            
-          client.channels.cache.get('780928716728959047'/*websiteChannelId*/).send(embed);
-          
-        } catch(err) {
-          console.log(err);
-        }
-        // TODO: Resolve applicant to iRacing driver and fetch stats
-        // TODO: Notify Discord channel
+        await handleApplication(JSON.parse(body));
       }
 
       res.writeHead(200, 'OK', {'Content-Type': 'text/plain'});
@@ -130,3 +95,38 @@ const port = process.env.PORT || 3001;
 server.listen(port);
 // Put a friendly message on the terminal
 console.log('Health check server running at http://127.0.0.1:' + port + '/');
+
+function handleApplication({ namedValues }) {
+  try {
+    const custId = await iracing.getDriverId(namedValues.Name[0]);
+    const { license, stats = {} } = await iracing.getCareerStats(custId);
+    const embed = new discord.MessageEmbed()
+    	.setTitle('New Driver Application')
+    	.setURL(`https://members.iracing.com/membersite/member/CareerStats.do?custid=${custId}`)
+      .setDescription(`${namedValues.Name[0]} applied to the league.`)
+      .addFields(
+        Object.entries(namedValues).reduce((fields, [name, value]) => { 
+          if (name !== "Name" && name !== "Email" && value[0])
+            fields.push({ name, value: value[0] });
+          return fields; 
+        }, [])
+      )
+    	.addFields(
+        { name: 'License', value: `\`${license.licGroupDisplayName}\``, inline: true },
+        { name: 'SR', value: `\`${license.srPrime}.${license.srSub}\``, inline: true },
+        { name: 'iRating', value: `\`${(parseInt(license.iRating)/1000).toFixed(1)}k\``, inline: true },
+        { name: 'Starts', value: `\`${stats.starts}\``, inline: true },
+        { name: 'Inc/Race', value: `\`${stats.avgIncPerRace.toFixed(2)}\``, inline: true },
+        { name: 'Laps', value: `\`${stats.totalLaps}\``, inline: true },
+        { name: 'Win %', value: `\`${stats.winPerc.toFixed(2)}%\``, inline: true },
+        { name: 'Top 5%', value: `\`${stats.top5Perc.toFixed(2)}%\``, inline: true },
+        { name: 'Led %', value: `\`${stats.lapsLedPerc.toFixed(2)}%\``, inline: true },
+    	)
+    	.setTimestamp()
+      
+    client.channels.cache.get('780928716728959047'/*websiteChannelId*/).send(embed);
+    
+  } catch(err) {
+    console.log(err);
+  }
+}
