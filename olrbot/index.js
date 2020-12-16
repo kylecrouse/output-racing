@@ -1,6 +1,7 @@
 const fs = require('fs');
 const discord = require('discord.js');
 const http = require('http');
+const iracing = require(`${process.cwd()}/lib/iracing`);
 const { prefix, superUsers } = require('./config.json');
 
 const client = new discord.Client();
@@ -74,12 +75,32 @@ const server = http.createServer((req, res) => {
 
     req.on('data', (chunk) => { body += chunk; });
 
-    req.on('end', function() {
+    req.on('end', async function() {
       if (req.url === '/apply') {
         console.log('Received message: ' + body);
         try {
           const { namedValues } = JSON.parse(body);
-          client.channels.cache.get('780929708484329512').send(`${namedValues.Name[0]} applied to the league.`);
+          const custId = await iracing.getDriverId(namedValues.Name[0]);
+          const { license, stats } = await iracing.getCareerStats(custId);
+          const embed = new discord.MessageEmbed()
+          	.setTitle('New Driver Application')
+          	.setURL(`https://members.iracing.com/membersite/member/CareerStats.do?custid=${custId}`)
+            .setDescription(`${namedValues.Name[0]} applied to the league.`)
+          	.addFields(
+              { name: 'License', value: `\`${license.licGroupDisplayName}\``, inline: true },
+              { name: 'SR', value: `\`${driver.license.srPrime}.${driver.license.srSub}\``, inline: true },
+              { name: 'iRating', value: `\`${(parseInt(driver.license.iRating)/1000).toFixed(1)}k\``, inline: true },
+              { name: 'Starts', value: `\`${stats.starts}\``, inline: true },
+              { name: 'Inc/Race', value: `\`${stats.avgIncPerRace.toFixed(2)}\``, inline: true },
+              { name: 'Laps', value: `\`${stats.totalLaps}\``, inline: true },
+              { name: 'Win %', value: `\`${stats.winPerc.toFixed(2)}%\``, inline: true },
+              { name: 'Top 5%', value: `\`${stats.top5Perc.toFixed(2)}%\``, inline: true },
+              { name: 'Led %', value: `\`${stats.lapsLedPerc.toFixed(2)}%\``, inline: true },
+          	)
+          	.setTimestamp()
+            
+          client.channels.cache.get('780929708484329512').send(embed);
+          
         } catch(err) {
           console.log(err);
         }
