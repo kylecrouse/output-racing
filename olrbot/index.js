@@ -81,7 +81,7 @@ const server = http.createServer((req, res) => {
         try {
           const { namedValues } = JSON.parse(body);
           const custId = await iracing.getDriverId(namedValues.Name[0]);
-          const { license, stats } = await iracing.getCareerStats(custId);
+          const { license, stats = {} } = await iracing.getCareerStats(custId);
           const embed = new discord.MessageEmbed()
           	.setTitle('New Driver Application')
           	.setURL(`https://members.iracing.com/membersite/member/CareerStats.do?custid=${custId}`)
