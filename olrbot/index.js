@@ -99,7 +99,9 @@ console.log('Health check server running at http://127.0.0.1:' + port + '/');
 async function handleApplication({ namedValues }) {
   try {
     const custId = await iracing.getDriverId(namedValues.Name[0]);
-    const { license, stats = {} } = await iracing.getCareerStats(custId);
+    console.log(`Matched ${namedValues.Name[0]} to ${custId}...`);
+    const { license = {}, stats = {} } = await iracing.getCareerStats(custId);
+    console.log({ license, stats });
     const embed = new discord.MessageEmbed()
     	.setTitle('New Driver Application')
     	.setURL(`https://members.iracing.com/membersite/member/CareerStats.do?custid=${custId}`)
