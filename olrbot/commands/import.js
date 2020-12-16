@@ -74,7 +74,7 @@ async function handleLatest(message, args) {
   await league.init();
   
   // Get the ID for the current season
-  const seasonId = league.season.fields.id['en-US'];
+  const seasonId = league.season.id;
   
   // Import the latest results from iRacing to danlisa.com
   const race = await getLatestResults();
