@@ -3,7 +3,7 @@ const discord = require('discord.js');
 const http = require('http');
 const moment = require('moment');
 const iracing = require(`${process.cwd()}/lib/iracing`);
-const { prefix, superUsers, websiteChannelId } = require('./config.json');
+const { prefix, superUsers, applicationsChannelId } = require('./config.json');
 
 const client = new discord.Client();
 
@@ -125,7 +125,7 @@ async function handleApplication({ namedValues }) {
     	)
     	.setTimestamp()
       
-    client.channels.cache.get(websiteChannelId).send(embed);
+    client.channels.cache.get(applicationsChannelId).send(embed);
     
   } catch(err) {
     console.log(err);
