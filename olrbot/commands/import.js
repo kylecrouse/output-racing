@@ -100,12 +100,12 @@ async function handleResults(message, args) {
     broadcast: (args.length > 3) ? args[3] : undefined
   });
   
-  const results = race.fields.results['en-US']
+  const results = race.results
     .sort((a,b) => a.finish - b.finish)
     .slice(0,5);
 
   const embed = new Discord.MessageEmbed()
-  	.setTitle(race.fields.name['en-US'])
+  	.setTitle(race.name)
   	.setURL(`http://dnhi063vpnzuy.cloudfront.net/race/${args[1]}/`)
   	.addFields(
   		{ name: 'P', value: results.map(item => `\`${item.finish}\``), inline: true },
@@ -114,17 +114,17 @@ async function handleResults(message, args) {
   	)
   	.setTimestamp()
     
-  if (race.fields.logo) {
-    const logo = await cms.getAsset(race.fields.logo['en-US'].sys.id);
+  if (race.logo) {
+    const logo = await cms.getAsset(race.logo.sys.id);
     embed.setThumbnail(`https:${logo.fields.file['en-US'].url}`);
   } else {
     embed.setThumbnail(
-      tracks.find(({ name }) => race.fields.track['en-US'].indexOf(name) >= 0).logo
+      tracks.find(({ name }) => race.track.indexOf(name) >= 0).logo
     );
   }
   
-  if (race.fields.media) {
-    const media = await cms.getAsset(race.fields.media['en-US'][0].sys.id);
+  if (race.media) {
+    const media = await cms.getAsset(race.media[0].sys.id);
     embed.setImage(`https:${media.fields.file['en-US'].url}`);
   }
 
