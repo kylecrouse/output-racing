@@ -126,7 +126,7 @@ async function handleApplication({ namedValues }) {
     	)
     	.setTimestamp()
       
-    client.channels.cache.get('780928716728959047'/*websiteChannelId*/).send(embed);
+    client.channels.cache.get(websiteChannelId).send(embed);
     
   } catch(err) {
     console.log(err);
