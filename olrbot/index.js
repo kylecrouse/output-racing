@@ -1,9 +1,7 @@
 const fs = require('fs');
 const discord = require('discord.js');
 const http = require('http');
-const moment = require('moment');
-const iracing = require(`${process.cwd()}/lib/iracing`);
-const { prefix, superUsers, applicationsChannelId } = require('./config.json');
+const { prefix, superUsers } = require('./config.json');
 
 const client = new discord.Client();
 
@@ -96,38 +94,3 @@ const port = process.env.PORT || 3001;
 server.listen(port);
 // Put a friendly message on the terminal
 console.log('Health check server running at http://127.0.0.1:' + port + '/');
-
-async function handleApplication({ namedValues }) {
-  try {
-    const custId = await iracing.getDriverId(namedValues.Name[0]);
-    const { license = {}, stats = {}, memberSince, clubId } = await iracing.getCareerStats(custId);
-    const embed = new discord.MessageEmbed()
-    	.setTitle('League Application Received')
-      .setDescription(`[${namedValues.Name[0]}](https://members.iracing.com/membersite/member/CareerStats.do?custid=${custId}) applied to the league.`)
-      .addFields(
-        Object.entries(namedValues).reduce((fields, [name, value]) => { 
-          if (name !== "Name" && name !== "Email" && name !== "Timestamp" && name !== "Rules" && value[0])
-            fields.push({ name, value: `\`${value[0]}\`` });
-          return fields; 
-        }, [])
-      )
-      .addField('Member Since', `\`${moment(memberSince, "DD-MM-YYYY").format('MMMM Do, YYYY')}\``)
-    	.addFields(
-        { name: 'License', value: `\`${license.licGroupDisplayName}\``, inline: true },
-        { name: 'SR', value: `\`${license.srPrime}.${license.srSub}\``, inline: true },
-        { name: 'iRating', value: `\`${(parseInt(license.iRating)/1000).toFixed(1)}k\``, inline: true },
-        { name: 'Starts', value: `\`${stats.starts}\``, inline: true },
-        { name: 'Inc/Race', value: `\`${stats.avgIncPerRace.toFixed(2)}\``, inline: true },
-        { name: 'Laps', value: `\`${stats.totalLaps}\``, inline: true },
-        { name: 'Win %', value: `\`${stats.winPerc.toFixed(2)}%\``, inline: true },
-        { name: 'Top 5%', value: `\`${stats.top5Perc.toFixed(2)}%\``, inline: true },
-        { name: 'Led %', value: `\`${stats.lapsLedPerc.toFixed(2)}%\``, inline: true },
-    	)
-    	.setTimestamp()
-      
-    client.channels.cache.get(applicationsChannelId).send(embed);
-    
-  } catch(err) {
-    console.log(err);
-  }
-}

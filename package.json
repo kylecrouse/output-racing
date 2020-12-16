@@ -24,6 +24,7 @@
     "contentful-management": "^6.3.2",
     "csv-parse": "^4.14.1",
     "discord.js": "^12.5.0",
+    "google-spreadsheet": "^3.0.14",
     "lodash": "^4.17.20",
     "log-update": "^4.0.0",
     "mime-types": "^2.1.27",
