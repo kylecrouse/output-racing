@@ -15,9 +15,10 @@ const doc = new GoogleSpreadsheet('1YwAKsEToADShutguF4tTztfg5gTsiFbRej5Yk4Tuj_4'
 
 async function getSheet(title) {
     // use service account creds
+    console.log(process.env.GOOGLE_PRIVATE_KEY);
     await doc.useServiceAccountAuth({
       client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+      private_key: process.env.GOOGLE_PRIVATE_KEY,
     });
     
     // Load the league doc
@@ -44,12 +45,69 @@ module.exports = {
       return rows.filter(row => row.Approved === 'PENDING');
   },
   kick: async (name) => {
+
+    // Get the applications sheet
+    const sheet = await getSheet('Applications');
     
+    // Get all rows
+    const rows = await sheet.getRows();
+    
+    // Find the latest application matching this name
+    const row = rows.filter(row => row.Name === name).pop();
+    
+    // Change the approved value to NO
+    row.Approved = "KICKED";
+    
+    // TODO: - Remove from league on iRacing?
+    //       - Remove from Discord?
+    //       - Mark driver as inactive in system?
+    //       - What else? Welcome message somewhere?
+    
+    // Return promise for saving row
+    return row.save();
+
   },
   accept: async (name) => {
+
+    // Get the applications sheet
+    const sheet = await getSheet('Applications');
+    
+    // Get all rows
+    const rows = await sheet.getRows();
+    
+    // Find the latest application matching this name
+    const row = rows.filter(row => row.Name === name).pop();
+    
+    // Change the approved value to NO
+    row.Approved = "YES";
+    
+    // TODO: - Invite to league on iRacing?
+    //       - Invite to Discord (associate ID somehow and remove !link?)
+    //       - Import driver to CMS?
+    //       - What else? Welcome message somewhere?
+    
+    // Return promise for saving row
+    return row.save();
     
   },
   reject: async (name) => {
+    
+    // Get the applications sheet
+    const sheet = await getSheet('Applications');
+    
+    // Get all rows
+    const rows = await sheet.getRows();
+    
+    // Find the latest application matching this name
+    const row = rows.filter(row => row.Name === name).pop();
+    
+    // Change the approved value to NO
+    row.Approved = "NO";
+    
+    // TODO: Is anything else done on rejection?
+    
+    // Return promise for saving row
+    return row.save();
     
   },
   handleApplication: async ({ namedValues, range }) => {
