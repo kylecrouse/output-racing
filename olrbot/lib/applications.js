@@ -126,7 +126,7 @@ module.exports = {
       
       // Get the cells to be updated
       const cellStatus = sheet.getCellByA1(`A${range.rowStart}`);
-      const cellRating = sheet.getCellByA1(`B${range.rowStart}`;
+      const cellRating = sheet.getCellByA1(`B${range.rowStart}`);
       const cellStarts = sheet.getCellByA1(`K${range.rowStart}`);
       const cellWin = sheet.getCellByA1(`L${range.rowStart}`);
       const cellT5 = sheet.getCellByA1(`M${range.rowStart}`);
