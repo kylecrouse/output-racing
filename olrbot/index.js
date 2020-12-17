@@ -1,6 +1,7 @@
 const fs = require('fs');
 const discord = require('discord.js');
 const http = require('http');
+const { handleApplication } = require('./lib/applications');
 const { prefix, superUsers } = require('./config.json');
 
 const client = new discord.Client();

@@ -52,21 +52,23 @@ module.exports = {
       const sheet = await getSheet('Applications');
       
       // Write retrieved data back to spreadsheet
-      await sheet.loadCells(`B${range.rowStart}:${range.rowStart}`);
+      await sheet.loadCells(`A${range.rowStart}:${range.rowStart}`);
       
       // Get the cells to be updated
-      const cellRating = sheet.getCell(0, 0);
-      const cellStarts = sheet.getCell(0, 9);
-      const cellWin = sheet.getCell(0, 10);
-      const cellT5 = sheet.getCell(0, 11);
-      const cellLaps = sheet.getCell(0, 12);
-      const cellLed = sheet.getCell(0, 13);
-      const cellLicense = sheet.getCell(0, 14);
-      const cellSR = sheet.getCell(0, 15);
-      const celliR = sheet.getCell(0, 16);
-      const cellInc = sheet.getCell(0, 17);
+      const cellStatus = sheet.getCell(0, 0);
+      const cellRating = sheet.getCell(0, 1);
+      const cellStarts = sheet.getCell(0, 10);
+      const cellWin = sheet.getCell(0, 11);
+      const cellT5 = sheet.getCell(0, 12);
+      const cellLaps = sheet.getCell(0, 13);
+      const cellLed = sheet.getCell(0, 14);
+      const cellLicense = sheet.getCell(0, 15);
+      const cellSR = sheet.getCell(0, 16);
+      const celliR = sheet.getCell(0, 17);
+      const cellInc = sheet.getCell(0, 18);
       
       // Set new data for each cell
+      cellStatus.value = 'PENDING';
       cellRating.value = `${stats.avgIncPerRace.toFixed(2)} inc / ${license.iRating} iR / ${license.licGroupDisplayName} / ${license.srPrime}.${license.srSub} SR`;
       cellStarts.value = stats.starts;
       cellWin.value = `${stats.winPerc.toFixed(2)}%`;
