@@ -17,7 +17,7 @@ async function getSheet(title) {
     // use service account creds
     await doc.useServiceAccountAuth({
       client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY,
+      private_key: "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDH2DbTWcEFRL2G\n3qM0ieYxWJQcZ01SPkS7uz5XTc2y+nPBRSUAQLbD/fSmNpOkClHYon0uyU4oAsSx\nwLtIBpiYAdgGed4yGayNZlfjeNenSL05OM9AeeUTvmlalLOnUEhwOpgm3HXbXIF1\nlRPYgjw6zB2azYZ090CsPsw/fOAF7nwibrzr0H3A7i/Wk9lbQv9KfSmMWvq8jBeh\nRXxyUDh3PKQs3ut5kiDdeGxn+t8fa/zZfQUrDmkdQINx4sAiAXhkjox2DdTskeqa\nKHM2SCQu/gqTBhPPNAP5mlU3ktQHKEOeslbgPCOBNhXeZnvw1uSkmt4etI9NDbR4\nbqe+LTV9AgMBAAECggEAKR0NfHI24FlZv3UusNic47KEOAq1kNGwLMoTA32Fb8iQ\nR2bs+44Uu6ITsp1ARwt7dpzJMbam7lrRcftDXEhFHOKmOYDZake3ZNi1BJ6ACVGQ\n4kSSeMKLEwKFpKW6hxWgbXxUgIwy7/fqR1Et5ck3UGZdQdN+EbKrWrRJq1cKtJVT\nzTX983JmK0F/acyi7sLAW7JChgy8PKCsc0MMol+MTEipiR8danqsSEmqFSX49rkc\naPRMIcQ2YVXD5l/+41ebwyDXJ6sS1wiV4BDj1FKOdgCLC5ljcQSsRgmc5OpKFjGc\nJcOPMYOGKJPr2TRYGGxqLB1syKXkHWA7GJMClrm/4QKBgQD852T5qJ5ED9vqtG7m\nQxOcNrhuN7vOvVYM4QnKup8JibesUBvep2r+JQ0Iy2jGCRkUuK5dTc5G4Cf1ECLt\nEyl6YmF3lZ06BZsxXTzrhXFzk545sHvaSYdfqqQryH+mE2JVZdCV8TUdGjggmIVv\n3njr7SIdRcYEkwuFFC9CD8sPYQKBgQDKSofn8mwyJpvOOGHWU3bnptnMdLXC3zvL\nLGTXbEMMpkoijfKlRbUaVpkrdd+p1lv2DJ6xPiP6R3XOtm8vegRliCcazPH0lOIn\nFLgTn2HNyz7pAp6/xepdHxBO/XYcxhwitI0cAmBENWLqITweUXFD950KMZM4/HxZ\ndiQec20nnQKBgQCPfL2mhEufNBxC8rJFBGOY6tcC+a4dowCyd+91TSK0Z6WFJ0JY\ntkYXAXB+v+GnEjxfrFSJbX6OadlhyhD2zztmS3EfRwyYgdvGSy8oNWLj/ynzczUh\n6TvcRFW23Z/G2xKcfxK0L9FBvMGBhOeYS/HxcW48i3zI1aDglU4mvg0ooQKBgDpQ\nOdU3INFkJ83OmwV5kfE9O9OgYTUHvOjYp0kiQEHJPd2wJZ5W9dnd1NGebRc8X84R\n3T0iuKRRLTilhm+dMN9D3GHxal4i/P5fDqE5dKwqRrxMsQ5/MwwdBEqA7idlRH8M\npRDJ7o47BYSQiBAFUi1Rl8d0ewgWYJI5aDgO9gxRAoGBANNGjmJ3Y1a1ySCek/QW\ntNRCjFpZEHenD27IAQY3UvYwFTguYnd9C5qS6/z/g/e2gTVjc7AzEV4y7qxD4ejP\nelWLXB1wbj/sj4Mh/HYZ6+37lsvHs4qyyXSqJ9ifGMEBuvJCum1OQ/dI6ZFHlCfM\nY0rxYHwMP9KZLAjTk5mtQf0N\n-----END PRIVATE KEY-----\n"//process.env.GOOGLE_PRIVATE_KEY,
     });
     
     // Load the league doc
@@ -28,7 +28,7 @@ async function getSheet(title) {
 }
 
 module.exports = {
-  getPending: async () => {
+  getPending: async (name) => {
     
     // Get the applications sheet
     const sheet = await getSheet('Applications');
@@ -36,9 +36,12 @@ module.exports = {
     // Get all rows
     const rows = await sheet.getRows();
     
-    // Filter the rows for pending applications
-    return rows.filter(row => row.Approved === 'PENDING');
-  
+    if (name)
+      // Return the queried applicant (only the last one for dupes)
+      return rows.filter(row => row.Approved === 'PENDING' && row.Name === name).pop();
+    else 
+      // Filter the rows for pending applications
+      return rows.filter(row => row.Approved === 'PENDING');
   },
   handleApplication: async ({ namedValues, range }) => {
     try {
