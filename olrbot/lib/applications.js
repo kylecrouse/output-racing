@@ -4,8 +4,7 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 const iracing = require(`${process.cwd()}/lib/iracing`);
 const { isAuthorized } = require('./authorization');
 const { applicationsChannelId } = require('../config.json');
-const { client_email, private_key } = require(`${process.cwd()}/.credentials/orlbot-6ab214a4a4ba.json`);
-
+const { getSecretValue } = require(`${process.cwd()}/lib/secrets`);
 const REACTION_ACCEPT = '👍';
 const REACTION_DENY = '👎';
 const REACTION_KICK = '🥾';
@@ -15,14 +14,18 @@ const REACTION_FAILURE = '😢';
 const doc = new GoogleSpreadsheet('1YwAKsEToADShutguF4tTztfg5gTsiFbRej5Yk4Tuj_4');
 
 async function getSheet(title) {
-    // use service account creds
-    await doc.useServiceAccountAuth({ client_email, private_key });
-    
-    // Load the league doc
-    await doc.loadInfo();
-    
-    // Get the applications sheet
-    return doc.sheetsByTitle[title];
+  
+  // Get Google credentials from AWS store  
+  const { client_email, private_key } = await getSecretValue('ORLBot/GoogleServiceAccount');
+  
+  // use service account creds
+  await doc.useServiceAccountAuth({ client_email, private_key });
+  
+  // Load the league doc
+  await doc.loadInfo();
+  
+  // Get the applications sheet
+  return doc.sheetsByTitle[title];
 }
 
 module.exports = {
