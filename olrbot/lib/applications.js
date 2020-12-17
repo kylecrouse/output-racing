@@ -16,7 +16,9 @@ const doc = new GoogleSpreadsheet('1YwAKsEToADShutguF4tTztfg5gTsiFbRej5Yk4Tuj_4'
 async function getSheet(title) {
   
   // Get Google credentials from AWS store  
-  const { client_email, private_key } = await getSecretValue('ORLBot/GoogleServiceAccount');
+  const { client_email, private_key } = await getSecretValue('ORLBot/GoogleServiceAccount').catch(err => console.log(err));
+  
+  console.log({client_email,private_key});
   
   // use service account creds
   await doc.useServiceAccountAuth({ client_email, private_key });
