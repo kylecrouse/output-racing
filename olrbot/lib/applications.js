@@ -15,10 +15,10 @@ const doc = new GoogleSpreadsheet('1YwAKsEToADShutguF4tTztfg5gTsiFbRej5Yk4Tuj_4'
 
 async function getSheet(title) {
     // use service account creds
-    console.log(process.env.GOOGLE_PRIVATE_KEY);
+    console.log(process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"));
     await doc.useServiceAccountAuth({
       client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY,
+      private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
     });
     
     // Load the league doc
