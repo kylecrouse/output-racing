@@ -4,6 +4,7 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 const iracing = require(`${process.cwd()}/lib/iracing`);
 const { isAuthorized } = require('./authorization');
 const { applicationsChannelId } = require('../config.json');
+const { client_email, private_key } = require(`${process.cwd()}/.credentials/orlbot-6ab214a4a4ba.json`);
 
 const REACTION_ACCEPT = '👍';
 const REACTION_DENY = '👎';
@@ -14,13 +15,8 @@ const REACTION_FAILURE = '😢';
 const doc = new GoogleSpreadsheet('1YwAKsEToADShutguF4tTztfg5gTsiFbRej5Yk4Tuj_4');
 
 async function getSheet(title) {
-    console.log(process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"));
-
     // use service account creds
-    await doc.useServiceAccountAuth({
-      client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
-    });
+    await doc.useServiceAccountAuth({ client_email, private_key });
     
     // Load the league doc
     await doc.loadInfo();
