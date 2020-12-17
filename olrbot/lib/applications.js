@@ -122,21 +122,21 @@ module.exports = {
       const sheet = await getSheet('Applications');
       
       // Write retrieved data back to spreadsheet
-      await sheet.loadCells(`A${range.rowStart}:${range.rowStart}`);
+      await sheet.loadCells(`A${range.rowStart}:T${range.rowStart}`);
       
       // Get the cells to be updated
-      const cellStatus = sheet.getCell(range.rowStart, 0);
-      const cellRating = sheet.getCell(range.rowStart, 1);
-      const cellStarts = sheet.getCell(range.rowStart, 10);
-      const cellWin = sheet.getCell(range.rowStart, 11);
-      const cellT5 = sheet.getCell(range.rowStart, 12);
-      const cellLaps = sheet.getCell(range.rowStart, 13);
-      const cellLed = sheet.getCell(range.rowStart, 14);
-      const cellLicense = sheet.getCell(range.rowStart, 15);
-      const cellSR = sheet.getCell(range.rowStart, 16);
-      const celliR = sheet.getCell(range.rowStart, 17);
-      const cellInc = sheet.getCell(range.rowStart, 18);
-      const cellCustId = sheet.getCell(range.rowStart, 19);
+      const cellStatus = sheet.getCellByA1(`A${range.rowStart}`);
+      const cellRating = sheet.getCellByA1(`B${range.rowStart}`;
+      const cellStarts = sheet.getCellByA1(`K${range.rowStart}`);
+      const cellWin = sheet.getCellByA1(`L${range.rowStart}`);
+      const cellT5 = sheet.getCellByA1(`M${range.rowStart}`);
+      const cellLaps = sheet.getCellByA1(`N${range.rowStart}`);
+      const cellLed = sheet.getCellByA1(`O${range.rowStart}`);
+      const cellLicense = sheet.getCellByA1(`P${range.rowStart}`);
+      const cellSR = sheet.getCellByA1(`Q${range.rowStart}`);
+      const celliR = sheet.getCellByA1(`R${range.rowStart}`);
+      const cellInc = sheet.getCellByA1(`S${range.rowStart}`);
+      const cellCustId = sheet.getCellByA1(`T${range.rowStart}`);
       
       // Set new data for each cell
       cellStatus.value = 'PENDING';
