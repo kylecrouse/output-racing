@@ -125,18 +125,18 @@ module.exports = {
       await sheet.loadCells(`A${range.rowStart}:${range.rowStart}`);
       
       // Get the cells to be updated
-      const cellStatus = sheet.getCell(0, 0);
-      const cellRating = sheet.getCell(0, 1);
-      const cellStarts = sheet.getCell(0, 10);
-      const cellWin = sheet.getCell(0, 11);
-      const cellT5 = sheet.getCell(0, 12);
-      const cellLaps = sheet.getCell(0, 13);
-      const cellLed = sheet.getCell(0, 14);
-      const cellLicense = sheet.getCell(0, 15);
-      const cellSR = sheet.getCell(0, 16);
-      const celliR = sheet.getCell(0, 17);
-      const cellInc = sheet.getCell(0, 18);
-      const cellCustId = sheet.getCell(0, 19);
+      const cellStatus = sheet.getCell(range.rowStart, 0);
+      const cellRating = sheet.getCell(range.rowStart, 1);
+      const cellStarts = sheet.getCell(range.rowStart, 10);
+      const cellWin = sheet.getCell(range.rowStart, 11);
+      const cellT5 = sheet.getCell(range.rowStart, 12);
+      const cellLaps = sheet.getCell(range.rowStart, 13);
+      const cellLed = sheet.getCell(range.rowStart, 14);
+      const cellLicense = sheet.getCell(range.rowStart, 15);
+      const cellSR = sheet.getCell(range.rowStart, 16);
+      const celliR = sheet.getCell(range.rowStart, 17);
+      const cellInc = sheet.getCell(range.rowStart, 18);
+      const cellCustId = sheet.getCell(range.rowStart, 19);
       
       // Set new data for each cell
       cellStatus.value = 'PENDING';
