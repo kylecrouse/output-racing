@@ -66,6 +66,7 @@ module.exports = {
       const cellSR = sheet.getCell(0, 16);
       const celliR = sheet.getCell(0, 17);
       const cellInc = sheet.getCell(0, 18);
+      const cellCustId = sheet.getCell(0, 19);
       
       // Set new data for each cell
       cellStatus.value = 'PENDING';
@@ -79,6 +80,7 @@ module.exports = {
       cellSR.value = `${license.srPrime}.${license.srSub}`;
       celliR.value = license.iRating;
       cellInc.value = stats.avgIncPerRace.toFixed(2);
+      cellCustId.value = custId;
       
       // Save all cells back to spreadsheet
       await sheet.saveUpdatedCells();
