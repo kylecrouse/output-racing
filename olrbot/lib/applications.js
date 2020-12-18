@@ -44,7 +44,7 @@ module.exports = {
       // Filter the rows for pending applications
       return rows.filter(row => row.Approved === 'PENDING');
   },
-  kick: async (name) => {
+  kick: async (name, reason) => {
 
     // Get the applications sheet
     const sheet = await getSheet('Applications');
@@ -57,6 +57,7 @@ module.exports = {
     
     // Change the approved value to NO
     row.Approved = "KICKED";
+    row['Reason for approve / deny / kicked'] = reason || 'N/A';
     
     // TODO: - Remove from league on iRacing?
     //       - Remove from Discord?
@@ -90,7 +91,7 @@ module.exports = {
     return row.save();
     
   },
-  reject: async (name) => {
+  reject: async (name, reason) => {
     
     // Get the applications sheet
     const sheet = await getSheet('Applications');
@@ -103,8 +104,7 @@ module.exports = {
     
     // Change the approved value to NO
     row.Approved = "NO";
-    
-    // TODO: Is anything else done on rejection?
+    row['Reason for approve / deny / kicked'] = reason || 'N/A';
     
     // Return promise for saving row
     return row.save();
