@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const moment = require('moment');
 const { getPending } = require('../lib/applications');
+const { isAuthorized } = require('../lib/authorization');
 
 module.exports = {
 	name: 'pending',
@@ -8,6 +9,8 @@ module.exports = {
   args: false,
   usage: '["<member name>"]',
 	execute: async (message, args) => {
+    
+    if (!isAuthorized(message.author, message.channel)) return;
     
     const applicants = await getPending(args[0]);
     
