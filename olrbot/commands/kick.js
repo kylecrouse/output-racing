@@ -36,19 +36,15 @@ module.exports = {
       };
 
       // Send the message to the appropriate location
-      const approval = await message.channel.send(`Are you *sure* you want to kick **${driver.name}**?`);
+      const approval = await message.channel.send(`Are you *sure* you want to kick **${driver.name}**? ${REACTION_ACCEPT} or ${REACTION_DENY}`);
         
       // Wait for response and return decision as boolean
       const confirmation = await approval.awaitReactions(filter, { max: 1 })
         .then(collected => collected.firstKey() === REACTION_ACCEPT ? approval : null)
         .catch(collected => approval.react(REACTION_FAILURE));
 
-      console.log({confirmation});
-
       // If kicking wasn't confirmed, exit.
       if (!confirmation) return;
-      
-      return;
       
       // Get GuildMember based on linked discordId
       const member = message.guild.members.cache.get(driver.discordId);
