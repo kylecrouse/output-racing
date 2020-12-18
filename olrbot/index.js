@@ -78,7 +78,7 @@ const server = http.createServer((req, res) => {
     req.on('end', async function() {
       if (req.url === '/apply') {
         console.log('Received message: ' + body);
-        await handleApplication(JSON.parse(body));
+        await handleApplication(client, JSON.parse(body));
       }
 
       res.writeHead(200, 'OK', {'Content-Type': 'text/plain'});

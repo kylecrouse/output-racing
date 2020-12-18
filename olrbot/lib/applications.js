@@ -110,7 +110,7 @@ module.exports = {
     return row.save();
     
   },
-  handleApplication: async ({ namedValues, range }) => {
+  handleApplication: async (client, { namedValues, range }) => {
     try {
       // Get iRacing customer ID that matches submitted name
       const custId = await iracing.getDriverId(namedValues.Name[0]);
