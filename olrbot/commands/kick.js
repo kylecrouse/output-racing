@@ -4,6 +4,11 @@ const league = require(`${process.cwd()}/lib/league`);
 const iracing = require(`${process.cwd()}/lib/iracing`);
 const { kick } = require('../lib/applications');
 const { isAuthorized } = require('../lib/authorization');
+const { websiteChannelId } = require('../config.json');
+const REACTION_ACCEPT = '👍';
+const REACTION_DENY = '👎';
+const REACTION_SUCCESS = '✅';
+const REACTION_FAILURE = '😢';
 
 module.exports = {
 	name: 'kick',
@@ -20,10 +25,30 @@ module.exports = {
       
       // Resolve member name / arg[0] to a driver entry
       const driver = league.drivers.find(
-        ({ name = '', nickname = '' }) => name.toLowerCase() === args[0].toLowerCase() 
-          || nickname.toLowerCase() === args[0].toLowerCase()
+        ({ name = '' }) => name.toLowerCase() === args[0].toLowerCase() 
       );
       if (!driver) return message.reply(`No one named **${args[0]}** to kick.`);
+    
+      // Set the collector filter for authorized users approving or denying
+      const filter = (reaction, user) => {
+        return isAuthorized(user, reaction.message.channel) 
+          && (reaction.emoji.name === REACTION_ACCEPT || reaction.emoji.name === REACTION_DENY);
+      };
+
+      // Send the message to the appropriate location
+      const approval = await message.channel.send(`Are you *sure* you want to kick **${driver.name}**?`);
+        
+      // Wait for response and return decision as boolean
+      const confirmation = await approval.awaitReactions(filter, { max: 1 })
+        .then(collected => collected.firstKey() === REACTION_ACCEPT ? approval : null)
+        .catch(collected => approval.react(REACTION_FAILURE));
+
+      console.log({confirmation});
+
+      // If kicking wasn't confirmed, exit.
+      if (!confirmation) return;
+      
+      return;
       
       // Get GuildMember based on linked discordId
       const member = message.guild.members.cache.get(driver.discordId);
@@ -37,7 +62,7 @@ module.exports = {
       await driver.put({ active: false });
       
       // Mark as kicked in spreadsheet
-      await kick(args[0], args[1]);
+      await kick(driver.name, args[1]);
           
       // Rebuild website to update driver roster
       await exec('npm run build && aws s3 sync ./out s3://output-racing/ && aws cloudfront create-invalidation --distribution-id E2HCYIFSR21K3R');
