@@ -2,6 +2,7 @@ const discord = require('discord.js');
 const { isAuthorized } = require('../lib/authorization');
 const { websiteChannelId } = require('../config.json');
 const league = require(`${process.cwd()}/lib/league`);
+const iracing = require(`${process.cwd()}/lib/iracing`);
 
 const REACTION_ACCEPT = '👍';
 const REACTION_DENY = '👎';
@@ -36,6 +37,7 @@ module.exports = {
     if (isAuthorized(message.author, message.channel)) {
       await Promise.all(
         // Update iRacing
+        iracing.updateDriver('CarNumber', args[0], driver.custId, 2732),
         // Update driver record
         driver.put({ number: args[0] })
       );
