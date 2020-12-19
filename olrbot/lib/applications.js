@@ -44,6 +44,18 @@ module.exports = {
       // Filter the rows for pending applications
       return rows.filter(row => row.Approved === 'PENDING');
   },
+  getInvited: async () => {
+    
+    // Get the applications sheet
+    const sheet = await getSheet('Applications');
+    
+    // Get all rows
+    const rows = await sheet.getRows();
+    
+    // Filter the rows for invited applications
+    return rows.filter(row => row.Approved === 'YES' && row.inviteCode);
+
+  },
   kick: async (name, reason) => {
 
     // Get the applications sheet
@@ -59,16 +71,11 @@ module.exports = {
     row.Approved = "KICKED";
     row['Reason for approve / deny / kicked'] = reason || 'N/A';
     
-    // TODO: - Remove from league on iRacing?
-    //       - Remove from Discord?
-    //       - Mark driver as inactive in system?
-    //       - What else? Welcome message somewhere?
-    
     // Return promise for saving row
     return row.save();
 
   },
-  accept: async (name) => {
+  accept: async (name, reason) => {
 
     // Get the applications sheet
     const sheet = await getSheet('Applications');
@@ -81,11 +88,7 @@ module.exports = {
     
     // Change the approved value to NO
     row.Approved = "YES";
-    
-    // TODO: - Invite to league on iRacing?
-    //       - Invite to Discord (associate ID somehow and remove !link?)
-    //       - Import driver to CMS?
-    //       - What else? Welcome message somewhere?
+    row['Reason for approve / deny / kicked'] = reason || 'N/A';
     
     // Return promise for saving row
     return row.save();
@@ -109,6 +112,24 @@ module.exports = {
     // Return promise for saving row
     return row.save();
     
+  },
+  setAccepted: async (name) => {
+    
+    // Get the applications sheet
+    const sheet = await getSheet('Applications');
+    
+    // Get all rows
+    const rows = await sheet.getRows();
+    
+    // Find the latest application matching this name
+    const row = rows.filter(row => row.Name === name).pop();
+    
+    // Remove the used invite code
+    row.inviteCode = "";
+    
+    // Return promise for saving row
+    return row.save();
+
   },
   handleApplication: async (client, { namedValues, range }) => {
     try {

@@ -1,7 +1,9 @@
 {
 	"prefix": "!",
-  "websiteChannelId": "780929708484329512",
 	"applicationsChannelId": "644978012781150218",
+	"generalChannelId": "428309139496763395",
+  "websiteChannelId": "780929708484329512",
+	"welcomeChannelId": "476442982787317760",
 	"superUsers": [
 		"697817102534311996"
 	]

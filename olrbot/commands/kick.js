@@ -35,8 +35,8 @@ module.exports = {
           && (reaction.emoji.name === REACTION_ACCEPT || reaction.emoji.name === REACTION_DENY);
       };
 
-      // Send the message to the appropriate location
-      const approval = await message.channel.send(`Are you *sure* you want to kick **${driver.name}**? ${REACTION_ACCEPT} or ${REACTION_DENY}`);
+      // Send a request for confirmation of this action
+      const approval = await message.channel.send(`Are you *sure* you want to kick **${driver.name}**? React with ${REACTION_ACCEPT} or ${REACTION_DENY} to confirm.`);
         
       // Wait for response and return decision as boolean
       const confirmation = await approval.awaitReactions(filter, { max: 1 })
