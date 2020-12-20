@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const { exec } = require('child_process');
 const iracing = require(`${process.cwd()}/lib/iracing`);
-const { accept } = require('../lib/applications');
+const { getPending, accept } = require('../lib/applications');
 const { isAuthorized } = require('../lib/authorization');
 const { welcomeChannelId } = require('../config.json');
 const REACTION_SUCCESS = '✅';
