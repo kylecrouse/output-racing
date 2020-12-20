@@ -24,8 +24,6 @@ module.exports = async (member) => {
   // Get open invites from guild
   const invites = await member.guild.fetchInvites();
   
-  console.log({applicants, invites});
-  
   // Find the missing applicant code from guild
   const [applicant] = _.differenceWith(applicants, invites, 
     (applicant, invite) => applicant.inviteCode === invite.code

@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const moment = require('moment');
-const { getPending } = require('../lib/applications');
+const { getPending, resolveApplicant } = require('../lib/applications');
 const { isAuthorized } = require('../lib/authorization');
 
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
     
     if (!isAuthorized(message.author, message.channel)) return;
     
-    const applicants = await getPending(args[0]);
+    let applicants = await getPending(args[0]);
     
     if (!applicants) 
       return args[0] 
@@ -21,6 +21,18 @@ module.exports = {
 
     // Handle multiple applicants matching query.
     if (Array.isArray(applicants)) {
+      
+      applicants = await Promise.all(applicants.map(async (applicant) => {
+        // If stats exist, return as normal
+        if (applicant.custId) return applicant;
+        // Otherwise, fetch from iRacing
+        else {
+          // Populate spreadsheet with all the info
+          await resolveApplicant(applicant.Name);
+          // Re-fetch the applicant
+          return getPending(applicant.Name);
+        }
+      }));
       
       const embed = new Discord.MessageEmbed()
       	.setTitle('Pending League Applications')
@@ -48,6 +60,13 @@ module.exports = {
     
     // Handle single applicant matching query
     else {
+      if (!applicants.custId) {
+        // Populate spreadsheet with all the info
+        await resolveApplicant(applicants.Name);
+        // Re-fetch the applicant
+        applicants = getPending(applicants.Name);
+      }
+
       const embed = new Discord.MessageEmbed()
       	.setTitle(`${applicants.Name}'s League Application`)
         .setURL(`https://members.iracing.com/membersite/member/CareerStats.do?custid=${applicants.custId}`)

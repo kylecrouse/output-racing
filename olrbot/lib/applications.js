@@ -28,6 +28,53 @@ async function getSheet(title) {
   return doc.sheetsByTitle[title];
 }
 
+async function resolveApplicant({ namedValues, range }) {
+    // Get iRacing customer ID that matches submitted name
+  const custId = await iracing.getDriverId(namedValues.Name[0]);
+  
+  // Get member profile data for custId
+  const { license = {}, stats = {}, memberSince, clubId } = await iracing.getCareerStats(custId);
+  
+  // Get the applications sheet
+  const sheet = await getSheet('Applications');
+  
+  // Write retrieved data back to spreadsheet
+  await sheet.loadCells(`A${range.rowStart}:T${range.rowStart}`);
+  
+  // Get the cells to be updated
+  const cellStatus = sheet.getCellByA1(`A${range.rowStart}`);
+  const cellRating = sheet.getCellByA1(`B${range.rowStart}`);
+  const cellStarts = sheet.getCellByA1(`K${range.rowStart}`);
+  const cellWin = sheet.getCellByA1(`L${range.rowStart}`);
+  const cellT5 = sheet.getCellByA1(`M${range.rowStart}`);
+  const cellLaps = sheet.getCellByA1(`N${range.rowStart}`);
+  const cellLed = sheet.getCellByA1(`O${range.rowStart}`);
+  const cellLicense = sheet.getCellByA1(`P${range.rowStart}`);
+  const cellSR = sheet.getCellByA1(`Q${range.rowStart}`);
+  const celliR = sheet.getCellByA1(`R${range.rowStart}`);
+  const cellInc = sheet.getCellByA1(`S${range.rowStart}`);
+  const cellCustId = sheet.getCellByA1(`T${range.rowStart}`);
+  
+  // Set new data for each cell
+  cellStatus.value = 'PENDING';
+  cellRating.value = `${stats.avgIncPerRace.toFixed(2)} inc / ${license.iRating} iR / ${license.licGroupDisplayName} / ${license.srPrime}.${license.srSub} SR`;
+  cellStarts.value = stats.starts;
+  cellWin.value = `${stats.winPerc.toFixed(2)}%`;
+  cellT5.value = `${stats.top5Perc.toFixed(2)}%`;
+  cellLed.value = `${stats.lapsLedPerc.toFixed(2)}%`;
+  cellLaps.value = stats.totalLaps;
+  cellLicense.value = license.licGroupDisplayName;
+  cellSR.value = `${license.srPrime}.${license.srSub}`;
+  celliR.value = license.iRating;
+  cellInc.value = stats.avgIncPerRace.toFixed(2);
+  cellCustId.value = custId;
+  
+  // Save all cells back to spreadsheet
+  await sheet.saveUpdatedCells();
+
+  return { custId, license, stats, memberSince, clubId };
+}
+
 module.exports = {
   getPending: async (name) => {
     
@@ -133,48 +180,7 @@ module.exports = {
   },
   handleApplication: async (client, { namedValues, range }) => {
     try {
-      // Get iRacing customer ID that matches submitted name
-      const custId = await iracing.getDriverId(namedValues.Name[0]);
-      
-      // Get member profile data for custId
-      const { license = {}, stats = {}, memberSince, clubId } = await iracing.getCareerStats(custId);
-      
-      // Get the applications sheet
-      const sheet = await getSheet('Applications');
-      
-      // Write retrieved data back to spreadsheet
-      await sheet.loadCells(`A${range.rowStart}:T${range.rowStart}`);
-      
-      // Get the cells to be updated
-      const cellStatus = sheet.getCellByA1(`A${range.rowStart}`);
-      const cellRating = sheet.getCellByA1(`B${range.rowStart}`);
-      const cellStarts = sheet.getCellByA1(`K${range.rowStart}`);
-      const cellWin = sheet.getCellByA1(`L${range.rowStart}`);
-      const cellT5 = sheet.getCellByA1(`M${range.rowStart}`);
-      const cellLaps = sheet.getCellByA1(`N${range.rowStart}`);
-      const cellLed = sheet.getCellByA1(`O${range.rowStart}`);
-      const cellLicense = sheet.getCellByA1(`P${range.rowStart}`);
-      const cellSR = sheet.getCellByA1(`Q${range.rowStart}`);
-      const celliR = sheet.getCellByA1(`R${range.rowStart}`);
-      const cellInc = sheet.getCellByA1(`S${range.rowStart}`);
-      const cellCustId = sheet.getCellByA1(`T${range.rowStart}`);
-      
-      // Set new data for each cell
-      cellStatus.value = 'PENDING';
-      cellRating.value = `${stats.avgIncPerRace.toFixed(2)} inc / ${license.iRating} iR / ${license.licGroupDisplayName} / ${license.srPrime}.${license.srSub} SR`;
-      cellStarts.value = stats.starts;
-      cellWin.value = `${stats.winPerc.toFixed(2)}%`;
-      cellT5.value = `${stats.top5Perc.toFixed(2)}%`;
-      cellLed.value = `${stats.lapsLedPerc.toFixed(2)}%`;
-      cellLaps.value = stats.totalLaps;
-      cellLicense.value = license.licGroupDisplayName;
-      cellSR.value = `${license.srPrime}.${license.srSub}`;
-      celliR.value = license.iRating;
-      cellInc.value = stats.avgIncPerRace.toFixed(2);
-      cellCustId.value = custId;
-      
-      // Save all cells back to spreadsheet
-      await sheet.saveUpdatedCells();
+      const { custId, license, stats, memberSince } = await resolveApplicant({ namedValues, range });
       
       // Notify applications channel
       const embed = new discord.MessageEmbed()
@@ -206,5 +212,6 @@ module.exports = {
     } catch(err) {
       console.log(err);
     }
-  }
+  },
+  resolveApplicant
 }
