@@ -28,7 +28,7 @@ client.on('message', async (message) => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
   
   // Only handle guild messages or DMs from allowed users
-  if (!(message.guild/* || superUsers.includes(message.author.id)*/)) return;
+  // if (!(message.guild || superUsers.includes(message.author.id))) return;
     
   // Get message command (i.e., !command) and args
   // Use regex that doesn't split inside quotes but doesn't match them either
