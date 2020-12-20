@@ -112,7 +112,7 @@ module.exports = {
     const rows = await sheet.getRows();
     
     // Find the latest application matching this name
-    const row = rows.filter(row => row.Name.toLowerCase() === name.toLowerCase()).pop();
+    const row = rows.filter(row => row.Approved === 'YES' && row.Name.toLowerCase() === name.toLowerCase()).pop();
     
     // Change the approved value to NO
     row.Approved = "KICKED";
@@ -131,7 +131,7 @@ module.exports = {
     const rows = await sheet.getRows();
     
     // Find the latest application matching this name
-    const row = rows.filter(row => row.Name.toLowerCase() === name.toLowerCase()).pop();
+    const row = rows.filter(row => row.Approved === 'PENDING' && row.Name.toLowerCase() === name.toLowerCase()).pop();
     
     // Change the approved value to NO
     row.Approved = "YES";
@@ -150,7 +150,7 @@ module.exports = {
     const rows = await sheet.getRows();
     
     // Find the latest application matching this name
-    const row = rows.filter(row => row.Name.toLowerCase() === name.toLowerCase()).pop();
+    const row = rows.filter(row => row.Approved === 'PENDING' && row.Name.toLowerCase() === name.toLowerCase()).pop();
     
     // Change the approved value to NO
     row.Approved = "NO";
@@ -169,7 +169,7 @@ module.exports = {
     const rows = await sheet.getRows();
     
     // Find the latest application matching this name
-    const row = rows.filter(row => row.Name.toLowerCase() === name.toLowerCase()).pop();
+    const row = rows.filter(row => row.Approved === 'YES' && row.Name.toLowerCase() === name.toLowerCase()).pop();
     
     // Remove the used invite code
     row.inviteCode = "";
