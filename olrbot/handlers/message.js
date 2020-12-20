@@ -1,3 +1,5 @@
+const { prefix, superUsers } = require('./config.json');
+
 module.exports = async (message) => {
   // console.log(message);
   
