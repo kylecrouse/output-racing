@@ -28,7 +28,7 @@ module.exports = {
         // Otherwise, fetch from iRacing
         else {
           // Populate spreadsheet with all the info
-          await resolveApplicant(applicant.Name);
+          await resolveApplicant(applicant.Name, applicant.rowNumber);
           // Re-fetch the applicant
           return getPending(applicant.Name);
         }
@@ -62,7 +62,7 @@ module.exports = {
     else {
       if (!applicants.custId) {
         // Populate spreadsheet with all the info
-        await resolveApplicant(applicants.Name);
+        await resolveApplicant(applicants.Name, applicants.rowNumber);
         // Re-fetch the applicant
         applicants = getPending(applicants.Name);
       }

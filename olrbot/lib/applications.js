@@ -28,9 +28,9 @@ async function getSheet(title) {
   return doc.sheetsByTitle[title];
 }
 
-async function resolveApplicant({ namedValues, range }) {
+async function resolveApplicant(name, row) {
     // Get iRacing customer ID that matches submitted name
-  const custId = await iracing.getDriverId(namedValues.Name[0]);
+  const custId = await iracing.getDriverId(name);
   
   // Get member profile data for custId
   const { license = {}, stats = {}, memberSince, clubId } = await iracing.getCareerStats(custId);
@@ -39,21 +39,21 @@ async function resolveApplicant({ namedValues, range }) {
   const sheet = await getSheet('Applications');
   
   // Write retrieved data back to spreadsheet
-  await sheet.loadCells(`A${range.rowStart}:T${range.rowStart}`);
+  await sheet.loadCells(`A${row}:T${row}`);
   
   // Get the cells to be updated
-  const cellStatus = sheet.getCellByA1(`A${range.rowStart}`);
-  const cellRating = sheet.getCellByA1(`B${range.rowStart}`);
-  const cellStarts = sheet.getCellByA1(`K${range.rowStart}`);
-  const cellWin = sheet.getCellByA1(`L${range.rowStart}`);
-  const cellT5 = sheet.getCellByA1(`M${range.rowStart}`);
-  const cellLaps = sheet.getCellByA1(`N${range.rowStart}`);
-  const cellLed = sheet.getCellByA1(`O${range.rowStart}`);
-  const cellLicense = sheet.getCellByA1(`P${range.rowStart}`);
-  const cellSR = sheet.getCellByA1(`Q${range.rowStart}`);
-  const celliR = sheet.getCellByA1(`R${range.rowStart}`);
-  const cellInc = sheet.getCellByA1(`S${range.rowStart}`);
-  const cellCustId = sheet.getCellByA1(`T${range.rowStart}`);
+  const cellStatus = sheet.getCellByA1(`A${row}`);
+  const cellRating = sheet.getCellByA1(`B${row}`);
+  const cellStarts = sheet.getCellByA1(`K${row}`);
+  const cellWin = sheet.getCellByA1(`L${row}`);
+  const cellT5 = sheet.getCellByA1(`M${row}`);
+  const cellLaps = sheet.getCellByA1(`N${row}`);
+  const cellLed = sheet.getCellByA1(`O${row}`);
+  const cellLicense = sheet.getCellByA1(`P${row}`);
+  const cellSR = sheet.getCellByA1(`Q${row}`);
+  const celliR = sheet.getCellByA1(`R${row}`);
+  const cellInc = sheet.getCellByA1(`S${row}`);
+  const cellCustId = sheet.getCellByA1(`T${row}`);
   
   // Set new data for each cell
   cellStatus.value = 'PENDING';
@@ -180,7 +180,7 @@ module.exports = {
   },
   handleApplication: async (client, { namedValues, range }) => {
     try {
-      const { custId, license, stats, memberSince } = await resolveApplicant({ namedValues, range });
+      const { custId, license, stats, memberSince } = await resolveApplicant(namedValues.Name[0], range.rowStart);
       
       // Notify applications channel
       const embed = new discord.MessageEmbed()
