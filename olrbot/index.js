@@ -4,7 +4,6 @@ const http = require('http');
 const handleGuildMemberAdd = require('./handlers/guildMemberAdd');
 const handleMessage = require('./handlers/message');
 const { handleApplication } = require('./lib/applications');
-const { prefix, superUsers } = require('./config.json');
 
 const client = new discord.Client();
 
