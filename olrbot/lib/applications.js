@@ -122,7 +122,7 @@ module.exports = {
     return row.save();
 
   },
-  accept: async (name, reason) => {
+  accept: async (name, reason, code) => {
 
     // Get the applications sheet
     const sheet = await getSheet('Applications');
@@ -136,6 +136,7 @@ module.exports = {
     // Change the approved value to NO
     row.Approved = "YES";
     row['Reason for approve / deny / kicked'] = reason || 'N/A';
+    row.inviteCode = code;
     
     // Return promise for saving row
     return row.save();

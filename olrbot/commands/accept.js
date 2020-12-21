@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const { exec } = require('child_process');
 const iracing = require(`${process.cwd()}/lib/iracing`);
 const { getPending, accept } = require('../lib/applications');
 const { isAuthorized } = require('../lib/authorization');
