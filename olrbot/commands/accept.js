@@ -18,7 +18,7 @@ module.exports = {
     
     try {      
       // Get applicant data
-      const driver = getPending(args[0]);
+      const driver = await getPending(args[0]);
       
       // Return error message if didn't match driver name
       if (!driver) return message.reply(`No one named **${args[0]}** to invite.`);

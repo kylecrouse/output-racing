@@ -64,7 +64,7 @@ module.exports = {
         // Populate spreadsheet with all the info
         await resolveApplicant(applicants.Name, applicants.rowNumber);
         // Re-fetch the applicant
-        applicants = getPending(applicants.Name);
+        applicants = await getPending(applicants.Name);
       }
 
       const embed = new Discord.MessageEmbed()
