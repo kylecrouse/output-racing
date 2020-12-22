@@ -33,6 +33,15 @@ module.exports = {
     // If no driver matched, bail out.
     if (!driver) return;
     
+    // Check whether number is already in use
+    const assigned = await league.drivers.find(driver => driver.number === args[0]);
+    
+    // If number is assigned already, exit with reply.
+    if (assigned) return message.reply(`That number is already assigned. Try again.`);
+    
+    // Validate a 2-digit number not starting with 0
+    if (!args[0].match(/^[1-9][0-9]$/)) return message.reply('Numbers must be between 1–99 and may not start with 0. Try again');
+    
     // If the author is authorized, assign it immediately
     if (isAuthorized(message.author, message.channel)) {
       await Promise.all(
