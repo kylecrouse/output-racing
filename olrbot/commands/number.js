@@ -34,7 +34,7 @@ module.exports = {
     if (!driver) return;
     
     // Check whether number is already in use
-    const assigned = await league.drivers.find(driver => driver.number === args[0]);
+    const assigned = await league.drivers.find(driver => driver.active && driver.number === args[0]);
     
     // If number is assigned already, exit with reply.
     if (assigned) return message.reply(`That number is already assigned. Try again.`);
