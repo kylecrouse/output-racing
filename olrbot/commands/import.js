@@ -22,37 +22,47 @@ module.exports = {
     
     if (!isAuthorized(message.author, message.channel)) return;
     
-    switch(args[0]) {
-      case 'drivers':
-        await handleDrivers(message, args);
-      break;
+    try {
+        
+      switch(args[0]) {
+        case 'drivers':
+          await handleDrivers(message, args);
+        break;
+        
+        case 'latest':
+          await handleLatest(message, args);
+        break;
+        
+        case 'results':        
+          await handleResults(message, args);
+        break;
+        
+        case 'season':
+          await handleSeason(message, args);
+        break;
+        
+        case 'standings':
+          await handleStandings(message, args);
+        break;
+        
+        case 'stats':
+          await handleStats(message, args);
+        break;
+        
+        default: 
+          message.react(REACTION_FAILURE);
+          throw new Error(`I don\'t know how to do that. (${JSON.stringify(args)})`);
+      }
       
-      case 'latest':
-        await handleLatest(message, args);
-      break;
-      
-      case 'results':        
-        await handleResults(message, args);
-      break;
-      
-      case 'season':
-        await handleSeason(message, args);
-      break;
-      
-      case 'standings':
-        await handleStandings(message, args);
-      break;
-      
-      case 'stats':
-        await handleStats(message, args);
-      break;
-      
-      default: 
-        message.react(REACTION_FAILURE);
-        throw new Error(`I don\'t know how to do that. (${JSON.stringify(args)})`);
+      await exec('npm run build && aws s3 sync ./out s3://output-racing/ && aws cloudfront create-invalidation --distribution-id E2HCYIFSR21K3R');
+          
+    } catch(err) {
+      console.log(err);
+      message.reply(
+        `Shit. Something went wrong importing **${args[0]}**.`, 
+        { embed: { description: `\`${err}\`` }}
+      );      
     }
-    
-    await exec('npm run build && aws s3 sync ./out s3://output-racing/ && aws cloudfront create-invalidation --distribution-id E2HCYIFSR21K3R');
 
 	},
 };
