@@ -165,5 +165,8 @@ module.exports = {
     { name: 'The Milwaukee Mile',
       logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/milmile/tle_logo_tmm.jpg'
     },
+    { name: 'Lanier National Speedway Dirt',
+      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/lanier/logo.jpg'
+    }
   ]
 }

@@ -1,24 +1,17 @@
 import Head from 'next/head'
-import { createClient } from 'contentful'
+import league from '../../lib/league/cache';
 import moment from 'moment';
 import Navbar from '../../components/Navbar';
-import { leagueId } from '../../constants'
-
-const client = createClient({
-  space: process.env.CONTENTFUL_SPACE_ID,
-  environment: process.env.CONTENTFUL_ENVIRONMENT_ID,
-  accessToken: process.env.CONTENTFUL_WEB_ACCESS_TOKEN
-})
 
 export default function Driver(props) {
   return (
   	<div>
   	  <Head>
-    		<title>{props.league.name} | {props.nickname || props.name}</title>
+    		<title>{props.leagueName} | {props.nickname || props.name}</title>
     		<link rel="icon" href="/favicon.ico" />
   	  </Head>
       
-      <Navbar seasonId={props.league.activeSeason.sys.id}/>
+      <Navbar seasonId={props.seasonId}/>
       
       <style jsx>{`
         th {
@@ -99,7 +92,7 @@ export default function Driver(props) {
             
             { props.leagueStats &&
               <>
-                <h4 className="text-center" style={{ margin: "3rem 0 1.5rem" }}>{props.league.name} Career Stats</h4>
+                <h4 className="text-center" style={{ margin: "3rem 0 1.5rem" }}>{props.leagueName} Career Stats</h4>
                 <table>
                   <thead>
                     <tr>
@@ -139,7 +132,7 @@ export default function Driver(props) {
             
             { props.seasonStats.length > 0 &&
                 <>
-                  <h4 className="text-center" style={{ margin: "3rem 0 -.5rem" }}>{props.league.name} Season Stats</h4>
+                  <h4 className="text-center" style={{ margin: "3rem 0 -.5rem" }}>{props.leagueName} Season Stats</h4>
                   { props.seasonStats.map((season, index) => (
                       <div key={`stats${index}`}>
                         <h6 className="text-center" style={{ margin: "2rem 0 1.5rem" }}>{season.name}</h6>
@@ -193,47 +186,35 @@ export default function Driver(props) {
 }
 
 export async function getStaticPaths() {
-  const entries = await client.getEntries({ 
-    content_type: 'driver', 
-    'fields.active': true, 
-    limit: 500 
-  });
+  const { drivers } = await league.load();
   return {
-    paths: entries.items
-      .filter(entry => entry.fields.active)
-      .map(entry => ({ params: { 
-        driverName: entry.fields.name.replace(/\s/g, '-').toLowerCase()
+    paths: drivers
+      .filter(driver => driver.active)
+      .map(driver => ({ params: { 
+        driverName: driver.name.replace(/\s/g, '-').toLowerCase()
       }})),
     fallback: false,
   }
 }
 
 export async function getStaticProps({ params }) {
-  const leagues = await client.getEntries({ 
-    content_type: 'league', 
-    'sys.id': leagueId, 
-    include: 2 
-  });
-  const entry = await client.getEntries({ 
-    content_type: 'driver', 
-    'fields.name[match]': params.driverName.replace(/-/g, ' '),
-  });
-  const seasons = leagues.items[0].fields.seasons;
-  const seasonStats = seasons
-    .filter(({ fields }) => fields.stats.find(({ driver }) => driver === entry.items[0].fields.name))
-    .sort((a, b) => moment(b.fields.schedule[0].date).diff(a.fields.schedule[0].date))
-    .map(({ fields }) => {
-      return {
-        name: fields.name,
-        ...fields.stats.find(({ driver }) => driver === entry.items[0].fields.name)
-      }
-    });
-  const leagueStats = leagues.items[0].fields.stats.find(({ driver }) => driver === entry.items[0].fields.name);
+  const { name, season, seasons, drivers } = await league.load();
+
+  const driver = drivers.find(driver => 
+    driver.name.toLowerCase() === params.driverName.replace(/-/g, ' ').toLowerCase()
+  );
+
   return { props: { 
-    ...entry.items[0].fields, 
-    league: leagues.items[0].fields, 
-    seasonStats, 
-    leagueStats: leagueStats || null
+    ...driver, 
+    leagueName: name,
+    seasonId: season.id, 
+    seasonStats: seasons
+      .filter(({ stats }) => stats.find(item => item.driver === driver.name))
+      .sort((a, b) => moment(b.schedule[0].date).diff(a.schedule[0].date))
+      .map(season => ({
+        name: season.name,
+        ...season.stats.find(item => item.driver === driver.name)
+      }))
   }};
 };
 

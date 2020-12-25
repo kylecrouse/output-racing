@@ -1,15 +1,15 @@
 import styles from '../styles/DriverChip.module.css'
 
 export default function DriverChip(props) {
-  return props.fields.active ? (
-    <a href={`/driver/${props.fields.name.replace(/\s/g, '-').toLowerCase()}/`} className={styles.container}>
-      <NumberArt {...props.fields.numberArt}/>
-      {props.fields.nickname || props.fields.name}
+  return props.active ? (
+    <a href={`/driver/${props.name.replace(/\s/g, '-').toLowerCase()}/`} className={styles.container}>
+      <NumberArt {...props.numberArt}/>
+      {props.nickname || props.name}
     </a>    
   ) : (
     <div className={styles.container}>
-      <NumberArt {...props.fields.numberArt}/>
-      {props.fields.nickname || props.fields.name}
+      <NumberArt {...props.numberArt}/>
+      {props.nickname || props.name}
     </div>    
   );
 }

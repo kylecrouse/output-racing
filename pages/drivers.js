@@ -1,22 +1,16 @@
 import Head from 'next/head'
-import { createClient } from 'contentful'
+import league from '../lib/league/cache';
 import Navbar from '../components/Navbar'
-import { leagueId } from '../constants'
-
-const client = createClient({
-  space: process.env.CONTENTFUL_SPACE_ID,
-  accessToken: process.env.CONTENTFUL_WEB_ACCESS_TOKEN
-})
 
 export default function Drivers(props) {
   return (
 	<div>
 	  <Head>
-  		<title>{props.league.name} | Drivers</title>
+  		<title>{props.leagueName} | Drivers</title>
   		<link rel="icon" href="/favicon.ico" />
 	  </Head>
 
-    <Navbar seasonId={props.league.activeSeason.sys.id}/>
+    <Navbar seasonId={props.seasonId}/>
     
     <main className="container">
   	  <div className="columns">
@@ -60,7 +54,7 @@ export default function Drivers(props) {
               </tr>
             </thead>
       		  <tbody>
-        			{ props.drivers.map(({ sys, fields: props }) => (
+        			{ props.drivers.map(props => (
                   <tr key={props.custId}>
                     <td className="number">
                       { props.numberArt
@@ -91,19 +85,12 @@ export default function Drivers(props) {
 }
 
 export async function getStaticProps() {
-  const league = await client.getEntry(leagueId);
-  const entries = await client.getEntries({ content_type: "driver", limit: 500 });
+  const { name, season, drivers } = await league.load();
   return { props: {
-    league: league.fields,
-    drivers: entries.items
-      .filter(({ fields }) => fields.active)
-      .sort((a, b) => parseInt(a.fields.number, 10) - parseInt(b.fields.number, 10))
-      .map(({ sys, fields }) => ({ 
-        sys, 
-        fields: { 
-          ...fields, 
-          leagueStats: league.fields.stats.find(({ driver }) => driver === fields.name) || {}
-        }
-      }))
+    leagueName: name,
+    seasonId: season.id,
+    drivers: drivers
+      .filter(driver => driver.active)
+      .sort((a, b) => parseInt(a.number, 10) - parseInt(b.number, 10))
   }};
 }
