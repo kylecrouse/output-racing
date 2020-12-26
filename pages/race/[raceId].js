@@ -1,26 +1,19 @@
 import Head from 'next/head'
-import { createClient } from 'contentful'
+import league from '../../lib/league/cache';
 import moment from 'moment'
 import Navbar from '../../components/Navbar'
 import Video from '../../components/Video'
 import DriverChip from '../../components/DriverChip'
-import { leagueId, tracks } from '../../constants'
-
-const client = createClient({
-  space: process.env.CONTENTFUL_SPACE_ID,
-  environment: process.env.CONTENTFUL_ENVIRONMENT_ID,
-  accessToken: process.env.CONTENTFUL_WEB_ACCESS_TOKEN
-})
 
 export default function Race(props) {
   return (
   	<div>
   	  <Head>
-    		<title>{props.league.name} | {props.name}</title>
+    		<title>{props.leagueName} | {props.name}</title>
     		<link rel="icon" href="/favicon.ico" />
   	  </Head>
     
-      <Navbar seasonId={props.league.activeSeason.sys.id}/>
+      <Navbar seasonId={props.currentSeasonId}/>
       
       <style jsx>{`
         ul {
@@ -59,7 +52,7 @@ export default function Race(props) {
                 </ul>
               </div>
               <div className="column col-4">
-                <img src={tracks.find(({ name }) => props.track.indexOf(name) >= 0).logo} style={{ display: "block", height: "100%", maxHeight: "150px", margin: "0 auto", maxWidth: "100%" }} />
+                <img src={props.track.logo} style={{ display: "block", height: "100%", maxHeight: "150px", margin: "0 auto", maxWidth: "100%" }} />
               </div>
             </div>
     
@@ -84,7 +77,7 @@ export default function Race(props) {
         			props.results
         			  .sort((a, b) => parseInt(a.finish, 10) > parseInt(b.finish, 10))
         			  .map(props => (
-                  <tr key={props.id} style={{ opacity: props.driver.fields.active ? 1 : 0.3 }}>
+                  <tr key={props.id} style={{ opacity: props.driver.active ? 1 : 0.3 }}>
                     <td>{props.finish}</td>
                     <td>{props.start}</td>
                     <td><DriverChip {...props.driver}/></td>
@@ -118,27 +111,32 @@ export default function Race(props) {
 }
 
 export async function getStaticPaths() {
-  const entries = await client.getEntries({ content_type: 'race', limit: 500 });
+  const { seasons } = await league.load();
   return {
-    paths: entries.items
-      .filter(entry => entry.fields.raceId)
-      .map(entry => ({ params: { raceId: entry.fields.raceId.toString() }})),
+    paths: seasons.reduce(
+      (ids, season) => ids.concat(
+        season.results.map(item => ({ params: { raceId: item.raceId.toString() }}))
+      ),
+      []
+    ),
     fallback: false,
   }
 }
 
 export async function getStaticProps({ params }) {
-  const league = await client.getEntry(leagueId);
-  const entries = await client.getEntries({ content_type: 'race', 'fields.raceId': params.raceId });
-  const [entry] = entries.items;
-  const drivers = await client.getEntries({ content_type: "driver", limit: 500 });
-  entry.fields.results = await Promise.all(entry.fields.results
-    .filter(result => result.id)
-    .map(result => {
-      const driver = drivers.items.find(driver => driver.sys.id === result.id);
-      return { ...result, driver };
-    }));
-  return { props: { league: league.fields, ...entry.fields }};
+  const { name, season: currentSeason, seasons } = await league.load();
+  
+  const season = seasons.find(
+    season => season.results.find(item => item.raceId == params.raceId)
+  );
+  
+  const race = season.results.find(item => item.raceId == params.raceId);
+  
+  return { props: { 
+    leagueName: name,
+    currentSeasonId: currentSeason.id,
+    ...race 
+  }};
 };
 
 function renderImage(image) {
