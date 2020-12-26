@@ -123,6 +123,6 @@ console.log(season.results);
     leagueName: name,
     currentSeasonId: currentSeason.id,
     ...season,
-    seasons
+    seasons: seasons.filter(season => season.id !== params.seasonId)
   }};
 };

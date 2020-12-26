@@ -44,7 +44,7 @@ export default function Race(props) {
               </div>
               <div className="column col-4 text-center">
                 <ul className="text-center">
-                  <li><b>{props.track}</b></li>
+                  <li><b>{props.track.name}</b></li>
                   <li>{moment(props.date).format('MMMM Do, YYYY')}</li>
                   <li style={{ marginTop: "0.5rem", fontSize: "0.6rem" }}>{props.laps} laps ({props.duration})</li>
                   <li style={{ fontSize: "0.6rem" }}>{props.cautions} cautions for {props.cautionLaps} laps</li>

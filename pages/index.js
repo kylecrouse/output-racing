@@ -100,6 +100,24 @@ export default function Home(props) {
               </div>
                 
               <div className="column col-5">
+
+                { props.nextRace &&
+                  <div className="panel" style={{ marginBottom: "1rem" }}>
+                    <div className="panel-header">
+                      <h6 className="panel-title">Next Race</h6>
+                    </div>
+                    <div className="panel-body text-center">
+                      <h4>{props.nextRace.name}</h4>
+                      <img src={tracks.find(({ name }) => props.nextRace.track.indexOf(name) >= 0).logo} style={{ display: "block", margin: "0 auto", width: "50%" }}/>
+                      <p style={{ margin: 0 }}>{props.nextRace.track}</p>
+                      <p style={{ margin: 0 }}>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</p>
+                    </div>
+                    <div className="panel-footer">
+                    
+                    </div>  
+                  </div>   
+                }
+
                 <div className="panel">
                   <div className="panel-header">
                     <h6 className="panel-title">Current Standings</h6>
@@ -151,23 +169,6 @@ export default function Home(props) {
                   
                   </div>  
                 </div>        
-
-                { props.nextRace &&
-                  <div className="panel" style={{ marginTop: "1rem" }}>
-                    <div className="panel-header">
-                      <h6 className="panel-title">Next Race</h6>
-                    </div>
-                    <div className="panel-body text-center">
-                      <h4>{props.nextRace.name}</h4>
-                      <img src={tracks.find(({ name }) => props.nextRace.track.indexOf(name) >= 0).logo} style={{ display: "block", margin: "0 auto", width: "50%" }}/>
-                      <p style={{ margin: 0 }}>{props.nextRace.track}</p>
-                      <p style={{ margin: 0 }}>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</p>
-                    </div>
-                    <div className="panel-footer">
-                    
-                    </div>  
-                  </div>   
-                }
 
               </div>
             </div>
