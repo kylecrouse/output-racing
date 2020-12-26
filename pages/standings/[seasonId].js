@@ -1,31 +1,25 @@
 import Head from 'next/head'
-import { createClient } from 'contentful'
+import league from '../../lib/league/cache';
 import moment from 'moment';
 import Navbar from '../../components/Navbar'
 import DriverChip from '../../components/DriverChip'
-import { leagueId } from '../../constants'
-
-const client = createClient({
-  space: process.env.CONTENTFUL_SPACE_ID,
-  accessToken: process.env.CONTENTFUL_WEB_ACCESS_TOKEN
-})
 
 export default function Schedule(props) {
   return (
   	<div>
   	  <Head>
-    		<title>{props.league.name} | Standings</title>
+    		<title>{props.leagueName} | Standings</title>
     		<link rel="icon" href="/favicon.ico" />
   	  </Head>
 
-      <Navbar seasonId={props.league.activeSeason.sys.id}/>
+      <Navbar seasonId={props.currentSeasonId}/>
 	    
       <main className="container">
 	  	  <div className="columns">
           <div className="column col-8 col-mx-auto">
 	
         		<h2 className="text-center">{props.name} Standings</h2>
-            <h6 className="text-center" style={{ margin: "1rem 0 2rem" }}>After {props.completed} of {props.races} Races</h6>
+            <h6 className="text-center" style={{ margin: "1rem 0 2rem" }}>After {props.results.filter(({ counts }) => counts).length} of {props.schedule.filter(({ counts }) => counts).length} Races</h6>
 
             <table>
               <thead>
@@ -46,30 +40,29 @@ export default function Schedule(props) {
               </thead>
               <tbody>
                 { props.standings &&
-                    props.standings
-                      .map((driver, index) => (
-                        <tr key={index} style={{opacity: driver.driver.fields.active ? 1 : 0.3}}>
-                          <td><b>{index + 1}</b></td>
-                          <td>
-                          { parseInt(driver.change, 10) > 0
-                              ? <span style={{color:"green"}}>&#9650;&nbsp;{driver.change.substr(1)}</span>
-                              : parseInt(driver.change, 10) < 0
-                                ? <span style={{color:"red"}}>&#9660;&nbsp;{driver.change.substr(1)}</span>
-                                : ''
-                          }
-                          </td>
-                          <td><DriverChip {...driver.driver}/></td>
-                          <td>{driver.starts}</td>
-                          <td>{driver.points}</td>
-                          <td>{driver.behindNext}</td>
-                          <td>{driver.behindLeader}</td>
-                          <td>{driver.wins}</td>
-                          <td>{driver.t5s}</td>
-                          <td>{driver.t10s}</td>
-                          <td>{driver.laps}</td>
-                          <td>{(driver.incidents / driver.starts).toFixed(2)}</td>
-                        </tr>
-                      ))
+                    props.standings.map((driver, index) => (
+                      <tr key={index} style={{opacity: driver.driver.active ? 1 : 0.3}}>
+                        <td><b>{index + 1}</b></td>
+                        <td>
+                        { parseInt(driver.change, 10) > 0
+                            ? <span style={{color:"green"}}>&#9650;&nbsp;{driver.change.substr(1)}</span>
+                            : parseInt(driver.change, 10) < 0
+                              ? <span style={{color:"red"}}>&#9660;&nbsp;{driver.change.substr(1)}</span>
+                              : ''
+                        }
+                        </td>
+                        <td><DriverChip {...driver.driver}/></td>
+                        <td>{driver.starts}</td>
+                        <td>{driver.points}</td>
+                        <td>{driver.behindNext}</td>
+                        <td>{driver.behindLeader}</td>
+                        <td>{driver.wins}</td>
+                        <td>{driver.t5s}</td>
+                        <td>{driver.t10s}</td>
+                        <td>{driver.laps}</td>
+                        <td>{(driver.incidents / driver.starts).toFixed(2)}</td>
+                      </tr>
+                    ))
                 }
               </tbody>
             </table> 
@@ -114,42 +107,22 @@ export default function Schedule(props) {
 }
 
 export async function getStaticPaths() {
-  const entries = await client.getEntries({ content_type: 'season' });
+  const { seasons } = await league.load();
   return {
-	  paths: entries.items.map(entry => ({ params: { seasonId: entry.sys.id }})),
-	  fallback: false,
+  	paths: seasons.map(season => ({ params: { seasonId: season.id }})),
+  	fallback: false,
   }
 }
 
 export async function getStaticProps({ params }) {
-  const league = await client.getEntry(leagueId);
-  const seasons = league.fields.seasons;
-  const season = seasons.find(season => season.sys.id === params.seasonId);
-  const drivers = await client.getEntries({ content_type: "driver", limit: 500 });
+  const { name, season: currentSeason, seasons } = await league.load();
+  const season = seasons.find(season => season.id === params.seasonId);
+
+console.log(season.results);
   return { props: {
-    league: league.fields,
-    name: season.fields.name,
-    races: season.fields.schedule.length,
-    completed: season.fields.results.length,
-    standings: season.fields.standings
-      .map(record => {
-        return { ...record, driver: drivers.items.find(driver => driver.fields.name === record.driver) };
-      })
-      .filter(record => record.driver !== undefined),
-    seasons: seasons
-      .filter(season => season.sys.id !== params.seasonId)
-      .sort((a, b) => moment(b.fields.schedule[0].date).diff(a.fields.schedule[0].date))
-      .map(season => ({
-        id: season.sys.id,
-        name: season.fields.name,
-        standings: season.fields.standings
-          .filter(record => parseInt(record.position) <= 3)
-          .sort((a, b) => parseInt(a.position) - parseInt(b.position))
-          .map(record => ({
-            ...record,
-            driver: drivers.items.find(driver => driver.fields.name === record.driver)
-          }))
-      })),
-    drivers: drivers.items
+    leagueName: name,
+    currentSeasonId: currentSeason.id,
+    ...season,
+    seasons
   }};
 };
