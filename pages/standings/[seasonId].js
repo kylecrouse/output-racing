@@ -118,7 +118,6 @@ export async function getStaticProps({ params }) {
   const { name, season: currentSeason, seasons } = await league.load();
   const season = seasons.find(season => season.id === params.seasonId);
 
-console.log(season.results);
   return { props: {
     leagueName: name,
     currentSeasonId: currentSeason.id,

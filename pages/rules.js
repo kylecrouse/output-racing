@@ -62,7 +62,6 @@ export async function getStaticProps() {
 }
 
 function renderNode({ data, nodeType, content, marks, value }) {
-  console.log(data, nodeType);
   switch(nodeType) {
     case 'heading-3':
       return <h3>{content.map(el => renderNode(el))}</h3>;
@@ -84,7 +83,6 @@ function renderNode({ data, nodeType, content, marks, value }) {
 }
 
 function renderMark(mark, content) {
-  // console.log(mark, content);
   switch(mark.type) {
     case 'bold':
       return <b>{content}</b>;
