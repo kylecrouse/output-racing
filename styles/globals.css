@@ -34,3 +34,30 @@ td {
   font-size: 0.7rem;
   padding: 5px 10px; 
 }
+
+ul, ol {
+  list-style-position: outside !important;
+  margin-bottom: 1.2rem;
+}
+
+li p {
+  margin-bottom: 0;
+}
+
+ul li, ol li {
+  margin-top: .2rem;
+}
+
+h3 b {
+  font-weight: inherit;
+}
+
+* + h3 {
+  margin-top: 2.4rem !important;
+}
+
+div + div > h2 {
+  margin: 4rem 0 2.4rem !important;
+  border-top: 1px solid #ccc;
+  padding-top: 2.4rem;
+}
