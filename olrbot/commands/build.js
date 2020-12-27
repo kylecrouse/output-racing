@@ -19,8 +19,14 @@ module.exports = {
       console.log(`Build stdout: ${data}`);
     });
     
+    build.stderr.on('data', (data) => {
+      console.error(`Build stderr: ${data}`);
+    });
+    
     build.on('exit', (code) => {
       console.log(`Build exited with code: ${code}`);
+      
+      if (code != 1) return message.react(REACTION_FAILURE);
       
       const sync = spawn(
         'aws', 
@@ -31,8 +37,14 @@ module.exports = {
         console.log(`Sync stdout: ${data}`);
       });
       
+      sync.stderr.on('data', (data) => {
+        console.error(`Sync stderr: ${data}`);
+      });
+      
       sync.on('exit', (code) => {
         console.log(`Sync exited with code: ${code}`);
+        
+        if (code != 1) return message.react(REACTION_FAILURE);
         
         const invalidate = spawn(
           'aws', 
@@ -43,31 +55,20 @@ module.exports = {
           console.log(`Invalidate stdout: ${data}`);
         });
         
-        sync.on('exit', (code) => {
+        invalidate.stderr.on('data', (data) => {
+          console.error(`Invalidate stderr: ${data}`);
+        });
+        
+        invalidate.on('exit', (code) => {
           console.log(`Invalidate exited with code: ${code}`);
+          
+          if (code != 1) return message.react(REACTION_FAILURE);
+          
           message.react(REACTION_SUCCESS);
         });
         
-        invalidate.on('error', (err) => {
-          console.error(err);
-          message.react(REACTION_FAILURE);
-        });
-    
-        invalidate.on('close', (code) => {
-          console.log(`Invalidate closed with code: ${code}`);
-        });
-
       });
 
-      sync.on('error', (err) => {
-        console.error(err);
-        message.react(REACTION_FAILURE);
-      });
-  
-      sync.on('close', (code) => {
-        console.log(`Sync closed with code: ${code}`);
-      });
-      
     });
     
     build.on('error', (err) => {
