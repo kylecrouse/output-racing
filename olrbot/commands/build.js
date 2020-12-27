@@ -48,7 +48,7 @@ module.exports = {
         
         const invalidate = spawn(
           'aws', 
-          ['cloudfront', 'create-invalidation', '--distribution-id', 'E2HCYIFSR21K3R']
+          ['cloudfront', 'create-invalidation', '--distribution-id', 'E2HCYIFSR21K3R' '--paths', '"/*"']
         );
 
         invalidate.stdout.on('data', (data) => {
