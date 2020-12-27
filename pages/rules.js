@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import React from 'react';
 import styles from '../styles/Home.module.css'
 import league from '../lib/league/cache';
 import Navbar from '../components/Navbar';
