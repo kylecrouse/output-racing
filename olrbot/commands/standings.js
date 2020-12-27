@@ -10,11 +10,16 @@ module.exports = {
     await league.init();
     
     const standings = league.season.standings.sort((a,b) => a.position - b.position);
-
+    
+    const scheduled = league.season.schedule.filter(race => race.counts);
+    const completed = league.season.results.filter(
+      race => scheduled.find(({ raceId }) => raceId == race.raceId)
+    );
+    
     const embed = new Discord.MessageEmbed()
     	.setTitle('Current Standings')
     	.setURL(`http://dnhi063vpnzuy.cloudfront.net/standings/${league.season.id}/`)
-      .addField(league.season.name, `After ${league.season.results.length} of ${league.season.schedule.filter(race => race.counts).length} races`)
+      .addField(league.season.name, `After ${completed.length} of ${scheduled.length} races`)
       .setThumbnail('http://output-racing.s3-website.us-west-2.amazonaws.com/logo-stacked.png')
     	.addFields(
     		{ name: 'Pos.', value: standings.map(item => `\`${item.position} ${item.change !== '-' ? '(' + item.change + ')' : ''}\``), inline: true },
