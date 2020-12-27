@@ -26,7 +26,7 @@ module.exports = {
     build.on('exit', (code) => {
       console.log(`Build exited with code: ${code}`);
       
-      if (code != 1) return message.react(REACTION_FAILURE);
+      if (code == 1) return message.react(REACTION_FAILURE);
       
       const sync = spawn(
         'aws', 
@@ -44,7 +44,7 @@ module.exports = {
       sync.on('exit', (code) => {
         console.log(`Sync exited with code: ${code}`);
         
-        if (code != 1) return message.react(REACTION_FAILURE);
+        if (code == 255) return message.react(REACTION_FAILURE);
         
         const invalidate = spawn(
           'aws', 
@@ -62,7 +62,7 @@ module.exports = {
         invalidate.on('exit', (code) => {
           console.log(`Invalidate exited with code: ${code}`);
           
-          if (code != 1) return message.react(REACTION_FAILURE);
+          if (code == 255) return message.react(REACTION_FAILURE);
           
           message.react(REACTION_SUCCESS);
         });
