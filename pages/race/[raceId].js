@@ -76,7 +76,7 @@ export default function Race(props) {
         		  { 
         			props.results
         			  .sort((a, b) => parseInt(a.finish, 10) > parseInt(b.finish, 10))
-        			  .map(props => (
+        			  .map(props => ( props.driver &&
                   <tr key={props.id} style={{ opacity: props.driver.active ? 1 : 0.3 }}>
                     <td>{props.finish}</td>
                     <td>{props.start}</td>

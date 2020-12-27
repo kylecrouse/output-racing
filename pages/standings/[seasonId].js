@@ -40,7 +40,7 @@ export default function Schedule(props) {
               </thead>
               <tbody>
                 { props.standings &&
-                    props.standings.map((driver, index) => (
+                    props.standings.map((driver, index) => ( driver.driver &&
                       <tr key={index} style={{opacity: driver.driver.active ? 1 : 0.3}}>
                         <td><b>{index + 1}</b></td>
                         <td>

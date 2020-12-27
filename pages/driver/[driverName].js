@@ -90,7 +90,7 @@ export default function Driver(props) {
               </>
             }
             
-            { props.leagueStats &&
+            { Object.keys(props.leagueStats).length > 0 &&
               <>
                 <h4 className="text-center" style={{ margin: "3rem 0 1.5rem" }}>{props.leagueName} Career Stats</h4>
                 <table>
