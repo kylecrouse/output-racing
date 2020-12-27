@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const { exec } = require('child_process');
 const getDrivers = require(`${process.cwd()}/lib/scraper/drivers`);
 const getLatestResults = require(`${process.cwd()}/lib/scraper/latest`);
 const getResults = require(`${process.cwd()}/lib/scraper/results`);
@@ -9,6 +8,7 @@ const getStats = require(`${process.cwd()}/lib/scraper/stats`);
 const league = require(`${process.cwd()}/lib/league`);
 const cms = require(`${process.cwd()}/lib/contentful`);
 const { isAuthorized } = require('../lib/authorization');
+const { buildAndDeploy } = require('../lib/builder');
 const { tracks } = require ('../../constants');
 const REACTION_SUCCESS = '✅';
 const REACTION_FAILURE = '😢';
@@ -23,30 +23,33 @@ module.exports = {
     if (!isAuthorized(message.author, message.channel)) return;
     
     try {
-        
+      let reply, embed;
+      
       switch(args[0]) {
         case 'drivers':
-          await handleDrivers(message, args);
+          const created = await handleDrivers(2732);
+          if (created.length > 0)
+            reply = `Added ${created.join(', ')}.`;
         break;
         
         case 'latest':
-          await handleLatest(message, args);
+          embed = await handleLatest(args);
         break;
         
         case 'results':        
-          await handleResults(message, args);
+          embed = await handleResults(args);
         break;
         
         case 'season':
-          await handleSeason(message, args);
+          await handleSeason(args);
         break;
         
         case 'standings':
-          await handleStandings(message, args);
+          await handleStandings(args);
         break;
         
         case 'stats':
-          await handleStats(message, args);
+          await handleStats(args);
         break;
         
         default: 
@@ -54,7 +57,13 @@ module.exports = {
           throw new Error(`I don\'t know how to do that. (${JSON.stringify(args)})`);
       }
       
-      await exec('npm run build && aws s3 sync ./out s3://output-racing/ && aws cloudfront create-invalidation --distribution-id E2HCYIFSR21K3R');
+      await buildAndDeploy();
+      
+      message.react(REACTION_SUCCESS);
+      
+      if (reply && embed) message.reply(reply, embed);
+      else if (reply) message.reply(reply);
+      else if (embed) message.reply(embed);
           
     } catch(err) {
       console.log(err);
@@ -67,18 +76,13 @@ module.exports = {
 	},
 };
 
-async function handleDrivers(message, args) {
+function handleDrivers(leagueId) {
   // Update all drivers from active roster
   // TODO: Store the leagueid in CMS and fetch from guild?
-  const created = await getDrivers(2732);
-  
-  message.react(REACTION_SUCCESS);
-
-  if (created.length > 0)
-    message.reply(`Added ${created.join(', ')}.`)
+  return getDrivers(leagueId);
 }
 
-async function handleLatest(message, args) {
+async function handleLatest(args) {
 
   // Ensure data is primed
   await league.init();
@@ -96,7 +100,7 @@ async function handleLatest(message, args) {
   await getStats('league', league.id);
 
   // Import the new results from danlisa
-  await handleResults(message, [
+  return handleResults(message, [
     null, 
     race.raceId, 
     args.length > 2 ? args[2] : race.name, 
@@ -104,7 +108,7 @@ async function handleLatest(message, args) {
   ]);
 }
 
-async function handleResults(message, args) {
+async function handleResults(args) {
   const race = await getResults(args[1], {
     name: (args.length > 2) ? args[2] : undefined,
     broadcast: (args.length > 3) ? args[3] : undefined
@@ -138,25 +142,20 @@ async function handleResults(message, args) {
     embed.setImage(`https:${media.fields.file['en-US'].url}`);
   }
 
-  message.react(REACTION_SUCCESS);
-  message.channel.send(embed);  
+  return embed;  
 }
 
-async function handleSeason(message, args) {
-  await getSeason(args[1]);
-  message.react(REACTION_SUCCESS);
+function handleSeason(seasonId) {
+  return getSeason(seasonId);
 }
 
-async function handleStandings(message, args) {
-  await getStandings(args[1]);
-  message.react(REACTION_SUCCESS);
+function handleStandings(seasonId) {
+  return getStandings(seasonId);
 }
 
-async function handleStats(message, args) {
-  if (args.length >= 2)
-    await getStats('season', args[1])
+function handleStats(seasonId) {
+  if (seasonId)
+    return getStats('season', seasonId)
   else 
-    await getStats('league', 1710);
-  
-  message.react(REACTION_SUCCESS);
+    return getStats('league', 1710);
 }
