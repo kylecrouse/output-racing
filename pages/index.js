@@ -20,13 +20,13 @@ export default function Home(props) {
       <div className="container">
         
         <main className="columns">
-          <div className="column col-8 col-mx-auto">
+          <div className="column col-8 col-xl-12 col-mx-auto">
   
             <div className="columns">
-              <div className="column col-7">
+              <div className="column col-7 col-md-12">
               
                 { props.lastRace &&
-                  <div className="panel">
+                  <div className="panel" style={{ marginBottom: "1rem" }}>
                     <div className="panel-header">
                       <h6 className="panel-title">Last Race</h6>
                     </div>
@@ -99,7 +99,7 @@ export default function Home(props) {
                 }
               </div>
                 
-              <div className="column col-5">
+              <div className="column col-5 col-md-12">
 
                 { props.nextRace &&
                   <div className="panel" style={{ marginBottom: "1rem" }}>

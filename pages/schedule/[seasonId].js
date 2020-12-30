@@ -17,7 +17,7 @@ export default function Schedule(props) {
       
 	    <main className="container">
 	  	  <div className="columns">
-          <div className="column col-8 col-mx-auto">
+          <div className="column col-8 col-xl-12 col-mx-auto">
 
           	<h2 className="text-center">{props.name} Schedule</h2>
             

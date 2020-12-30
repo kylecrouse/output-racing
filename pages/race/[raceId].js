@@ -33,7 +33,7 @@ export default function Race(props) {
 
   	  <main className="container">
 	  	  <div className="columns">
-          <div className="column col-8 col-mx-auto">
+          <div className="column col-8 col-xl-12 col-mx-auto">
           
             <div className="columns" style={{ alignItems: "center" }}>
               <div className="column col-4 text-center">

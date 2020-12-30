@@ -16,7 +16,7 @@ export default function Schedule(props) {
 	    
       <main className="container">
 	  	  <div className="columns">
-          <div className="column col-8 col-mx-auto">
+          <div className="column col-8 col-xl-12 col-mx-auto">
 	
         		<h2 className="text-center">{props.name} Standings</h2>
             <h6 className="text-center" style={{ margin: "1rem 0 2rem" }}>After {props.results.filter(({ counts }) => counts).length} of {props.schedule.filter(({ counts }) => counts).length} Races</h6>

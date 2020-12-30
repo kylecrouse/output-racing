@@ -14,7 +14,7 @@ export default function Drivers(props) {
     
     <main className="container">
   	  <div className="columns">
-        <div className="column col-8 col-mx-auto">
+        <div className="column col-8 col-xl-12 col-mx-auto">
     
           <h2>Drivers</h2>
 
@@ -66,9 +66,9 @@ export default function Drivers(props) {
                       <a href={`/driver/${props.name.replace(/\s/g, '-').toLowerCase()}/`}>{props.nickname || props.name}</a>
                     </td>
                     <td>{props.leagueStats.starts || 0}</td>
-                    <td>{props.leagueStats.wins || 0} <span>({props.leagueStats.winPercentage || 0})</span></td>
-                    <td>{props.leagueStats.top5s || 0} <span>({props.leagueStats.top5Percentage || 0})</span></td>
-                    <td>{props.leagueStats.poles || 0} <span>({((props.leagueStats.poles || 0) / (props.leagueStats.starts || 1) * 100).toFixed(0)}%)</span></td>
+                    <td>{props.leagueStats.wins || 0}&nbsp;<span>({props.leagueStats.winPercentage || 0})</span></td>
+                    <td>{props.leagueStats.top5s || 0}&nbsp;<span>({props.leagueStats.top5Percentage || 0})</span></td>
+                    <td>{props.leagueStats.poles || 0}&nbsp;<span>({((props.leagueStats.poles || 0) / (props.leagueStats.starts || 1) * 100).toFixed(0)}%)</span></td>
                   </tr>
                 )) 
         			}

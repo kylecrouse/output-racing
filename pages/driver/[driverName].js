@@ -23,7 +23,7 @@ export default function Driver(props) {
   	  <main className="container">
 
         <div className="columns">   
-          <div className="col-8 col-mx-auto">
+          <div className="column col-8 col-xl-12 col-mx-auto">
 
             <div className="columns" style={{ display: "flex", alignItems: "center" }}>
               <div className="column col-6">
