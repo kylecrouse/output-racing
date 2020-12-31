@@ -4,6 +4,7 @@ import moment from 'moment'
 import Navbar from '../../components/Navbar'
 import Video from '../../components/Video'
 import DriverChip from '../../components/DriverChip'
+import Footer from '../../components/Footer';
 
 export default function Race(props) {
   return (
@@ -105,6 +106,8 @@ export default function Race(props) {
         </div>
 		  
   	  </main>
+
+      <Footer {...props}/>
 
   	</div>
   )

@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import league from '../lib/league/cache';
 import Navbar from '../components/Navbar'
+import Footer from '../components/Footer';
 
 export default function Drivers(props) {
   return (
@@ -16,7 +17,7 @@ export default function Drivers(props) {
   	  <div className="columns">
         <div className="column col-8 col-xl-12 col-mx-auto">
     
-          <h2>Drivers</h2>
+          <h2 className="text-center">Drivers</h2>
 
           <style jsx>{`
             td {
@@ -79,6 +80,8 @@ export default function Drivers(props) {
       </div>
 		  
 	  </main>
+
+    <Footer {...props}/>
 
 	</div>
   )

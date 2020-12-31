@@ -20,7 +20,7 @@ export default function Home(props) {
       
       <img src="/2020-11-04_15-13-02_0.png" style={{ display: "block", width: "100%", marginTop: "-2rem" }}/>
       
-      <div className="tagline">An Asphalt Oval League for the Late Night Racer</div>
+      <div className={styles.tagline}>An Asphalt Oval League for the Late Night Racer</div>
         
       <div className="container">
       
@@ -40,12 +40,12 @@ export default function Home(props) {
               </div>
             </div>
             
-            <h6>Current Season</h6>
+            <h6 className={styles.title}>Current Season</h6>
                 
             <div className="columns" style={{ marginBottom: "2rem" }}>
               <div className="column col-7 col-sm-12">
               
-                <div className="description">
+                <div className={styles.description}>
                   <h5>{props.season.name}</h5>
                   { props.season.description && 
                     props.season.description.content.map(el => renderNode(el))
@@ -71,7 +71,7 @@ export default function Home(props) {
               <div className="column col-5 col-sm-12">
                 { props.nextRace &&
                   <div className="panel" style={{ marginTop: "1rem" }}>
-                    <div className="panel-header"><h6 className="panel-title">Next Race</h6></div>
+                    <div className="panel-header"><h6 className={`${styles.title} panel-title`}>Next Race</h6></div>
                     <div className="panel-body text-center" style={{ margin: "1rem 0 2rem" }}>
                       <h4>{props.nextRace.name}</h4>
                       <img src={tracks.find(({ name }) => props.nextRace.track.indexOf(name) >= 0).logo} style={{ display: "block", margin: "0 auto", width: "50%" }}/>
@@ -108,7 +108,7 @@ export default function Home(props) {
         <div className="columns">
           <div className="column col-8 col-xl-12 col-mx-auto">
           
-            <h6>Last Race</h6>
+            <h6 className={styles.title}>Last Race</h6>
                 
             <div style={{ marginBottom: "1rem" }}>
               { props.lastRace.broadcast &&

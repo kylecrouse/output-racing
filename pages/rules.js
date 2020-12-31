@@ -2,6 +2,7 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import league from '../lib/league/cache';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 export default function Rules(props) {
   return (
@@ -43,6 +44,8 @@ export default function Rules(props) {
         </main>
         
       </div>
+
+      <Footer {...props}/>
 
     </div>
   )

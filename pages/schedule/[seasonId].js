@@ -3,6 +3,7 @@ import league from '../../lib/league/cache';
 import moment from 'moment';
 import Navbar from '../../components/Navbar'
 import DriverChip from '../../components/DriverChip'
+import Footer from '../../components/Footer';
 import { cars } from '../../constants'
 
 export default function Schedule(props) {
@@ -98,6 +99,8 @@ export default function Schedule(props) {
         </div>
 		  
 	  </main>
+
+    <Footer {...props}/>
 
 	</div>
   )

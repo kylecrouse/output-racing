@@ -2,6 +2,7 @@ import Head from 'next/head'
 import league from '../../lib/league/cache';
 import moment from 'moment';
 import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
 
 export default function Driver(props) {
   return (
@@ -180,6 +181,8 @@ export default function Driver(props) {
         </div>
 
   	  </main>
+
+      <Footer {...props}/>
 
   	</div>
   )
