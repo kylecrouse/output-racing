@@ -73,5 +73,5 @@ async function buildAndDeploy() {
 if (process.argv[1] === `${process.cwd()}/olrbot/lib/builder.js`) {
   return buildAndDeploy();
 } else {
-  module.exports = buildAndDeploy;
+  module.exports = { buildAndDeploy };
 }
