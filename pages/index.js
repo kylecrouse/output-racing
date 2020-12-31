@@ -35,39 +35,14 @@ export default function Home(props) {
                 <p>If you are a late night racer that is looking for a fun group to chill and race with once a week, feel free to apply. We welcome a wide range of skill levels with a minimum C class 2.0 SR license and 1000 IR.</p>
                 <p><a className="btn btn-primary" href="/apply">Apply</a></p>
               </div>
-              <div className="column col-5 col-ml-auto hide-md">
+              <div className="column col-5 col-ml-auto col-md-12">
                 <img src="/Autclub-ocvcbeysezsqrsibr3cet23yfi51isxfp6kw671qpc.png" style={{ display: "block", height: "100%", maxWidth: "100%", margin: "0 auto"}}/>
               </div>
             </div>
             
-          </div>
-        </div>
-      
-      </div>
-      
-      <div style={{ backgroundColor: "black", marginBottom: "2rem", padding: "0.4rem 0" }}>
-        <div className="container">
-          <div className="columns">
-            <div className="column col-8 col-xl-12 col-mx-auto">
-              <div className="columns">
-                <img src="/Charlotte-Start.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
-                <img src="/Champ.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
-                <img src="/Chambliss.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
-                <img src="/Autoclub.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div className="container">
-      
-        <div className="columns">
-          <div className="column col-8 col-xl-12 col-mx-auto">
-          
             <h6>Current Season</h6>
                 
-            <div className="columns" style={{ marginBottom: "3rem" }}>
+            <div className="columns" style={{ marginBottom: "2rem" }}>
               <div className="column col-7 col-sm-12">
               
                 <div className="description">
@@ -108,125 +83,154 @@ export default function Home(props) {
               </div>
             </div>
   
+          </div>
+        </div>
+      
+      </div>
+      
+      <div style={{ backgroundColor: "black", marginBottom: "2rem", padding: "0.4rem 0" }}>
+        <div className="container">
+          <div className="columns">
+            <div className="column col-8 col-xl-12 col-mx-auto">
+              <div className="columns">
+                <img src="/Charlotte-Start.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
+                <img src="/Champ.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
+                <img src="/Chambliss.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
+                <img src="/Autoclub.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="container">
+      
+        <div className="columns">
+          <div className="column col-8 col-xl-12 col-mx-auto">
+          
+            <h6>Last Race</h6>
+                
+            <div style={{ marginBottom: "1rem" }}>
+              { props.lastRace.broadcast &&
+                <Video src={props.lastRace.broadcast}/>
+              }
+              { props.lastRace.logo
+                ? ( <div className="columns col-gapless" style={{ alignItems: "center", margin: "2rem 0", position: "relative", left: "15px" }}>
+                      <div className="column col-3 text-center">
+                        <img src={ props.lastRace.logo.fields.file.url } style={{ display: "block", margin: "0 auto", maxHeight: "80px", height: "100%" }} />
+                      </div>
+                      <div className="column col-6 text-center" style={{ paddingLeft: "30px" }}>
+                        <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
+                          <li style={{ marginTop: 0, lineHeight: 1.2 }}><b>{props.lastRace.track.name}</b></li>
+                          <li style={{ marginTop: 0 }}>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</li>
+                        </ul>
+                      </div>
+                      <div className="column col-3 text-center">
+                        <img src={props.lastRace.track.logo} style={{ display: "block", margin: "0 auto", maxHeight: "80px", height: "100%", maxWidth: "100%" }}/>
+                      </div>
+                    </div>
+                )
+                : ( <div className="columns col-gapless" style={{ alignItems: "center", margin: "2rem 0", padding: "0 0 0 30px" }}>
+                      <div className="column col-6">
+                        <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
+                          <li><h4>{props.lastRace.name}</h4></li>
+                          <li style={{ marginTop: 0, lineHeight: 1.2 }}><b>{props.lastRace.track.name}</b></li>
+                          <li style={{ marginTop: 0 }}>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</li>
+                        </ul>
+                      </div>
+                      <div className="column col-6">
+                        <img src={props.lastRace.track.logo} style={{ display: "block", margin: "0 auto", maxHeight: "150px", height: "100%", maxWidth: "100%" }}/>
+                      </div>
+                    </div>  
+                )
+              }
+            </div>
+
             <div className="columns">
-              <div className="column col-7 col-md-12">
-              
-                { props.lastRace &&
-                  <div style={{ marginBottom: "1rem" }}>
-                    <h6>Last Race</h6>
-                    { props.lastRace.broadcast &&
-                      <Video src={props.lastRace.broadcast}/>
-                    }
-                    { props.lastRace.logo
-                      ? ( <div className="columns col-gapless" style={{ alignItems: "center", margin: "2rem 0", position: "relative", left: "15px" }}>
-                            <div className="column col-3 text-center">
-                              <img src={ props.lastRace.logo.fields.file.url } style={{ display: "block", margin: "0 auto", maxHeight: "80px", height: "100%" }} />
-                            </div>
-                            <div className="column col-6 text-center" style={{ paddingLeft: "30px" }}>
-                              <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-                                <li style={{ marginTop: 0, lineHeight: 1.2 }}><b>{props.lastRace.track.name}</b></li>
-                                <li style={{ marginTop: 0 }}>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</li>
-                              </ul>
-                            </div>
-                            <div className="column col-3 text-center">
-                              <img src={props.lastRace.track.logo} style={{ display: "block", margin: "0 auto", maxHeight: "80px", height: "100%", maxWidth: "100%" }}/>
-                            </div>
-                          </div>
-                      )
-                      : ( <div className="columns col-gapless" style={{ alignItems: "center", margin: "2rem 0", padding: "0 0 0 30px" }}>
-                            <div className="column col-6">
-                              <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-                                <li><h4>{props.lastRace.name}</h4></li>
-                                <li style={{ marginTop: 0, lineHeight: 1.2 }}><b>{props.lastRace.track.name}</b></li>
-                                <li style={{ marginTop: 0 }}>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</li>
-                              </ul>
-                            </div>
-                            <div className="column col-6">
-                              <img src={props.lastRace.track.logo} style={{ display: "block", margin: "0 auto", maxHeight: "150px", height: "100%", maxWidth: "100%" }}/>
-                            </div>
-                          </div>  
-                      )
-                      
-                    }
-                    <table>
-                      <thead>
-                        <tr>
-                          <th width="7%">F</th>
-                          <th width="7%">S</th>
-                          <th>Driver</th>
-                          <th width="10%">Interval</th>
-                          <th width="10%">Led</th>
-                          <th width="10%">Inc</th>
+              <div className="column col-7 col-md-12" style={{ marginBottom: "1rem" }}>
+
+                <h5 class="text-center">Results
+                  <span style={{ display: "block", fontSize: "0.6rem", marginTop: "0.2rem" }}>
+                    {props.lastRace.laps} laps ({props.lastRace.cautions} cautions for {props.lastRace.cautionLaps} laps)
+                  </span>
+                </h5>
+
+                <table>
+                  <thead>
+                    <tr>
+                      <th width="7%">F</th>
+                      <th width="7%">S</th>
+                      <th>Driver</th>
+                      <th width="10%">Interval</th>
+                      <th width="10%">Led</th>
+                      <th width="10%">Inc</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    { 
+                      props.lastRace.results.slice(0,10).map((props, index) => (
+                        <tr key={`standings${props.id}`}>
+                          <td>{props.finish}</td>
+                          <td>{props.start}</td>
+                          <td><DriverChip {...props.driver}/></td>
+                          <td>{props.interval}</td>
+                          <td>{props.led}</td>
+                          <td>{props.incidents}</td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        { 
-                          props.lastRace.results.slice(0,5).map((props, index) => (
-                            <tr key={`standings${props.id}`}>
-                              <td>{props.finish}</td>
-                              <td>{props.start}</td>
-                              <td><DriverChip {...props.driver}/></td>
-                              <td>{props.interval}</td>
-                              <td>{props.led}</td>
-                              <td>{props.incidents}</td>
-                            </tr>
-                          ))
-                        }
-                      </tbody>
-                    </table>
-                    <p className="text-center" style={{ marginTop: "1rem" }}><a href={`/race/${props.lastRace.raceId}`} className="btn btn-primary">View Results</a></p> 
-                  </div>
-                }
+                      ))
+                    }
+                  </tbody>
+                </table>
+                <p className="text-center" style={{ marginTop: "1rem" }}><a href={`/race/${props.lastRace.raceId}`} className="btn btn-primary">View Results</a></p> 
               </div>
                 
-              <div className="column col-5 col-md-12">
+              <div className="column col-5 col-md-12" style={{ marginBottom: "1rem" }}>
 
-                <div>
-                  <h6>Standings</h6>
-                  <p className="text-center" style={{ fontSize: "0.8rem" }}>After {props.results.filter(({ counts }) => counts).length} of {props.schedule.filter(({ counts }) => counts).length} Races</p>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th width="2%"></th>
-                        <th width="2%"></th>
-                        <th>Driver</th>
-                        <th width="7%">Behind</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      { props.standings &&
-                        props.standings
-                          .map((props, index) => (
-                            <tr key={`standings${index}`} style={{opacity: props.driver.active ? 1 : 0.2}}>
-                              <td>
-                                <b>{index + 1}</b>
-                              </td>
-                              <td>
-                                { parseInt(props.change, 10) > 0
-                                    ? <span style={{color:"green"}}>&#9650;&nbsp;{props.change.substr(1)}</span>
-                                    : parseInt(props.change, 10) < 0
-                                      ? <span style={{color:"red"}}>&#9660;&nbsp;{props.change.substr(1)}</span>
-                                      : ''
-                                }
-                              </td>
-                              <td>
-                                <a href={`/driver/${props.driver.id}/`} style={{ whiteSpace: "nowrap" }}>
-                                  { props.driver.numberArt &&
-                                    <div style={{ display: "inline-block", marginRight: "6px", width: "22px", height: "22px", position: "relative", top: "6px", marginTop: "-6px" }}>
-                                      <img src={ props.driver.numberArt.fields.file.url } style={{ width: "100%" }} />
-                                    </div>
-                                  }                      
-                                  {(props.driver.nickname || props.driver.name).replace(/ /g, '\u00a0')}
-                                </a>
-                              </td>
-                              <td>{props.behindLeader}</td>
-                            </tr>
-                          ))
-                      }
-                    </tbody>
-                  </table>   
-                  <p className="text-center" style={{ marginTop: "1rem" }}><a href={`/standings/${props.seasonId}`} className="btn btn-primary">View Standings</a></p> 
-                </div>        
+                <h5 class="text-center">Standings
+                  <span style={{ display: "block", fontSize: "0.6rem", marginTop: "0.2rem" }}>through {props.results.filter(({ counts }) => counts).length} of {props.schedule.filter(({ counts }) => counts).length} races</span>
+                </h5>
+                <table>
+                  <thead>
+                    <tr>
+                      <th width="2%"></th>
+                      <th width="2%"></th>
+                      <th>Driver</th>
+                      <th width="7%">Behind</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    { props.standings &&
+                      props.standings
+                        .map((props, index) => (
+                          <tr key={`standings${index}`} style={{opacity: props.driver.active ? 1 : 0.2}}>
+                            <td>
+                              <b>{index + 1}</b>
+                            </td>
+                            <td>
+                              { parseInt(props.change, 10) > 0
+                                  ? <span style={{color:"green"}}>&#9650;&nbsp;{props.change.substr(1)}</span>
+                                  : parseInt(props.change, 10) < 0
+                                    ? <span style={{color:"red"}}>&#9660;&nbsp;{props.change.substr(1)}</span>
+                                    : ''
+                              }
+                            </td>
+                            <td>
+                              <a href={`/driver/${props.driver.id}/`} style={{ whiteSpace: "nowrap" }}>
+                                { props.driver.numberArt &&
+                                  <div style={{ display: "inline-block", marginRight: "6px", width: "22px", height: "22px", position: "relative", top: "6px", marginTop: "-6px" }}>
+                                    <img src={ props.driver.numberArt.fields.file.url } style={{ width: "100%" }} />
+                                  </div>
+                                }                      
+                                {(props.driver.nickname || props.driver.name).replace(/ /g, '\u00a0')}
+                              </a>
+                            </td>
+                            <td>{props.behindLeader}</td>
+                          </tr>
+                        ))
+                    }
+                  </tbody>
+                </table>   
+                <p className="text-center" style={{ marginTop: "1rem" }}><a href={`/standings/${props.seasonId}`} className="btn btn-primary">View Standings</a></p> 
 
               </div>
             </div>
