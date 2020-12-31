@@ -1,0 +1,31 @@
+.nav {
+  display: flex;
+  align-items: center;
+  flex: 1 0;
+  justify-content: inherit;
+}
+
+.nav a:link,
+.nav a:visited {
+  display: inline-block;
+  font-size: 0.7rem;
+  color: #f4a913;
+  padding: 10px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.nav a.active,
+.nav a:hover,
+.nav a:active {
+  background-color: #f4a913;
+  color: #000;
+  transform: skew(-20deg);
+}
+
+.nav a.active span,
+.nav a:hover span,
+.nav a:active span {
+  display: inline-block;
+  transform: skew(20deg);
+}

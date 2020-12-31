@@ -86,39 +86,10 @@ h6 {
   margin-bottom: 2rem;
 }
 
-.navbar .navbar-section {
-  justify-content: center;
-}
-
-.navItem:link,
-.navItem:visited {
-  display: inline-block;
-  font-size: 0.7rem;
-  color: #f4a913;
-  padding: 10px;
-  text-transform: uppercase;
-  text-decoration: none;
-}
-
-.navItem.active,
-.navItem:hover,
-.navItem:active {
-  background-color: #f4a913;
-  color: #000;
-  transform: skew(-20deg);
-}
-
-.navItem.active span,
-.navItem:hover span,
-.navItem:active span {
-  display: inline-block;
-  transform: skew(20deg);
-}
-
 .btn.btn-primary {
-  background-color: #f4a913 !important;
-  border-color: #f4a913 !important;
-  color: #000 !important;
+  background-color: #f4a913;
+  border-color: #f4a913;
+  color: #000;
 }
 
 .description {

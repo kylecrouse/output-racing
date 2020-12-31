@@ -4,13 +4,23 @@
   padding: 1rem 0;
 }
 
-.navbarContent {
-  display: flex;
-}
-
 .logo {
   display: block;
-  height: 50px;
+  height: 2.5rem;
   position: relative;
   top: 2px;
+}
+
+.navbarSection:not(:first-child):last-child {
+  justify-content: flex-end;
+}
+
+@media (max-width: 1280px) {
+  .navbarSection {
+    justify-content: center !important;
+  }
+  
+  .logo {
+    margin-bottom: 1rem;
+  }
 }

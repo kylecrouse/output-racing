@@ -5,6 +5,7 @@ import moment from 'moment';
 import Navbar from '../components/Navbar';
 import Video from '../components/Video';
 import DriverChip from '../components/DriverChip';
+import Footer from '../components/Footer';
 import { cars, tracks } from '../constants';
 
 export default function Home(props) {
@@ -27,14 +28,14 @@ export default function Home(props) {
           <div className="column col-8 col-xl-12 col-mx-auto">
           
             <div className="columns" style={{ marginBottom: "2rem" }}>
-              <div className="column col-6">
+              <div className="column col-6 col-md-12">
                 <h2>About Us</h2>
                 <p>Output Racing is an online sim racing league on iRacing.</p>
                 <p>We put this league together to provide a place for the late night racer to hang out, make friends and race hard. Established in mid 2018 with the goal of building a competitive league without toxic people or egos, we focused on building a tight knit community that meshes well on and off the track.</p>
                 <p>If you are a late night racer that is looking for a fun group to chill and race with once a week, feel free to apply. We welcome a wide range of skill levels with a minimum C class 2.0 SR license and 1000 IR.</p>
                 <p><a className="btn btn-primary" href="/apply">Apply</a></p>
               </div>
-              <div className="column col-5 col-ml-auto">
+              <div className="column col-5 col-ml-auto hide-md">
                 <img src="/Autclub-ocvcbeysezsqrsibr3cet23yfi51isxfp6kw671qpc.png" style={{ display: "block", height: "100%", maxWidth: "100%", margin: "0 auto"}}/>
               </div>
             </div>
@@ -44,15 +45,15 @@ export default function Home(props) {
       
       </div>
       
-      <div style={{ backgroundColor: "black", marginBottom: "2rem", padding: ".8rem 0" }}>
+      <div style={{ backgroundColor: "black", marginBottom: "2rem", padding: "0.4rem 0" }}>
         <div className="container">
           <div className="columns">
             <div className="column col-8 col-xl-12 col-mx-auto">
               <div className="columns">
-                <img src="/Charlotte-Start.png" className="column col-3"/>
-                <img src="/Champ.png" className="column col-3"/>
-                <img src="/Chambliss.png" className="column col-3"/>
-                <img src="/Autoclub.png" className="column col-3"/>
+                <img src="/Charlotte-Start.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
+                <img src="/Champ.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
+                <img src="/Chambliss.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
+                <img src="/Autoclub.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
               </div>
             </div>
           </div>
@@ -66,7 +67,7 @@ export default function Home(props) {
           
             <h6>Current Season</h6>
                 
-            <div className="columns">
+            <div className="columns" style={{ marginBottom: "3rem" }}>
               <div className="column col-7 col-sm-12">
               
                 <div className="description">
@@ -77,7 +78,7 @@ export default function Home(props) {
                 </div>
 
                 { props.season.cars && 
-                    <div className="columns col-gapless" style={{ margin: "1rem 0 3rem" }}>
+                    <div className="columns col-gapless" style={{ marginTop: "1rem" }}>
                       { props.season.cars.map(name => {
                           const car = cars.find(car => car.name === name);
                           return (
@@ -244,10 +245,7 @@ export default function Home(props) {
         </div>
       </div>
       
-      <footer style={{ backgroundColor: "black", marginTop: "3rem", padding: "2rem 0 3rem" }}>
-        <Navbar seasonId={props.seasonId} logo="false"/>
-        <p className="text-center" style={{ color: "white", margin: "2rem 0 0" }}>&copy; 2020 Output Racing League</p>
-      </footer>
+      <Footer {...props}/>
 
     </div>
   )
