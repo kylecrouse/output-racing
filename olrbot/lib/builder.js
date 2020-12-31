@@ -12,7 +12,7 @@ async function buildAndDeploy() {
     });
     
     build.stderr.on('data', (data) => {
-      console.error(`Build stderr: ${data}`);
+      console.log(`Build stderr: ${data}`);
     });
     
     build.on('exit', (code) => {
@@ -31,7 +31,7 @@ async function buildAndDeploy() {
       });
       
       sync.stderr.on('data', (data) => {
-        console.error(`Sync stderr: ${data}`);
+        console.log(`Sync stderr: ${data}`);
       });
       
       sync.on('exit', (code) => {
@@ -50,7 +50,7 @@ async function buildAndDeploy() {
         });
         
         invalidate.stderr.on('data', (data) => {
-          console.error(`Invalidate stderr: ${data}`);
+          console.log(`Invalidate stderr: ${data}`);
         });
         
         invalidate.on('exit', (code) => {
