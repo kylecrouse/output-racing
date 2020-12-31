@@ -10,7 +10,7 @@ export default function Drivers(props) {
   		<link rel="icon" href="/favicon.ico" />
 	  </Head>
 
-    <Navbar seasonId={props.seasonId}/>
+    <Navbar seasonId={props.seasonId} page="drivers"/>
     
     <main className="container">
   	  <div className="columns">

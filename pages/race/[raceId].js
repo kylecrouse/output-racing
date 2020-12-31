@@ -13,7 +13,7 @@ export default function Race(props) {
     		<link rel="icon" href="/favicon.ico" />
   	  </Head>
     
-      <Navbar seasonId={props.currentSeasonId}/>
+      <Navbar seasonId={props.currentSeasonId} page="schedule"/>
       
       <style jsx>{`
         ul {

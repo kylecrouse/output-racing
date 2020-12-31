@@ -11,7 +11,7 @@ export default function Driver(props) {
     		<link rel="icon" href="/favicon.ico" />
   	  </Head>
       
-      <Navbar seasonId={props.seasonId}/>
+      <Navbar seasonId={props.seasonId} page="drivers"/>
       
       <style jsx>{`
         th {

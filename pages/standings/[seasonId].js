@@ -12,7 +12,7 @@ export default function Schedule(props) {
     		<link rel="icon" href="/favicon.ico" />
   	  </Head>
 
-      <Navbar seasonId={props.currentSeasonId}/>
+      <Navbar seasonId={props.currentSeasonId} page="standings"/>
 	    
       <main className="container">
 	  	  <div className="columns">
