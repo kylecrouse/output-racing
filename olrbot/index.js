@@ -80,6 +80,12 @@ const server = http.createServer((req, res) => {
     req.on('end', async function() {
       if (req.url === '/apply')
         await handleApplication(client, JSON.parse(body));
+        
+      if (req.url === '/session') {
+        const json = JSON.parse(body);
+        console.log(json);
+        client.users.cache.get('kylecrouse').send(`\`\`\`${json}\`\`\``);
+      }
 
       res.writeHead(200, 'OK', {'Content-Type': 'text/plain'});
       res.end();
