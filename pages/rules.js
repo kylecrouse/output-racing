@@ -17,7 +17,7 @@ export default function Rules(props) {
       <div className="container">
         
         <main className="columns">
-          <div className="column col-6 col-mx-auto">
+          <div className="column col-6 col-sm-12 col-mx-auto">
             
             { props.raceInfo && 
               <div>

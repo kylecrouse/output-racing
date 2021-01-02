@@ -29,3 +29,10 @@
   display: inline-block;
   transform: skew(20deg);
 }
+
+@media (max-width: 600px) {
+  .nav a:link,
+  .nav a:visited {
+    font-size: 0.5rem;
+  }
+}

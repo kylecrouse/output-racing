@@ -72,8 +72,8 @@ export default function Schedule(props) {
                 <tr>
                   <th></th>
                   <th width="20%">1st</th>
-                  <th width="20%">2nd</th>
-                  <th width="20%">3rd</th>
+                  <th className="hide-sm" width="20%">2nd</th>
+                  <th className="hide-sm" width="20%">3rd</th>
                 </tr>
               </thead>
         		  <tbody>
@@ -83,10 +83,10 @@ export default function Schedule(props) {
                 			<td>
                         <DriverChip {...season.standings[0].driver}/>
                       </td>
-                			<td>
+                			<td className="hide-sm">
                         <DriverChip {...season.standings[1].driver}/>
                       </td>
-                			<td>
+                			<td className="hide-sm">
                         <DriverChip {...season.standings[2].driver}/>
                       </td>
               		  </tr>

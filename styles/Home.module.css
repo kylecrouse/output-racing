@@ -1,5 +1,6 @@
 .thumbnail {
-  padding: 0.4rem 0;
+  padding: 0.4rem;
+  height: auto;
 }
 
 .title {
@@ -34,4 +35,17 @@
 .description li,
 .description li p {
   margin: 0;
+}
+
+@media (max-width: 600px) {
+  .tagline {
+    font-size: 1rem;
+    line-height: 1.2;
+    padding: 20px;
+  }
+  
+  .thumbnail {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }

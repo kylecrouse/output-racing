@@ -159,11 +159,11 @@ export default function Home(props) {
                   <thead>
                     <tr>
                       <th width="7%">F</th>
-                      <th width="7%">S</th>
+                      <th className="hide-sm" width="7%">S</th>
                       <th>Driver</th>
                       <th width="10%">Interval</th>
                       <th width="10%">Led</th>
-                      <th width="10%">Inc</th>
+                      <th className="hide-sm" width="10%">Inc</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -171,11 +171,11 @@ export default function Home(props) {
                       props.lastRace.results.slice(0,10).map((props, index) => (
                         <tr key={`standings${props.id}`}>
                           <td>{props.finish}</td>
-                          <td>{props.start}</td>
+                          <td className="hide-sm">{props.start}</td>
                           <td><DriverChip {...props.driver}/></td>
                           <td>{props.interval}</td>
                           <td>{props.led}</td>
-                          <td>{props.incidents}</td>
+                          <td className="hide-sm">{props.incidents}</td>
                         </tr>
                       ))
                     }

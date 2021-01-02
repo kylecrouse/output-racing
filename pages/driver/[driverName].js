@@ -18,8 +18,71 @@ export default function Driver(props) {
         th {
           width: 8.33%;
         }
-      `}</style>
 
+        @media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+        
+        	/* Force table to not be like tables anymore */
+        	table, thead, tbody, th, td, tr { 
+        		display: block; 
+        	}
+          
+          table {
+            width: 60%;
+            margin: 0 auto;
+          }
+        	
+        	/* Hide table headers (but not display: none;, for accessibility) */
+        	thead tr { 
+        		position: absolute;
+        		top: -9999px;
+        		left: -9999px;
+        	}
+          
+          tbody tr { background-color: white; }
+        	
+        	td { 
+        		/* Behave  like a "row" */
+        		border: none;
+        		border-bottom: 1px solid #eee; 
+        		position: relative;
+        		padding-left: 50%; 
+            text-align: right;
+        	}
+          
+          td:last-child {
+            border-bottom: 0;
+        	}
+          
+        	td:before { 
+        		/* Now like a table header */
+        		position: absolute;
+        		/* Top/left values mimic padding */
+        		top: 6px;
+        		left: 6px;
+        		width: 45%; 
+        		padding-right: 10px; 
+        		white-space: nowrap;
+            text-align: left;
+            font-weight: bold;
+        	}
+        	
+        	/*
+        	Label the data
+        	*/
+        	td:nth-of-type(1):before { content: "Starts"; }
+        	td:nth-of-type(2):before { content: "Wins"; }
+        	td:nth-of-type(3):before { content: "Top 5s"; }
+        	td:nth-of-type(4):before { content: "Poles"; }
+        	td:nth-of-type(5):before { content: "Avg Start"; }
+        	td:nth-of-type(6):before { content: "Avg Finish"; }
+        	td:nth-of-type(7):before { content: "Total Laps"; }
+        	td:nth-of-type(8):before { content: "Laps Led"; }
+        	td:nth-of-type(9):before { content: "Inc/Race"; }
+        	td:nth-of-type(10):before { content: "Win %"; }
+        	td:nth-of-type(11):before { content: "Top 5 %"; }
+        	td:nth-of-type(12):before { content: "Laps Led %"; }
+        }
+      `}</style>
   
   	  <main className="container">
 
@@ -36,7 +99,7 @@ export default function Driver(props) {
                 <h2>{props.nickname || props.name}</h2>
                 { props.license &&
                   <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-                    <li><span style={{ backgroundColor: `#${props.license.licColor}`, color: props.license.licGroup === 3 ? 'black' : 'white', padding: "4px 8px", borderRadius: "4px" }}> {props.license.licGroupDisplayName} <span style={{ marginLeft: "4px" }}>{props.license.srPrime}.{props.license.srSub}</span></span></li>
+                    <li style={{ marginBottom: "0.4rem" }}><span style={{ backgroundColor: `#${props.license.licColor}`, color: props.license.licGroup === 3 ? 'black' : 'white', padding: "4px 8px", borderRadius: "4px" }}> {props.license.licGroupDisplayName} <span style={{ marginLeft: "4px" }}>{props.license.srPrime}.{props.license.srSub}</span></span></li>
                     <li><span style={{ border: "1px solid black", padding: "4px 8px", borderRadius: "4px" }}>iRating <span style={{ marginLeft: "4px" }}>{props.license.iRating}</span></span></li>
                   </ul>
                 }

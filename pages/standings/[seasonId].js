@@ -15,6 +15,82 @@ export default function Schedule(props) {
 
       <Navbar seasonId={props.currentSeasonId} page="standings"/>
 	    
+      <style jsx>{`
+        th {
+          width: 8.33%;
+        }
+
+        @media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+        
+        	/* Force table to not be like tables anymore */
+        	table, thead, tbody, th, td, tr { 
+        		display: block; 
+        	}
+          
+        	/* Hide table headers (but not display: none;, for accessibility) */
+        	thead tr { 
+        		position: absolute;
+        		top: -9999px;
+        		left: -9999px;
+        	}
+          
+          tbody tr {
+            margin-bottom: 1rem;
+          }
+          
+        	td { 
+        		/* Behave  like a "row" */
+        		border: none;
+        		border-bottom: 1px solid #eee; 
+        		position: relative;
+        		padding-left: 50%; 
+            text-align: right;
+        	}
+          
+          tbody tr:nth-child(odd) td {
+            border-bottom-color: white;
+          }
+          
+          td:last-child {
+            border-bottom: 0;
+        	}
+          
+        	td:before { 
+        		/* Now like a table header */
+        		position: absolute;
+        		/* Top/left values mimic padding */
+        		top: 6px;
+        		left: 6px;
+        		width: 45%; 
+        		padding-right: 10px; 
+        		white-space: nowrap;
+            text-align: left;
+            font-weight: bold;
+        	}
+        	
+        	/*
+        	Label the data
+        	*/
+        	.standings td:nth-of-type(1):before { content: "Position"; }
+        	.standings td:nth-of-type(2):before { content: "Change"; }
+        	.standings td:nth-of-type(3):before { content: "Driver"; }
+        	.standings td:nth-of-type(4):before { content: "Starts"; }
+        	.standings td:nth-of-type(5):before { content: "Points"; }
+        	.standings td:nth-of-type(6):before { content: "Behind Next"; }
+        	.standings td:nth-of-type(7):before { content: "Behind Leader"; }
+        	.standings td:nth-of-type(8):before { content: "Wins"; }
+        	.standings td:nth-of-type(9):before { content: "Top 5s"; }
+        	.standings td:nth-of-type(10):before { content: "Top 10s"; }
+        	.standings td:nth-of-type(11):before { content: "Total Laps"; }
+        	.standings td:nth-of-type(12):before { content: "Incidents per Race"; }
+
+        	.archive td:nth-of-type(1):before { content: "Season"; }
+        	.archive td:nth-of-type(2):before { content: "1st"; }
+        	.archive td:nth-of-type(3):before { content: "2nd"; }
+        	.archive td:nth-of-type(4):before { content: "3rd"; }
+        }
+      `}</style>
+      
       <main className="container">
 	  	  <div className="columns">
           <div className="column col-8 col-xl-12 col-mx-auto">
@@ -22,7 +98,7 @@ export default function Schedule(props) {
         		<h2 className="text-center">{props.name} Standings</h2>
             <h6 className="text-center" style={{ margin: "1rem 0 2rem" }}>After {props.results.filter(({ counts }) => counts).length} of {props.schedule.filter(({ counts }) => counts).length} Races</h6>
 
-            <table>
+            <table className="standings">
               <thead>
                 <tr>
                   <th width="2%"></th>
@@ -49,7 +125,7 @@ export default function Schedule(props) {
                             ? <span style={{color:"green"}}>&#9650;&nbsp;{driver.change.substr(1)}</span>
                             : parseInt(driver.change, 10) < 0
                               ? <span style={{color:"red"}}>&#9660;&nbsp;{driver.change.substr(1)}</span>
-                              : ''
+                              : '\u00a0'
                         }
                         </td>
                         <td><DriverChip {...driver.driver}/></td>
@@ -70,7 +146,7 @@ export default function Schedule(props) {
             
             <h3 style={{ marginTop: "3rem" }}>Other Seasons</h3>
 
-        		<table>
+        		<table className="archive">
               <thead>
                 <tr>
                   <th></th>
