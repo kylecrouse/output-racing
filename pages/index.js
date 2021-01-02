@@ -57,8 +57,8 @@ export default function Home(props) {
                       { props.season.cars.map(name => {
                           const car = cars.find(car => car.name === name);
                           return (
-                            <figure key={car.id} className={`col-${(12/props.season.cars.length).toFixed(0)} col-mx-auto text-center`}>
-                              <img src={car.image} alt={car.name} style={{ maxHeight: "150px", maxWidth: "100%" }}/>
+                            <figure key={car.id} className={`col-${(12/props.season.cars.length).toFixed(0)} col-mx-auto text-center`} style={{ overflow: "hidden" }}>
+                              <img src={car.image} alt={car.name} style={{ maxHeight: "150px", maxWidth: "102%", marginLeft: "-1%" }}/>
                               <figcaption style={{ fontSize: "0.6rem" }}>{car.name}</figcaption>
                             </figure>
                           );
