@@ -108,7 +108,7 @@ export default function Driver(props) {
             
             { props.media && 
                 <div style={{ marginTop: "2rem" }}>
-                  { props.media.slice(-1).map(image => renderImage(image)) }
+                  { props.media.slice(0, 1).map(image => renderImage(image)) }
                 </div>
             }
             
