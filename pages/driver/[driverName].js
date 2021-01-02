@@ -90,12 +90,12 @@ export default function Driver(props) {
           <div className="column col-8 col-xl-12 col-mx-auto">
 
             <div className="columns" style={{ display: "flex", alignItems: "center" }}>
-              <div className="column col-6">
+              <div className="column col-6 col-sm-4">
                 { props.numberArt &&
-                    <img src={ props.numberArt.fields.file.url } style={{ display: "block", width: "200px", margin: "0 20px 0 auto" }}/>
+                    <img src={ props.numberArt.fields.file.url } style={{ display: "block", width: "100%", margin: "0 20px 0 auto", maxWidth: "200px" }}/>
                 }
               </div>
-              <div className="column col-6 col-mx-auto">
+              <div className="column col-6 col-sm-8 col-mx-auto">
                 <h2>{props.nickname || props.name}</h2>
                 { props.license &&
                   <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
