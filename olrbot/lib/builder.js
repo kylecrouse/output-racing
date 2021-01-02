@@ -42,7 +42,8 @@ async function buildAndDeploy() {
         
         const invalidate = spawn(
           'aws', 
-          ['cloudfront', 'create-invalidation', '--distribution-id', 'E2HCYIFSR21K3R', '--paths', '"/*"']
+          ['cloudfront', 'create-invalidation', '--distribution-id', 'E2HCYIFSR21K3R', '--paths', '"/*"'],
+          { shell: true }
         );
 
         invalidate.stdout.on('data', (data) => {
