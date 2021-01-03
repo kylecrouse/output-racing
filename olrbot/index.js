@@ -72,6 +72,17 @@ client.on('guildMemberAdd', handleGuildMemberAdd);
 client.login(process.env.DISCORD_ACCESS_TOKEN);
 
 const server = http.createServer((req, res) => {
+  if (req.method === "OPTIONS") {
+    const headers = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "OPTIONS, POST, GET",
+      "Access-Control-Max-Age": 2592000
+    };
+    res.writeHead(204, headers);
+    res.end();
+    return;
+  }
+
   if (req.method === 'POST') {
     var body = '';
 
