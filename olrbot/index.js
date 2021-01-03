@@ -100,7 +100,7 @@ const server = http.createServer((req, res) => {
         if (!user) 
           user = await client.users.fetch(userId);
         
-        user.send(`\`\`\`${JSON.parse(body)}\`\`\``);
+        user.send(`\`\`\`${body}\`\`\``);
       }
 
       res.writeHead(200, 'OK', {...headers, 'Content-Type': 'text/plain'});
