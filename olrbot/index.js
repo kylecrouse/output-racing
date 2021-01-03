@@ -97,7 +97,7 @@ const server = http.createServer((req, res) => {
       if (req.url === '/session') {
         const json = JSON.parse(body);
         console.log(json);
-        client.users.cache.get('kylecrouse').send(`\`\`\`${json}\`\`\``);
+        client.users.cache.get('697817102534311996').send(`\`\`\`${json}\`\`\``);
       }
 
       res.writeHead(200, 'OK', {...headers, 'Content-Type': 'text/plain'});
