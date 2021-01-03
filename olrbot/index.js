@@ -72,12 +72,14 @@ client.on('guildMemberAdd', handleGuildMemberAdd);
 client.login(process.env.DISCORD_ACCESS_TOKEN);
 
 const server = http.createServer((req, res) => {
+  const headers = {
+    "Access-Control-Allow-Origin": 'http://192.168.7.131',
+    "Access-Control-Allow-Methods": "OPTIONS, POST, GET",
+    "Access-Control-Allow-Headers": 'Content-Type',
+    "Access-Control-Max-Age": 2592000
+  };
+	
   if (req.method === "OPTIONS") {
-    const headers = {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "OPTIONS, POST, GET",
-      "Access-Control-Max-Age": 2592000
-    };
     res.writeHead(204, headers);
     res.end();
     return;
@@ -98,11 +100,11 @@ const server = http.createServer((req, res) => {
         client.users.cache.get('kylecrouse').send(`\`\`\`${json}\`\`\``);
       }
 
-      res.writeHead(200, 'OK', {'Content-Type': 'text/plain'});
+      res.writeHead(200, 'OK', {...headers, 'Content-Type': 'text/plain'});
       res.end();
     });
   } else {
-    res.writeHead(200, 'OK', {'Content-Type': 'text/plain'});
+    res.writeHead(200, 'OK', {...headers, 'Content-Type': 'text/plain'});
     res.end();
   }
 });
