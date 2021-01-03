@@ -95,9 +95,12 @@ const server = http.createServer((req, res) => {
         await handleApplication(client, JSON.parse(body));
         
       if (req.url === '/session') {
-        const json = JSON.parse(body);
-        console.log(json);
-        client.users.cache.get('697817102534311996').send(`\`\`\`${json}\`\`\``);
+        const userId = '697817102534311996';
+        let user = client.users.cache.get(userId);
+        if (!user) 
+          user = await client.users.fetch(userId);
+        
+        user.send(`\`\`\`${JSON.parse(body)}\`\`\``);
       }
 
       res.writeHead(200, 'OK', {...headers, 'Content-Type': 'text/plain'});
