@@ -1,6 +1,7 @@
 const fs = require('fs');
 const discord = require('discord.js');
 const http = require('http');
+const WebSocket = require('ws');
 const handleGuildMemberAdd = require('./handlers/guildMemberAdd');
 const { handleApplication } = require('./lib/applications');
 const { prefix, superUsers } = require('./config.json');
@@ -71,6 +72,7 @@ client.on('guildMemberAdd', handleGuildMemberAdd);
 
 client.login(process.env.DISCORD_ACCESS_TOKEN);
 
+let connections = [];
 const server = http.createServer((req, res) => {
   const headers = {
     "Access-Control-Allow-Origin": 'http://192.168.7.131',
@@ -94,14 +96,8 @@ const server = http.createServer((req, res) => {
       if (req.url === '/apply')
         await handleApplication(client, JSON.parse(body));
         
-      if (req.url === '/session') {
-        const userId = '697817102534311996';
-        let user = client.users.cache.get(userId);
-        if (!user) 
-          user = await client.users.fetch(userId);
-        
-        user.send(`\`\`\`${body}\`\`\``);
-      }
+      if (req.url === '/session') 
+        connections.forEach(ws => ws.send(body));
 
       res.writeHead(200, 'OK', {...headers, 'Content-Type': 'text/plain'});
       res.end();
@@ -110,6 +106,22 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, 'OK', {...headers, 'Content-Type': 'text/plain'});
     res.end();
   }
+});
+
+const wss = new WebSocket.Server({ server });
+
+wss.on('connection', function connection(ws) {
+  connections.push(ws);
+  
+  ws.on('message', function incoming(message) {
+    console.log('received: %s', message);
+  });
+  
+  ws.on('close', function close() {
+    connections.splice(connections.indexOf(ws), 1);
+  });
+
+  ws.send('Hello, World!');
 });
 
 const port = process.env.PORT || 3001;

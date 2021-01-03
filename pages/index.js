@@ -149,7 +149,7 @@ export default function Home(props) {
             <div className="columns">
               <div className="column col-7 col-md-12" style={{ marginBottom: "1rem" }}>
 
-                <h5 class="text-center">Results
+                <h5 className="text-center">Results
                   <span style={{ display: "block", fontSize: "0.6rem", marginTop: "0.2rem" }}>
                     {props.lastRace.laps} laps ({props.lastRace.cautions} cautions for {props.lastRace.cautionLaps} laps)
                   </span>
@@ -186,7 +186,7 @@ export default function Home(props) {
                 
               <div className="column col-5 col-md-12" style={{ marginBottom: "1rem" }}>
 
-                <h5 class="text-center">Standings
+                <h5 className="text-center">Standings
                   <span style={{ display: "block", fontSize: "0.6rem", marginTop: "0.2rem" }}>through {props.results.filter(({ counts }) => counts).length} of {props.schedule.filter(({ counts }) => counts).length} races</span>
                 </h5>
                 <table>
@@ -250,7 +250,9 @@ export default function Home(props) {
       </div>
       
       <Footer {...props}/>
-
+      
+      <script type="text/javascript" src="/ws.js"/>
+      
     </div>
   )
 }

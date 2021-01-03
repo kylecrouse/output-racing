@@ -35,6 +35,10 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "sharp": "^0.26.3",
-    "spectre.css": "^0.5.9"
-  }
+    "spectre.css": "^0.5.9",
+    "twitch": "^4.3.7",
+    "twitch-auth": "^4.3.7",
+    "ws": "^7.4.2"
+  },
+  "devDependencies": {}
 }
