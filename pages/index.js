@@ -74,8 +74,8 @@ export default function Home(props) {
                     <div className="panel-header"><h6 className={`${styles.title} panel-title`}>Next Race</h6></div>
                     <div className="panel-body text-center" style={{ margin: "1rem 0 2rem" }}>
                       <h4>{props.nextRace.name}</h4>
-                      <img src={tracks.find(({ name }) => props.nextRace.track.indexOf(name) >= 0).logo} style={{ display: "block", margin: "0 auto", width: "50%" }}/>
-                      <p style={{ margin: 0 }}>{props.nextRace.track}</p>
+                      <img src={props.nextRace.track.logo} style={{ display: "block", margin: "0 auto", width: "50%" }}/>
+                      <p style={{ margin: 0 }}>{props.nextRace.track.name}</p>
                       <p style={{ margin: 0 }}>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</p>
                     </div>
                   </div>   
