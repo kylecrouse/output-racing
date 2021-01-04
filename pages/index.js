@@ -251,8 +251,6 @@ export default function Home(props) {
       
       <Footer {...props}/>
       
-      <script type="text/javascript" src="/ws.js"/>
-      
     </div>
   )
 }
