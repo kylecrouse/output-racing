@@ -14,10 +14,16 @@ export default function Home(props) {
       <Head>
         <title>{props.leagueName}</title>
         <link rel="icon" href="/favicon.ico" />
+        <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>  
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js" crossorigin></script>
+        <script src="/raceday.js" type="text/babel"></script>
       </Head>
 
       <Navbar seasonId={props.seasonId}/>
       
+      <div id="raceday" data-race={ JSON.stringify(props.nextRace) }></div>
+
       <img src="/2020-11-04_15-13-02_0.png" style={{ display: "block", width: "100%", marginTop: "-2rem" }}/>
       
       <div className={styles.tagline}>An Asphalt Oval League for the Late Night Racer</div>
