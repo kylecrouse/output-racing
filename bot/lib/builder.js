@@ -71,7 +71,7 @@ async function buildAndDeploy() {
 }
 
 // Allow this script to be run from the command line or as a module
-if (process.argv[1] === `${process.cwd()}/olrbot/lib/builder.js`) {
+if (process.argv[1] === `${process.cwd()}/bot/lib/builder.js`) {
   return buildAndDeploy();
 } else {
   module.exports = { buildAndDeploy };

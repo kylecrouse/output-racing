@@ -121,7 +121,7 @@ wss.on('connection', function connection(ws) {
     connections.splice(connections.indexOf(ws), 1);
   });
 
-  ws.send('Hello, World!');
+  // ws.send('Hello, World!');
 });
 
 const port = process.env.PORT || 3001;
