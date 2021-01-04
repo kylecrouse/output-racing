@@ -6,13 +6,13 @@
     "dev": "next dev",
     "build": "next build && next export",
     "server": "next start",
-    "start": "node ./olrbot/index.js",
-    "race": "babel-node ./olrbot/scrape-results.js",
-    "season": "babel-node ./olrbot/scrape-season.js",
-    "standings": "babel-node ./olrbot/scrape-standings.js",
-    "stats": "babel-node ./olrbot/scrape-stats.js",
-    "drivers": "babel-node ./olrbot/scrape-drivers.js",
-    "upload": "babel-node ./olrbot/scrape-upload.js"
+    "start": "node ./bot/index.js",
+    "race": "babel-node ./bot/scrape-results.js",
+    "season": "babel-node ./bot/scrape-season.js",
+    "standings": "babel-node ./bot/scrape-standings.js",
+    "stats": "babel-node ./bot/scrape-stats.js",
+    "drivers": "babel-node ./bot/scrape-drivers.js",
+    "upload": "babel-node ./bot/scrape-upload.js"
   },
   "dependencies": {
     "@babel/core": "^7.12.3",
