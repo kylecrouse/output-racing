@@ -18,7 +18,7 @@ module.exports = {
     
     const embed = new Discord.MessageEmbed()
     	.setTitle('Current Standings')
-    	.setURL(`http://dnhi063vpnzuy.cloudfront.net/standings/${league.season.id}/`)
+    	.setURL(`https://outputracing.com/standings/${league.season.id}/`)
       .addField(league.season.name, `After ${completed.length} of ${scheduled.length} races`)
       .setThumbnail('http://output-racing.s3-website.us-west-2.amazonaws.com/logo-stacked.png')
     	.addFields(
