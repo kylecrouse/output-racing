@@ -167,6 +167,9 @@ module.exports = {
     },
     { name: 'Lanier National Speedway Dirt',
       logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/lanier/logo.jpg'
+    },
+    { name: 'Rockingham Speedway Oval',
+      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/rockingham/logo.jpg'
     }
   ]
 }
