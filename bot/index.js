@@ -33,7 +33,7 @@ client.on('message', async (message) => {
     
   // Get message command (i.e., !command) and args
   // Use regex that doesn't split inside quotes but doesn't match them either
-  const regex = /[^\s"]+|"([^"]*)"/gi;
+  const regex = /[^\s"“]+|["“]([^"”]*)["”]/gi;
   const string = message.content.slice(prefix.length).trim();
   let args = [], match = null;
   //Each call to exec returns the next regex match as an array
