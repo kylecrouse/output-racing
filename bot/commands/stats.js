@@ -54,7 +54,7 @@ async function getStats(user) {
         : user.displayAvatarURL()
     )
   	.setTitle('Output Racing League Career Stats')
-  	.setURL(`http://dnhi063vpnzuy.cloudfront.net/driver/${driver.name.replace(/\s/g, '-').toLowerCase()}/`)
+  	.setURL(`https://outputracing.com/driver/${driver.name.replace(/\s/g, '-').toLowerCase()}/`)
     .setDescription(`\`${driver.license.licGroupDisplayName} ${driver.license.srPrime}.${driver.license.srSub} / ${(parseInt(driver.license.iRating)/1000).toFixed(1)}k iR / ${driver.careerStats ? driver.careerStats.avgIncPerRace.toFixed(2) : '?.??'}x per race\``)
   	.addFields(
   		{ name: 'Starts', value: `\`${stats.starts}\``, inline: true },
