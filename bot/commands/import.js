@@ -100,7 +100,7 @@ async function handleLatest(args) {
   await getStats('league', league.id);
 
   // Import the new results from danlisa
-  return handleResults(message, [
+  return handleResults([
     null, 
     race.raceId, 
     args.length > 2 ? args[2] : race.name, 
