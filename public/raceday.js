@@ -6,7 +6,6 @@ class RaceDay extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.data = null;
     this.ws = new WebSocket('ws://orldiscordbot-env.eba-zhcidp9s.us-west-2.elasticbeanstalk.com');
   }
   
@@ -31,36 +30,48 @@ class RaceDay extends React.Component {
   }
 
   render() {
-    const props = this.props;
-    const { Session = null, Car } = this.state;
-    return Session ? (
+    const session = this.state.sessions.find(
+      ({ SessionNum }) => SessionNum == this.state.sessionNum
+    );
+    
+    return session ? (
   	  <div className="container">
     	  <div className="columns">
           <div className="column col-8 col-xl-12 col-mx-auto">
           
             <div className="columns" style={{ alignItems: "center" }}>
               <div className="column col-4 col-sm-12 text-center">
-                { props.logo
-                    ? <img src={ props.logo.fields.file.url } style={{ display: "block", height: "100%", maxHeight: "150px", margin: "0 auto" }} />
-                    : <h3 style={{ marginBottom: "2rem" }}>{props.name}</h3>
+                { this.props.logo
+                    ? <img 
+                        src={ this.props.logo.fields.file.url } 
+                        style={{ 
+                          display: "block", 
+                          maxWidth: "100%",
+                          height: "100%", 
+                          maxHeight: "150px", 
+                          margin: "0 auto"
+                        }} 
+                      />
+                    : <h3 style={{ marginBottom: "2rem" }}>{this.props.name}</h3>
                 }
               </div>
               <div className="column col-4 col-sm-12 text-center">
                 <ul className="text-center" style={{ marginBottom: "1rem" }}>
-                  <li><b>{props.track.name}</b></li>
-                  <li>{Session.Name.Value}</li>
-                  <li style={{ marginTop: "0.5rem", fontSize: "0.6rem" }}>
-                    Lap {Session.Lap.Value} of {Session.Laps.Value}
-                  </li>
-                  { Session.Cautions && 
-                    <li style={{ fontSize: "0.6rem" }}>
-                      {Session.Cautions.Value} cautions for {Session.CautionLaps.Value} laps
-                    </li>
-                  }
+                  <li><b>{this.state.trackName}</b></li>
+                  <li>{session.SessionName}</li>
                 </ul>
               </div>
               <div className="column col-4 col-sm-12">
-                <img src={props.track.logo} style={{ display: "block", height: "100%", maxHeight: "150px", margin: "0 auto", maxWidth: "100%" }} />
+                <img 
+                  src={this.props.track.logo} 
+                  style={{ 
+                    display: "block", 
+                    maxWidth: "100%",
+                    height: "100%", 
+                    maxHeight: "150px", 
+                    margin: "0 auto" 
+                  }} 
+                />
               </div>
             </div>
           
@@ -72,13 +83,20 @@ class RaceDay extends React.Component {
                 </tr>
               </thead>
               <tbody>
-          		  { Object.entries(Car).map(([key, val], i) => (
-                    <tr key={i}>
-                      <td>{val.Position.Value}</td>
-                      <td>{val.DriverName.Value</td>
-                    </tr>
-                  ))
-          		  }
+          		  { this.state.positions
+                    .filter((carIdx) => this.state.drivers[carIdx] > 0)
+                    .map((carIdx, index) => {
+                      const driver = this.props.drivers.find(
+                        ({ custId }) => custId == this.state.drivers[carIdx]
+                      );
+                      return (
+                        <tr key={carIdx}>
+                          <td>{index}</td>
+                          <td>{driver.nickname || driver.name}</td>
+                        </tr>
+                      );
+                    })
+                }
               </tbody>
         		</table>
 
@@ -90,4 +108,10 @@ class RaceDay extends React.Component {
 }
 
 const domContainer = document.querySelector('#raceday');
-ReactDOM.render(<RaceDay {...JSON.parse(domContainer.dataset.race)} />, domContainer);
+ReactDOM.render(
+  <RaceDay 
+    {...JSON.parse(domContainer.dataset.race)} 
+    drivers={JSON.parse(domContainer.dataset.drivers)}
+  />, 
+  domContainer
+);
