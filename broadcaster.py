@@ -14,7 +14,11 @@ async def send(data):
 # this is our State class, with some helpful variables
 class State:
     ir_connected = False
-    last_car_setup_tick = -1
+    last_weekend_info_tick = -1
+    last_driver_info_tick = -1
+    last_session_info_tick = -1
+    last_positions_tick = -1
+    last_session_num_tick = -1
 
 # here we check if we are connected to iracing
 # so we can retrieve some data
@@ -22,11 +26,15 @@ def check_iracing():
     if state.ir_connected and not (ir.is_initialized and ir.is_connected):
         state.ir_connected = False
         # don't forget to reset your State variables
-        state.last_car_setup_tick = -1
+        state.last_weekend_info_tick = -1
+        state.last_driver_info_tick = -1
+        state.last_session_info_tick = -1
+        state.last_positions_tick = -1
+        state.last_session_num_tick = -1
         # we are shutting down ir library (clearing all internal variables)
         ir.shutdown()
         print('irsdk disconnected')
-    elif not state.ir_connected and ir.startup() and ir.is_initialized and ir.is_connected:
+    elif not state.ir_connected and ir.startup(test_file='irsdkData.bin') and ir.is_initialized and ir.is_connected:
         state.ir_connected = True
         print('irsdk connected')
         
@@ -42,36 +50,55 @@ def loop():
     # and you will get inconsistent data
     ir.freeze_var_buffer_latest()
 
-    # retrieve live telemetry data
-    # check here for list of available variables
-    # https://github.com/kutu/pyirsdk/blob/master/vars.txt
-    # this is not full list, because some cars has additional
-    # specific variables, like brake bias, wings adjustment, etc
-    t = ir['SessionTime']
-    print('session time:', t)
-
-    # retrieve CarSetup from session data
-    # we also check if CarSetup data has been updated
+    # retrieve WeekendInfo from session data
+    # we also check if data has been updated
     # with ir.get_session_info_update_by_key(key)
     # but first you need to request data, before checking if its updated
-    car_setup = ir['CarSetup']
-    if car_setup:
-        car_setup_tick = ir.get_session_info_update_by_key('CarSetup')
-        if car_setup_tick != state.last_car_setup_tick:
-            state.last_car_setup_tick = car_setup_tick
-            print('car setup update count:', car_setup['UpdateCount'])
-            # now you can go to garage, and do some changes with your setup
-            # this line will be printed, only when you change something
-            # and press apply button, but not every 1 sec
-    # note about session info data
-    # you should always check if data exists first
-    # before do something like ir['WeekendInfo']['TeamRacing']
-    # so do like this:
-    if ir['WeekendInfo']:
-      print(ir['WeekendInfo']['WeekendOptions'])
-      
-    keys = list(ir._var_headers_dict.keys())
-    send(keys)
+    weekend_info = ir['WeekendInfo']
+    if weekend_info:
+        weekend_info_tick = ir.get_session_info_update_by_key('WeekendInfo')
+        if weekend_info_tick != state.last_weekend_info_tick:
+            state.last_weekend_info_tick = weekend_info_tick
+            send(json.dumps({
+              "trackName": weekend_info['TrackDisplayName'],
+              "trackId": weekend_info['TrackID'],
+              "skies": weekend_info['TrackSkies'],
+              "surfaceTemp": weekend_info['TrackSurfaceTemp'],
+              "airTemp": weekend_info['TrackAirTemp'],
+              "leagueId": weekend_info['LeagueID'],
+              "subsessionId": weekend_info['SubSessionID']
+            }))
+            
+    driver_info = ir['DriverInfo']
+    if driver_info:
+        driver_info_tick = ir.get_session_info_update_by_key('DriverInfo')
+        if driver_info_tick != state.last_driver_info_tick:
+            state.last_driver_info_tick = driver_info_tick
+            send(json.dumps({ "drivers": map(lambda a: a['UserID'], driver_info['Drivers']) }))
+
+    session_info = ir['SessionInfo']
+    if session_info:
+        session_info_tick = ir.get_session_info_update_by_key('SessionInfo')
+        if session_info_tick != state.last_session_info_tick:
+            state.last_session_info_tick = session_info_tick
+            send(json.dumps({ "sessions": session_info['Sessions'] }))
+
+    positions = ir['CarIdxPosition']
+    if positions:
+        positions_tick = ir.get_session_info_update_by_key('CarIdxPosition')
+        if positions_tick != state.last_positions_tick:
+            state.last_positions_tick = positions_tick
+            send(json.dumps({ "positions": positions }))
+            
+    session_num = ir['SessionNum']
+    if session_num:
+        session_num_tick = ir.get_session_info_update_by_key('SessionNum')
+        if session_num_tick != state.last_session_num_tick:
+            state.last_session_num_tick = session_num_tick
+            send(json.dumps({ "sessionNum": session_num }))
+    
+    # send(json.dumps({ "state": session_state }))
+    # send(json.dumps({ "flags": session_flags }))
 
 
 if __name__ == '__main__':
