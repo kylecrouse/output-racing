@@ -22,7 +22,11 @@ export default function Home(props) {
 
       <Navbar seasonId={props.seasonId}/>
       
-      <div id="raceday" data-race={ JSON.stringify(props.nextRace) }></div>
+      <div 
+        id="raceday" 
+        data-race={ JSON.stringify(props.nextRace) } 
+        data-drivers={ JSON.stringify(props.drivers) }
+      />
 
       <img src="/2020-11-04_15-13-02_0.png" style={{ display: "block", width: "100%", marginTop: "-2rem" }}/>
       
@@ -263,7 +267,7 @@ export default function Home(props) {
 
 export async function getStaticProps() {
   // Get data from CMS
-  const { name, season } = await league.load();
+  const { name, season, drivers } = await league.load();
 
   return { props: { 
     leagueName: name,
@@ -273,7 +277,8 @@ export async function getStaticProps() {
     schedule: season.schedule,
     standings: season.standings.slice(0,10), 
     nextRace: season.nextRace, 
-    lastRace: season.lastRace
+    lastRace: season.lastRace,
+    drivers
   }};
 }
 
