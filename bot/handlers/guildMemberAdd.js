@@ -26,7 +26,7 @@ module.exports = async (member) => {
   
   // Find the missing applicant code from guild
   const [applicant] = _.differenceWith(applicants, invites, 
-    (applicant, invite) => applicant.inviteCode === invite.code
+    (applicant, invite) => applicant.inviteCode == invite.code
   );
   
   // If nothing is found, send commands message and exit.
