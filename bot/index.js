@@ -111,14 +111,18 @@ const server = http.createServer((req, res) => {
 const wss = new WebSocket.Server({ server });
 
 wss.on('connection', function connection(ws) {
+  console.log('New connection', ws);
   connections.push(ws);
+  console.log('Number connected', connections.length);
   
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);
   });
   
   ws.on('close', function close() {
+    console.log('Connection closed', ws);
     connections.splice(connections.indexOf(ws), 1);
+    console.log('Number connected', connections.length);
   });
 
   // ws.send('Hello, World!');
