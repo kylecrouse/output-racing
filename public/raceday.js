@@ -20,7 +20,7 @@ class RaceDay extends React.Component {
     let connectInterval;
 
     ws.onopen = () => {
-      console.log('Seocket connected');
+      console.log('Socket connected');
 
       this.setState({ ws });
 
