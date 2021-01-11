@@ -74,7 +74,7 @@ client.login(process.env.DISCORD_ACCESS_TOKEN);
 
 const server = http.createServer((req, res) => {
   const headers = {
-    "Access-Control-Allow-Origin": 'http://192.168.7.131',
+    "Access-Control-Allow-Origin": '*',
     "Access-Control-Allow-Methods": "OPTIONS, POST, GET",
     "Access-Control-Allow-Headers": 'Content-Type',
     "Access-Control-Max-Age": 2592000
