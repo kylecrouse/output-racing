@@ -96,9 +96,6 @@ const server = http.createServer((req, res) => {
       if (req.url === '/apply')
         await handleApplication(client, JSON.parse(body));
         
-      if (req.url === '/session') 
-        connections.forEach(ws => ws.send(body));
-
       res.writeHead(200, 'OK', {...headers, 'Content-Type': 'text/plain'});
       res.end();
     });
@@ -112,17 +109,18 @@ const wss = new WebSocket.Server({ server });
 
 wss.on('connection', function connection(ws) {
   console.log('New connection', ws);
-  connections.push(ws);
-  console.log('Number connected', connections.length);
+  // connections.push(ws);
+  // console.log('Number connected', connections.length);
   
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);
+    // connections.forEach(ws => ws.send(message));
   });
   
   ws.on('close', function close() {
     console.log('Connection closed', ws);
-    connections.splice(connections.indexOf(ws), 1);
-    console.log('Number connected', connections.length);
+    // connections.splice(connections.indexOf(ws), 1);
+    // console.log('Number connected', connections.length);
   });
 
   // ws.send('Hello, World!');
