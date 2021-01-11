@@ -8,10 +8,7 @@ import json
 async def send(data):
     uri = "ws://orldiscordbot-env.eba-zhcidp9s.us-west-2.elasticbeanstalk.com"
     async with websockets.connect(uri) as websocket:
-        print(data)
         await websocket.send(data)
-        response = await websocket.recv()
-        print(response)
 
 # this is our State class, with some helpful variables
 class State:
@@ -20,6 +17,8 @@ class State:
     last_driver_info_tick = -1
     last_session_info_tick = -1
     last_positions_tick = -1
+    last_best_lap_num_tick = -1
+    last_best_lap_time_tick = -1
     last_session_num_tick = -1
 
 # here we check if we are connected to iracing
@@ -32,11 +31,13 @@ def check_iracing():
         state.last_driver_info_tick = -1
         state.last_session_info_tick = -1
         state.last_positions_tick = -1
+        state.last_best_lap_num_tick = -1
+        state.last_best_lap_time_tick = -1
         state.last_session_num_tick = -1
         # we are shutting down ir library (clearing all internal variables)
         ir.shutdown()
         print('irsdk disconnected')
-    elif not state.ir_connected and ir.startup(test_file='irsdkData.bin') and ir.is_initialized and ir.is_connected:
+    elif not state.ir_connected and ir.startup() and ir.is_initialized and ir.is_connected:
         state.ir_connected = True
         print('irsdk connected')
         
@@ -92,6 +93,21 @@ async def loop():
         if positions_tick != state.last_positions_tick:
             state.last_positions_tick = positions_tick
             await send(json.dumps({ "positions": positions }))
+            
+    best_lap_num = ir['CarIdxBestLapNum']
+    if best_lap_num:
+        best_lap_num_tick = ir.get_session_info_update_by_key('CarIdxBestLapNum')
+        if best_lap_num_tick != state.last_best_lap_num_tick:
+            state.last_best_lap_num_tick = best_lap_num_tick
+            await send(json.dumps({ "bestLapNum": best_lap_num }))
+            
+    best_lap_time = ir['CarIdxBestLapTime']
+    if best_lap_time:
+        best_lap_time_tick = ir.get_session_info_update_by_key('CarIdxBestLapTime')
+        if best_lap_time_tick != state.last_best_lap_time_tick:
+            state.last_best_lap_time_tick = best_lap_time_tick
+            await send(json.dumps({ "bestLapTime": best_lap_time }))
+            
             
     session_num = ir['SessionNum']
     if session_num:
