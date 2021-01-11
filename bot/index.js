@@ -72,7 +72,6 @@ client.on('guildMemberAdd', handleGuildMemberAdd);
 
 client.login(process.env.DISCORD_ACCESS_TOKEN);
 
-let connections = [];
 const server = http.createServer((req, res) => {
   const headers = {
     "Access-Control-Allow-Origin": 'http://192.168.7.131',
@@ -108,22 +107,13 @@ const server = http.createServer((req, res) => {
 const wss = new WebSocket.Server({ server });
 
 wss.on('connection', function connection(ws) {
-  console.log('New connection');
-  // connections.push(ws);
-  // console.log('Number connected', connections.length);
-  
   ws.on('message', function incoming(message) {
-    console.log('received: %s', message);
-    // connections.forEach(ws => ws.send(message));
+    wss.clients.forEach(function each(client) {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        client.send(data);
+      }
+    });
   });
-  
-  ws.on('close', function close() {
-    console.log('Connection closed');
-    // connections.splice(connections.indexOf(ws), 1);
-    // console.log('Number connected', connections.length);
-  });
-
-  // ws.send('Hello, World!');
 });
 
 const port = process.env.PORT || 3001;
