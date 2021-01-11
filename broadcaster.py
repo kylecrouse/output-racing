@@ -8,8 +8,10 @@ import json
 async def send(data):
     uri = "ws://orldiscordbot-env.eba-zhcidp9s.us-west-2.elasticbeanstalk.com"
     async with websockets.connect(uri) as websocket:
+        print(data)
         await websocket.send(data)
-        await websocket.recv()
+        response = await websocket.recv()
+        print(response)
 
 # this is our State class, with some helpful variables
 class State:
@@ -40,7 +42,7 @@ def check_iracing():
         
 # our main loop, where we retrieve data
 # and do something useful with it
-def loop():
+async def loop():
     # on each tick we freeze buffer with live telemetry
     # it is optional, but useful if you use vars like CarIdxXXX
     # this way you will have consistent data from those vars inside one tick
@@ -74,28 +76,29 @@ def loop():
         driver_info_tick = ir.get_session_info_update_by_key('DriverInfo')
         if driver_info_tick != state.last_driver_info_tick:
             state.last_driver_info_tick = driver_info_tick
-            send(json.dumps({ "drivers": map(lambda a: a['UserID'], driver_info['Drivers']) }))
+            # await send(json.dumps({ "drivers": map(lambda a: a['UserID'], driver_info['Drivers']) }))
+            await send(json.dumps({ "drivers": driver_info['Drivers'] }))
 
     session_info = ir['SessionInfo']
     if session_info:
         session_info_tick = ir.get_session_info_update_by_key('SessionInfo')
         if session_info_tick != state.last_session_info_tick:
             state.last_session_info_tick = session_info_tick
-            send(json.dumps({ "sessions": session_info['Sessions'] }))
+            await send(json.dumps({ "sessions": session_info['Sessions'] }))
 
     positions = ir['CarIdxPosition']
     if positions:
         positions_tick = ir.get_session_info_update_by_key('CarIdxPosition')
         if positions_tick != state.last_positions_tick:
             state.last_positions_tick = positions_tick
-            send(json.dumps({ "positions": positions }))
+            await send(json.dumps({ "positions": positions }))
             
     session_num = ir['SessionNum']
     if session_num:
         session_num_tick = ir.get_session_info_update_by_key('SessionNum')
         if session_num_tick != state.last_session_num_tick:
             state.last_session_num_tick = session_num_tick
-            send(json.dumps({ "sessionNum": session_num }))
+            await send(json.dumps({ "sessionNum": session_num }))
     
     # send(json.dumps({ "state": session_state }))
     # send(json.dumps({ "flags": session_flags }))
@@ -113,7 +116,7 @@ if __name__ == '__main__':
             check_iracing()
             # if we are, then process data
             if state.ir_connected:
-                loop()
+                asyncio.get_event_loop().run_until_complete(loop())
             # sleep for 1 second
             # maximum you can use is 1/60
             # cause iracing updates data with 60 fps
