@@ -5,16 +5,30 @@ const e = React.createElement;
 class RaceDay extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { sessions: [] };
-    this.ws = new WebSocket('ws://orldiscordbot-env.eba-zhcidp9s.us-west-2.elasticbeanstalk.com');
+    this.state = { sessions: [], ws: null };
   }
   
   componentDidMount() {
-    this.ws.onopen = () => {
-      console.log('connected');
+    this.connect();
+  }
+  
+  timeout = 250;
+  
+  connect = () => {
+    let ws = new WebSocket('ws://orldiscordbot-env.eba-zhcidp9s.us-west-2.elasticbeanstalk.com');
+    let that = this;
+    let connectInterval;
+
+    ws.onopen = () => {
+      console.log('Seocket connected');
+
+      this.setState({ ws });
+
+      that.timeout = 250; // reset timer to 250 on open of websocket connection 
+      clearTimeout(connectInterval); // clear Interval on on open of websocket connection
     }
 
-    this.ws.onmessage = (event) => {
+    ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
         console.log(data);
@@ -24,10 +38,39 @@ class RaceDay extends React.Component {
       }
     }
 
-    this.ws.onclose = () => {
-      console.log('disconnected');
+    ws.onclose = (event) => {
+      console.log(
+          `Socket is closed. Reconnect will be attempted in ${Math.min(
+              10000 / 1000,
+              (that.timeout + that.timeout) / 1000
+          )} seconds.`,
+          event.reason
+      );
+
+      // increment retry interval
+      that.timeout = that.timeout + that.timeout;
+      // call check function after timeout
+      connectInterval = setTimeout(this.check, Math.min(10000, that.timeout));
     }
+    
+    ws.onerror = (err) => {
+      console.error(
+          "Socket encountered error: ",
+          err.message,
+          "Closing socket"
+      );
+
+      ws.close();
+    };
+
   }
+  
+  check = () => {
+    const { ws } = this.state;
+    //check if websocket instance is closed, if so call `connect` function.
+    if (!ws || ws.readyState == WebSocket.CLOSED) this.connect(); 
+  };
+
 
   render() {
     const session = this.state.sessions.find(
