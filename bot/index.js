@@ -107,7 +107,7 @@ const server = http.createServer((req, res) => {
 const wss = new WebSocket.Server({ server });
 
 wss.on('connection', function connection(ws) {
-  ws.on('message', function incoming(message) {
+  ws.on('message', function incoming(data) {
     wss.clients.forEach(function each(client) {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send(data);
