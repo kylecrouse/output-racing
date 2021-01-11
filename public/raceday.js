@@ -5,7 +5,7 @@ const e = React.createElement;
 class RaceDay extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { sessions: [] };
     this.ws = new WebSocket('ws://orldiscordbot-env.eba-zhcidp9s.us-west-2.elasticbeanstalk.com');
   }
   
