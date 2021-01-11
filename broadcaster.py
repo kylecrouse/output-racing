@@ -61,7 +61,7 @@ async def loop():
         weekend_info_tick = ir.get_session_info_update_by_key('WeekendInfo')
         if weekend_info_tick != state.last_weekend_info_tick:
             state.last_weekend_info_tick = weekend_info_tick
-            send(json.dumps({
+            await send(json.dumps({
               "trackName": weekend_info['TrackDisplayName'],
               "trackId": weekend_info['TrackID'],
               "skies": weekend_info['TrackSkies'],
