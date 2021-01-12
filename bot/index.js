@@ -105,16 +105,32 @@ const server = http.createServer((req, res) => {
   }
 });
 
+// Create data cache for received messages (need to purge at some point)
+let cache = {};
+
+// Create new socket server piggy-backing on http server
 const wss = new WebSocket.Server({ server });
 
+// Listen for new connections
 wss.on('connection', function connection(ws) {
+  
+  // Send cached data to newly connected clients
+  ws.send(cache);
+  
+  // Handle messages received from iRacing
   ws.on('message', function incoming(data) {
+    
+    // Update data cache
+    cache = { ...cache, ...data };
+    
+    // Broadcast data to all clients (except self)
     wss.clients.forEach(function each(client) {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send(data);
       }
     });
   });
+  
 });
 
 const port = process.env.PORT || 3001;
