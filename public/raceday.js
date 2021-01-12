@@ -119,42 +119,6 @@ class RaceDay extends React.Component {
               </div>
             </div>
           
-            { this.state.drivers && this.state.positions &&
-          		<table>
-                <thead>
-                  <tr>
-                    <th width="2%">P</th>
-                    <th>Driver</th>
-                    <th>Time</th>
-                    <th>Lap</th>
-                  </tr>
-                </thead>
-                <tbody>
-            		  { this.state.positions
-                      .filter((carIdx) => carIdx > 0 && this.state.drivers[carIdx]['UserID'] > 0)
-                      .map((carIdx, index) => {
-                        const driver = this.props.drivers.find(
-                          ({ custId }) => custId == this.state.drivers[carIdx]['UserID']
-                        );
-                        return (
-                          <tr key={carIdx}>
-                            <td>{index}</td>
-                            <td>
-                              { driver 
-                                  ? driver.nickname || driver.name 
-                                  : this.state.drivers[carIdx]['UserName'] 
-                              }
-                            </td>
-                            <td>this.state.bestLapTime[carIdx]</td>
-                            <td>this.state.bestLapNum[carIdx]</td>
-                          </tr>
-                        );
-                      })
-                  }
-                </tbody>
-          		</table>
-            }
-
             { session.ResultsFastestLap &&
           		<table>
                 <thead>
