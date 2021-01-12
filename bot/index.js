@@ -6,7 +6,8 @@ const handleGuildMemberAdd = require('./handlers/guildMemberAdd');
 const { handleApplication } = require('./lib/applications');
 const { prefix, superUsers } = require('./config.json');
 
-const client = new discord.Client({ ws: { intents: [discord.Intents.FLAGS.GUILD_MEMBERS] }});
+// const client = new discord.Client({ ws: { intents: [discord.Intents.FLAGS.GUILD_MEMBERS] }});
+const client = new discord.Client();
 
 // Set all recognized commands for bot from ./command/*.js
 client.commands = new discord.Collection();
