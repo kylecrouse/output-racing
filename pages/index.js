@@ -5,6 +5,7 @@ import moment from 'moment';
 import Navbar from '../components/Navbar';
 import Video from '../components/Video';
 import DriverChip from '../components/DriverChip';
+import RichText from '../components/RichText';
 import Footer from '../components/Footer';
 import { cars, tracks } from '../constants';
 
@@ -29,13 +30,9 @@ export default function Home(props) {
           
             <div className="columns" style={{ marginBottom: "2rem" }}>
               <div className="column col-6 col-md-12">
-                <h2>About Us</h2>
-                <p>Output Racing is an online sim racing league on iRacing.</p>
-                <p>We put this league together to provide a place for the late night racer to hang out, make friends and race hard. Established in mid 2018 with the goal of building a competitive league without toxic people or egos, we focused on building a tight knit community that meshes well on and off the track.</p>
-                <p>If you are a late night racer that is looking for a fun group to chill and race with once a week, feel free to apply. We welcome a wide range of skill levels with a minimum C class 2.0 SR license and 1000 IR.</p>
-                <p><a className="btn btn-primary" href="/apply">Apply</a></p>
+                { props.leagueDescription && <RichText {...props.leagueDescription}/> }
               </div>
-              <div className="column col-5 col-ml-auto col-md-12">
+              <div className="column col-5 col-ml-auto col-md-12 hide-md">
                 <img src="/Autclub-ocvcbeysezsqrsibr3cet23yfi51isxfp6kw671qpc.png" style={{ display: "block", height: "100%", maxWidth: "100%", margin: "0 auto"}}/>
               </div>
             </div>
@@ -47,9 +44,7 @@ export default function Home(props) {
               
                 <div className={styles.description}>
                   <h5>{props.season.name}</h5>
-                  { props.season.description && 
-                    props.season.description.content.map(el => renderNode(el))
-                  }
+                  { props.season.description && <RichText {...props.season.description}/> }
                 </div>
 
                 { props.season.cars && 
@@ -257,10 +252,11 @@ export default function Home(props) {
 
 export async function getStaticProps() {
   // Get data from CMS
-  const { name, season } = await league.load();
+  const { name, description, season } = await league.load();
 
   return { props: { 
     leagueName: name,
+    leagueDescription: description,
     seasonId: season.id,
     season,
     results: season.results,
@@ -269,36 +265,4 @@ export async function getStaticProps() {
     nextRace: season.nextRace, 
     lastRace: season.lastRace
   }};
-}
-
-function renderNode({ data, nodeType, content, marks, value }) {
-  switch(nodeType) {
-    case 'heading-3':
-      return <h3>{content.map(el => renderNode(el))}</h3>;
-    case 'paragraph':
-      return <p>{content.map(el => renderNode(el))}</p>;
-    case 'unordered-list':
-      return <ul>{content.map(el => renderNode(el))}</ul>;
-    case 'ordered-list':
-      return <ol>{content.map(el => renderNode(el))}</ol>;
-    case 'list-item':
-      return <li>{content.map(el => renderNode(el))}</li>;
-    case 'hyperlink':
-      return <a href={data.uri}>{content.map(el => renderNode(el))}</a>
-    case 'text':
-      return marks.length > 0 
-        ? marks.reduce((html, el) => renderMark(el, html), value)
-        : value;
-  }
-}
-
-function renderMark(mark, content) {
-  switch(mark.type) {
-    case 'bold':
-      return <b>{content}</b>;
-    case 'italic':
-      return <i>{content}</i>;
-    default:
-      return content;
-  }
 }
