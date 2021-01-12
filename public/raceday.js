@@ -73,9 +73,10 @@ class RaceDay extends React.Component {
 
 
   render() {
-    const session = this.state.sessions.find(
-      ({ SessionNum }) => SessionNum == this.state.sessionNum
-    );
+    // const session = this.state.sessions.find(
+    //   ({ SessionNum }) => SessionNum == this.state.sessionNum
+    // );
+    const [session] = this.state.sessions.slice(-1);
     
     return session ? (
   	  <div className="container">
@@ -118,31 +119,77 @@ class RaceDay extends React.Component {
               </div>
             </div>
           
-        		<table>
-              <thead>
-                <tr>
-                  <th width="2%">P</th>
-                  <th>Driver</th>
-                </tr>
-              </thead>
-              <tbody>
-          		  { this.state.positions
-                    .filter((carIdx) => this.state.drivers[carIdx] > 0)
-                    .map((carIdx, index) => {
-                      const driver = this.props.drivers.find(
-                        ({ custId }) => custId == this.state.drivers[carIdx]
-                      );
-                      return (
-                        <tr key={carIdx}>
-                          <td>{index}</td>
-                          <td>{driver.nickname || driver.name}</td>
-                        </tr>
-                      );
-                    })
-                }
-              </tbody>
-        		</table>
+            { this.state.drivers && this.state.positions &&
+          		<table>
+                <thead>
+                  <tr>
+                    <th width="2%">P</th>
+                    <th>Driver</th>
+                    <th>Time</th>
+                    <th>Lap</th>
+                  </tr>
+                </thead>
+                <tbody>
+            		  { this.state.positions
+                      .filter((carIdx) => carIdx > 0 && this.state.drivers[carIdx]['UserID'] > 0)
+                      .map((carIdx, index) => {
+                        const driver = this.props.drivers.find(
+                          ({ custId }) => custId == this.state.drivers[carIdx]['UserID']
+                        );
+                        return (
+                          <tr key={carIdx}>
+                            <td>{index}</td>
+                            <td>
+                              { driver 
+                                  ? driver.nickname || driver.name 
+                                  : this.state.drivers[carIdx]['UserName'] 
+                              }
+                            </td>
+                            <td>this.state.bestLapTime[carIdx]</td>
+                            <td>this.state.bestLapNum[carIdx]</td>
+                          </tr>
+                        );
+                      })
+                  }
+                </tbody>
+          		</table>
+            }
 
+            { session.ResultsFastestLap &&
+          		<table>
+                <thead>
+                  <tr>
+                    <th width="2%">P</th>
+                    <th>Driver</th>
+                    <th>Time</th>
+                    <th>Lap</th>
+                  </tr>
+                </thead>
+                <tbody>
+            		  { this.state.drivers && session.ResultsFastestLap
+                      .map((obj, index) => {
+                        const driver = this.props.drivers.find(
+                          ({ custId }) => custId == this.state.drivers[obj.CarIdx]['UserID']
+                        );
+                        return (
+                          <tr key={carIdx}>
+                            <td>{index}</td>
+                            <td>
+                              { driver 
+                                  ? driver.nickname || driver.name 
+                                  : this.state.drivers[carIdx]['UserName'] 
+                              }
+                            </td>
+                            <td>obj.FastestTime</td>
+                            <td>obj.FastestLap</td>
+                          </tr>
+                        );
+                      })
+                  }
+                </tbody>
+          		</table>
+            }
+            
           </div>
         </div>
       </div>
