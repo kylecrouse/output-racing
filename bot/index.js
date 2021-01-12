@@ -115,7 +115,7 @@ const wss = new WebSocket.Server({ server });
 wss.on('connection', function connection(ws) {
   
   // Send cached data to newly connected clients
-  ws.send(cache);
+  ws.send(JSON.stringify(cache));
   
   // Handle messages received from iRacing
   ws.on('message', function incoming(data) {
