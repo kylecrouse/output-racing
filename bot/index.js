@@ -109,7 +109,13 @@ const server = http.createServer((req, res) => {
 let cache = {};
 
 // Create new socket server piggy-backing on http server
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({ 
+  server,
+  verifyClient: info => {
+    console.log(info);
+    return true;
+  }
+});
 
 // Listen for new connections
 wss.on('connection', function connection(ws) {
