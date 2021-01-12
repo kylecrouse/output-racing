@@ -77,8 +77,8 @@ async def loop():
         driver_info_tick = ir.get_session_info_update_by_key('DriverInfo')
         if driver_info_tick != state.last_driver_info_tick:
             state.last_driver_info_tick = driver_info_tick
-            # await send(json.dumps({ "drivers": map(lambda a: a['UserID'], driver_info['Drivers']) }))
-            await send(json.dumps({ "drivers": driver_info['Drivers'] }))
+            await send(json.dumps({ "drivers": list(map(lambda a: { 'id': a['UserID'], 'name': a['UserName'], number: a['CarNumber'] }, driver_info['Drivers'])) }))
+            # await send(json.dumps({ "drivers": driver_info['Drivers'] }))
 
     session_info = ir['SessionInfo']
     if session_info:
@@ -92,21 +92,21 @@ async def loop():
         positions_tick = ir.get_session_info_update_by_key('CarIdxPosition')
         if positions_tick != state.last_positions_tick:
             state.last_positions_tick = positions_tick
-            await send(json.dumps({ "positions": positions }))
+            # await send(json.dumps({ "positions": positions }))
             
     best_lap_num = ir['CarIdxBestLapNum']
     if best_lap_num:
         best_lap_num_tick = ir.get_session_info_update_by_key('CarIdxBestLapNum')
         if best_lap_num_tick != state.last_best_lap_num_tick:
             state.last_best_lap_num_tick = best_lap_num_tick
-            await send(json.dumps({ "bestLapNum": best_lap_num }))
+            # await send(json.dumps({ "bestLapNum": best_lap_num }))
             
     best_lap_time = ir['CarIdxBestLapTime']
     if best_lap_time:
         best_lap_time_tick = ir.get_session_info_update_by_key('CarIdxBestLapTime')
         if best_lap_time_tick != state.last_best_lap_time_tick:
             state.last_best_lap_time_tick = best_lap_time_tick
-            await send(json.dumps({ "bestLapTime": best_lap_time }))
+            # await send(json.dumps({ "bestLapTime": best_lap_time }))
             
             
     session_num = ir['SessionNum']
@@ -114,7 +114,7 @@ async def loop():
         session_num_tick = ir.get_session_info_update_by_key('SessionNum')
         if session_num_tick != state.last_session_num_tick:
             state.last_session_num_tick = session_num_tick
-            await send(json.dumps({ "sessionNum": session_num }))
+            # await send(json.dumps({ "sessionNum": session_num }))
     
     # send(json.dumps({ "state": session_state }))
     # send(json.dumps({ "flags": session_flags }))

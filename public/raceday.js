@@ -168,16 +168,21 @@ class RaceDay extends React.Component {
                 <tbody>
             		  { this.state.drivers && session.ResultsFastestLap
                       .map((obj, index) => {
+                        // Get id, name and number from the iRacing data
+                        const { id, name, number } = this.state.drivers.find(
+                          ({ id }) => id == obj.CarIdx
+                        );
+                        // Match to driver in league data
                         const driver = this.props.drivers.find(
-                          ({ custId }) => custId == this.state.drivers[obj.CarIdx]['UserID']
+                          ({ custId }) => custId == id
                         );
                         return (
-                          <tr key={carIdx}>
+                          <tr key={id}>
                             <td>{index}</td>
                             <td>
                               { driver 
-                                  ? driver.nickname || driver.name 
-                                  : this.state.drivers[carIdx]['UserName'] 
+                                  ? `#${driver.number} ${driver.nickname || driver.name}`
+                                  : `#${number} ${name}`
                               }
                             </td>
                             <td>obj.FastestTime</td>
