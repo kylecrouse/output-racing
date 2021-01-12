@@ -5,7 +5,7 @@ const e = React.createElement;
 class RaceDay extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { sessions: [], ws: null };
+    this.state = { sessions: [], drivers: [], positions: [], ws: null };
   }
   
   componentDidMount() {
@@ -83,8 +83,8 @@ class RaceDay extends React.Component {
     	  <div className="columns">
           <div className="column col-8 col-xl-12 col-mx-auto">
           
-            <div className="columns" style={{ alignItems: "center" }}>
-              <div className="column col-4 col-sm-12 text-center">
+            <div className="columns col-gapless" style={{ alignItems: "center", margin: "2rem 0", position: "relative", left: "15px" }}>
+              <div className="column col-3 col-sm-12 text-center">
                 { this.props.logo
                     ? <img 
                         src={ this.props.logo.fields.file.url } 
@@ -99,13 +99,13 @@ class RaceDay extends React.Component {
                     : <h3 style={{ marginBottom: "2rem" }}>{this.props.name}</h3>
                 }
               </div>
-              <div className="column col-4 col-sm-12 text-center">
-                <ul className="text-center" style={{ marginBottom: "1rem" }}>
-                  <li><b>{this.state.trackName}</b></li>
-                  <li>{session.SessionName}</li>
+              <div className="column col-6 col-sm-12 text-center">
+                <ul className="text-center" style={{ listStyle: "none", margin: 0, padding: 0 }}>
+                  <li style={{ marginTop: 0, lineHeight: 1.2 }}><b>{this.state.trackName}</b></li>
+                  <li style={{ marginTop: 0 }}>{session.SessionName}</li>
                 </ul>
               </div>
-              <div className="column col-4 col-sm-12">
+              <div className="column col-3 col-sm-12">
                 <img 
                   src={this.props.track.logo} 
                   style={{ 
@@ -119,38 +119,41 @@ class RaceDay extends React.Component {
               </div>
             </div>
           
-            { session.ResultsFastestLap &&
+            { this.state.drivers.length > 0 && session.ResultsPositions &&
           		<table>
                 <thead>
                   <tr>
                     <th width="2%">P</th>
                     <th>Driver</th>
-                    <th>Time</th>
-                    <th>Lap</th>
+                    <th width="10%">Laps</th>
+                    <th width="10%">Time</th>
+                    <th width="10%">Lap</th>
                   </tr>
                 </thead>
                 <tbody>
-            		  { this.state.drivers && session.ResultsFastestLap
-                      .map((obj, index) => {
+            		  { session.ResultsPositions &&
+                      .map((obj, idx) => {
+                        
                         // Get id, name and number from the iRacing data
-                        const { id, name, number } = this.state.drivers.find(
-                          ({ id }) => id == obj.CarIdx
-                        );
+                        const driver = this.state.drivers[obj.CarIdx];
+                        
+                        if (!driver) return null;
+                        
                         // Match to driver in league data
-                        const driver = this.props.drivers.find(
-                          ({ custId }) => custId == id
-                        );
+                        const match = this.props.drivers.find(({ custId }) => custId == driver.id);
+                        
                         return (
-                          <tr key={id}>
-                            <td>{index}</td>
+                          <tr key={driver.id}>
+                            <td>{idx + 1}</td>
                             <td>
-                              { driver 
-                                  ? `#${driver.number} ${driver.nickname || driver.name}`
-                                  : `#${number} ${name}`
+                              { match 
+                                  ? `#${match.number} ${match.nickname || match.name}`
+                                  : `#${driver.number} ${driver.name}`
                               }
                             </td>
-                            <td>obj.FastestTime</td>
-                            <td>obj.FastestLap</td>
+                            <td>{obj.LapsComplete}</td>
+                            <td>{obj.FastestTime.toFixed(3)}</td>
+                            <td>{obj.FastestLap}</td>
                           </tr>
                         );
                       })

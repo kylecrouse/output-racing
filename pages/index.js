@@ -26,6 +26,7 @@ export default function Home(props) {
         id="raceday" 
         data-race={ JSON.stringify(props.nextRace) } 
         data-drivers={ JSON.stringify(props.drivers) }
+        style={{ marginBottom: "4rem" }}
       />
 
       <img src="/2020-11-04_15-13-02_0.png" style={{ display: "block", width: "100%", marginTop: "-2rem" }}/>
