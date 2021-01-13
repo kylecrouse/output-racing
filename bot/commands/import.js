@@ -100,7 +100,7 @@ async function handleLatest(args) {
   await getStats('league', league.id);
 
   // Update driver stats
-  await getDrivers(league.id);
+  await getDrivers(2732);
 
   // Import the new results from danlisa
   return handleResults([
