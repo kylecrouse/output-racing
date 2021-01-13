@@ -1,12 +1,8 @@
-'use strict';
-
-import React, { useState, useEffect } from 'react';
-
 function RaceDay(props) {
-  const [data, setData] = useState({});
-  const [socket, setSocket] = useState({});
+  const [data, setData] = React.useState({});
+  const [socket, setSocket] = React.useState({});
   
-  useEffect(() => {
+  React.useEffect(() => {
     if (!socket.readyState || socket.readyState == WebSocket.CLOSED) {
       const ws = connect(setSocket, setData);
       return () => { 
@@ -72,32 +68,30 @@ function RaceDay(props) {
                 </tr>
               </thead>
               <tbody>
-          		  { session.ResultsPositions &&
-                    .map((obj, idx) => {
-                      
-                      // Get id, name and number from the iRacing data
-                      const driver = drivers[obj.CarIdx];
-                      
-                      if (!driver) return null;
-                      
-                      // Match to driver in league data
-                      const match = props.drivers.find(({ custId }) => custId == driver.id);
-                      
-                      return (
-                        <tr key={driver.id}>
-                          <td>{idx + 1}</td>
-                          <td>
-                            { match 
-                                ? <DriverChip {...match}/>
-                                : `#${driver.number} ${driver.name}`
-                            }
-                          </td>
-                          <td>{obj.LapsComplete}</td>
-                          <td>{obj.FastestTime.toFixed(3)}</td>
-                          <td>{obj.FastestLap}</td>
-                        </tr>
-                      );
-                    })
+          		  { session.ResultsPositions.map((obj, idx) => {                      
+                    // Get id, name and number from the iRacing data
+                    const driver = drivers[obj.CarIdx];
+                    
+                    if (!driver) return null;
+                    
+                    // Match to driver in league data
+                    const match = props.drivers.find(({ custId }) => custId == driver.id);
+                    
+                    return (
+                      <tr key={driver.id}>
+                        <td>{idx + 1}</td>
+                        <td>
+                          { match 
+                              ? <DriverChip {...match}/>
+                              : `#${driver.number} ${driver.name}`
+                          }
+                        </td>
+                        <td>{obj.LapsComplete}</td>
+                        <td>{obj.FastestTime.toFixed(3)}</td>
+                        <td>{obj.FastestLap}</td>
+                      </tr>
+                    );
+                  })
                 }
               </tbody>
         		</table>
@@ -142,7 +136,8 @@ function NumberArt(props) {
 }
 
 function connect(setSocket, setData) {
-  let ws = new WebSocket('ws://orldiscordbot-env.eba-zhcidp9s.us-west-2.elasticbeanstalk.com');
+  // let ws = new WebSocket('ws://orldiscordbot-env.eba-zhcidp9s.us-west-2.elasticbeanstalk.com');
+  let ws = new WebSocket('ws://localhost');
 
   ws.onopen = () => {
     console.log('Socket connected');  
