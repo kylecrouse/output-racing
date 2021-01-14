@@ -235,7 +235,7 @@ export default function Home(props) {
 export async function getStaticProps() {
   // Get data from CMS
   const { name, description, season, seasons } = await league.load();
-
+  
   return { props: { 
     leagueName: name,
     leagueDescription: description,
