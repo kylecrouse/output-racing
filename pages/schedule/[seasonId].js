@@ -17,6 +17,65 @@ export default function Schedule(props) {
 
       <Navbar seasonId={props.currentSeasonId} page="schedule"/>
       
+      <style jsx>{`
+        @media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+        
+        	/* Force table to not be like tables anymore */
+        	#schedule, #schedule thead, #schedule tbody, #schedule th, #schedule td, #schedule tr { 
+        		display: block; 
+        	}
+          
+        	/* Hide table headers (but not display: none;, for accessibility) */
+        	#schedule thead tr { 
+        		position: absolute;
+        		top: -9999px;
+        		left: -9999px;
+        	}
+          
+          #schedule tbody tr {
+            margin-bottom: 1rem;
+          }
+          
+        	#schedule td { 
+        		/* Behave  like a "row" */
+        		border: none;
+        		border-bottom: 1px solid #eee; 
+        		position: relative;
+        		padding-left: 30%; 
+            text-align: right;
+        	}
+          
+          #schedule tbody tr:nth-child(odd) td {
+            border-bottom-color: white;
+          }
+          
+          #schedule td:last-child {
+            border-bottom: 0;
+        	}
+          
+        	#schedule td:before { 
+        		/* Now like a table header */
+        		position: absolute;
+        		/* Top/left values mimic padding */
+        		top: 6px;
+        		left: 6px;
+        		width: 25%; 
+        		padding-right: 10px; 
+        		white-space: nowrap;
+            text-align: left;
+            font-weight: bold;
+        	}
+        	
+        	/*
+        	Label the data
+        	*/
+        	#schedule td:nth-of-type(1):before { content: "Date"; }
+        	#schedule td:nth-of-type(2):before { content: "Event"; }
+        	#schedule td:nth-of-type(3):before { content: "Track"; }
+        	#schedule td:nth-of-type(4):before { content: "Duration"; }
+        }
+      `}</style>
+            
 	    <main className="container">
 	  	  <div className="columns">
           <div className="column col-8 col-xl-12 col-mx-auto">
@@ -24,14 +83,16 @@ export default function Schedule(props) {
           	<h2 className="text-center">{props.name} Schedule</h2>
             
             <div class="columns" style={{ margin: "2rem 0" }}>
-              <div class="column col-6">
-                { props.description && <RichText {...props.description}/> }
-                <p>
-                  <a href="/apply" className="btn btn-primary">Apply</a>
-                </p>
-              </div>
+              { props.description &&
+                <div class="column col-6 col-sm-12 col-mx-auto">
+                  <RichText {...props.description}/>
+                  <p>
+                    <a href="/apply" className="btn btn-primary">Apply</a>
+                  </p>
+                </div>
+              }
               { props.cars && 
-                  <div class="column col-6">
+                  <div class="column col-6 col-sm-12 col-mx-auto">
                     { props.cars.map(name => {
                         const car = cars.find(car => car.name === name);
                         return (
@@ -46,13 +107,13 @@ export default function Schedule(props) {
               }
             </div>
 
-        		<table>
+        		<table id="schedule">
               <thead>
                 <tr>
                   <th width="13%">Date</th>
                   <th>Event</th>
                   <th width="42%">Track</th>
-                  <th width="5%">Laps</th>
+                  <th width="5%">Duration</th>
                 </tr>
               </thead>
         		  <tbody>
@@ -62,12 +123,12 @@ export default function Schedule(props) {
                 			<td>
                         { race.raceId 
                             ? <a href={`/race/${race.raceId}/`}>{race.name}</a>
-                            : race.name
+                            : race.offWeek ? <i>{race.name}</i> : race.name
                         }
-                        { !race.counts && <i style={{opacity:0.5}}> (non-points)</i>}
+                        { !race.counts && !race.offWeek && <i style={{opacity:0.5}}> (non-points)</i>}
                       </td>
-                			<td style={{ whiteSpace: "nowrap" }}>{race.track}</td>
-                      <td>{race.laps}</td>
+                			<td>{race.track}</td>
+                      <td>{race.laps ? `${race.laps}\u00A0laps` : race.time}</td>
               		  </tr>
               		)) 
           			}
@@ -80,26 +141,26 @@ export default function Schedule(props) {
               <thead>
                 <tr>
                   <th></th>
-                  <th width="20%">1st</th>
+                  <th className="hide-sm" width="20%">1st</th>
                   <th className="hide-sm" width="20%">2nd</th>
                   <th className="hide-sm" width="20%">3rd</th>
                 </tr>
               </thead>
         		  <tbody>
           			{ props.seasons.map(season => (
-              		  <tr key={season.id}>
+                    <tr key={season.id}>
                       <td><a href={`/schedule/${season.id}/`}>{season.name}</a></td>
-                			<td>
-                        <DriverChip {...season.standings[0].driver}/>
+                			<td className="hide-sm">
+                        { season.standings.length > 0 && <DriverChip {...season.standings[0].driver}/> }
                       </td>
                 			<td className="hide-sm">
-                        <DriverChip {...season.standings[1].driver}/>
+                        { season.standings.length > 0 && <DriverChip {...season.standings[1].driver}/> }
                       </td>
                 			<td className="hide-sm">
-                        <DriverChip {...season.standings[2].driver}/>
+                        { season.standings.length > 0 && <DriverChip {...season.standings[2].driver}/> }
                       </td>
               		  </tr>
-              		)) 
+              		))
           			}
         		  </tbody>
         		</table>

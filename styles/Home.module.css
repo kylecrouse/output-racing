@@ -80,16 +80,45 @@
   font-size: 0.6rem;
 }
 
+.resultsHeader {
+  margin: 1rem 0;
+}
+
+.resultsHeader ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.resultsHeader li {
+  margin-top: 0;
+}
+
+.resultsHeader img {
+  display: block;
+  margin: 0 auto;
+  max-height: 150px;
+  height: 100%;
+  max-width: 100%;
+}
+
 @media (max-width: 600px) {
-  .tagline {
+  .tagline p {
     font-size: 1rem;
     line-height: 1.2;
-    padding: 20px;
+    padding: 0.4rem 20px 1rem;
   }
   
   .thumbnail {
     padding-left: 0;
     padding-right: 0;
     height: 56.25%;
+  }
+
+  .resultsHeader {
+    text-align: center;
+    display: flex;
+    flex-direction: column-reverse;
+    margin: 0 0 1.2rem;
   }
 }

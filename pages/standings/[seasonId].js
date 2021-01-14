@@ -16,7 +16,7 @@ export default function Schedule(props) {
       <Navbar seasonId={props.currentSeasonId} page="standings"/>
 	    
       <style jsx>{`
-        th {
+        .standings th {
           width: 8.33%;
         }
 
@@ -150,26 +150,26 @@ export default function Schedule(props) {
               <thead>
                 <tr>
                   <th></th>
-                  <th width="20%">1st</th>
-                  <th width="20%">2nd</th>
-                  <th width="20%">3rd</th>
+                  <th className="hide-sm" width="20%">1st</th>
+                  <th className="hide-sm" width="20%">2nd</th>
+                  <th className="hide-sm" width="20%">3rd</th>
                 </tr>
               </thead>
         		  <tbody>
           			{ props.seasons.map(season => (
-              		  <tr key={season.id}>
+                    <tr key={season.id}>
                       <td><a href={`/schedule/${season.id}/`}>{season.name}</a></td>
-                			<td>
-                        <DriverChip {...season.standings[0].driver}/>
+                			<td className="hide-sm">
+                        { season.standings.length > 0 && <DriverChip {...season.standings[0].driver}/> }
                       </td>
-                			<td>
-                        <DriverChip {...season.standings[1].driver}/>
+                			<td className="hide-sm">
+                        { season.standings.length > 0 && <DriverChip {...season.standings[1].driver}/> }
                       </td>
-                			<td>
-                        <DriverChip {...season.standings[2].driver}/>
+                			<td className="hide-sm">
+                        { season.standings.length > 0 && <DriverChip {...season.standings[2].driver}/> }
                       </td>
               		  </tr>
-              		)) 
+              		))
           			}
         		  </tbody>
         		</table>

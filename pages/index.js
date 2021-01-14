@@ -61,34 +61,34 @@ export default function Home(props) {
                 <Video src={props.lastRace.broadcast}/>
               }
               { props.lastRace.logo
-                ? ( <div className="columns col-gapless" style={{ alignItems: "center", margin: "2rem 0", position: "relative", left: "15px" }}>
-                      <div className="column col-3 text-center">
-                        <img src={ props.lastRace.logo.fields.file.url } style={{ display: "block", margin: "0 auto", maxHeight: "80px", height: "100%" }} />
+                ? ( <div className={`columns col-gapless ${styles.resultsHeader}`}>
+                      <div className="column col-3 col-sm-12 text-center">
+                        <img src={ props.lastRace.logo.fields.file.url }/>
                       </div>
-                      <div className="column col-6 text-center" style={{ paddingLeft: "30px" }}>
-                        <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-                          <li style={{ marginTop: 0, lineHeight: 1.2 }}><b>{props.lastRace.track.name}</b></li>
-                          <li style={{ marginTop: 0 }}>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</li>
+                      <div className="column col-6 col-sm-12 text-center" style={{ paddingLeft: "30px" }}>
+                        <ul>
+                          <li style={{ lineHeight: 1.2 }}><b>{props.lastRace.track.name}</b></li>
+                          <li>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</li>
                         </ul>
                       </div>
-                      <div className="column col-3 text-center">
-                        <img src={props.lastRace.track.logo} style={{ display: "block", margin: "0 auto", maxHeight: "80px", height: "100%", maxWidth: "100%" }}/>
+                      <div className="column col-3 col-sm-12 text-center">
+                        <img src={props.lastRace.track.logo}/>
                       </div>
                     </div>
                 )
-                : ( <div className="columns col-gapless" style={{ alignItems: "center", margin: "2rem 0", padding: "0 0 0 30px" }}>
-                      <div className="column col-6">
-                        <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
+                : ( <div className={`columns col-gapless ${styles.resultsHeader}`}>
+                      <div className="column col-6 col-sm-12">
+                        <ul>
                           <li><h4>{props.lastRace.name}</h4></li>
-                          <li style={{ marginTop: 0, lineHeight: 1.2 }}><b>{props.lastRace.track.name}</b></li>
-                          <li style={{ marginTop: 0 }}>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</li>
-                          <li style={{ marginTop: "0rem", fontSize: "0.6rem" }}>{props.lastRace.laps} laps ({props.lastRace.duration})</li>
-                          <li style={{ marginTop: "0rem", fontSize: "0.6rem" }}>{props.lastRace.cautions} cautions for {props.lastRace.cautionLaps} laps</li>
-                          <li style={{ marginTop: "0rem", fontSize: "0.6rem" }}>{props.lastRace.leadChanges} lead changes between {props.lastRace.leaders} drivers</li>
+                          <li style={{ lineHeight: 1.2 }}><b>{props.lastRace.track.name}</b></li>
+                          <li>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</li>
+                          <li style={{ fontSize: "0.6rem" }}>{props.lastRace.laps} laps ({props.lastRace.duration})</li>
+                          <li style={{ fontSize: "0.6rem" }}>{props.lastRace.cautions} cautions for {props.lastRace.cautionLaps} laps</li>
+                          <li style={{ fontSize: "0.6rem" }}>{props.lastRace.leadChanges} lead changes between {props.lastRace.leaders} drivers</li>
                         </ul>
                       </div>
-                      <div className="column col-6">
-                        <img src={props.lastRace.track.logo} style={{ display: "block", margin: "0 auto", maxHeight: "150px", height: "100%", maxWidth: "100%" }}/>
+                      <div className="column col-6 col-sm-12">
+                        <img src={props.lastRace.track.logo}/>
                       </div>
                     </div>  
                 )
