@@ -102,6 +102,36 @@
   max-width: 100%;
 }
 
+.promo {
+  background: #f4a913;
+  color: black;
+  transform: skew(-20deg);
+  margin: 1rem 0 3rem;
+}
+
+.promo > div {
+  transform: skew(20deg);
+  padding: 1.2rem 0 0.2rem;
+  break-inside: avoid-column;
+}
+
+.multicol {
+  columns: 2;
+}
+
+.carcut {
+  background: white;
+  margin-left: 1rem;
+  transform: skew(0) !important;
+  overflow: hidden;
+  display: flex;
+}
+
+.carcut figure {
+  transform: skew(20deg) scale(1.5);
+  align-self: center;
+}
+
 @media (max-width: 600px) {
   .tagline p {
     font-size: 1rem;

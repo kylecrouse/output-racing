@@ -67,6 +67,29 @@ div + div:not(.column) > h2 {
   padding-top: 2.4rem;
 }
 
+.btn {
+  border-radius: 0;
+  font-size: 0.6rem;
+  font-weight: bold;
+  transform: skew(-20deg);
+  text-transform: uppercase;
+  font-style: italic;
+  padding-left: 0.6rem;
+  padding-right: 0.6rem;
+}
+
+.btn span {
+  display: inline-block;
+  transform: skew(20deg);
+}
+
+.btn:after {
+  display: inline-block;
+  content: "\2192";
+  padding-left: 0.4rem;
+  transform: skew(20deg);
+}
+
 .btn.btn-primary {
   background-color: #f4a913;
   border-color: #f4a913;
@@ -77,4 +100,16 @@ div + div:not(.column) > h2 {
   background-color: black;
   border-color: black;
   color: white;
+}
+
+.btn.btn-secondary {
+  background-color: black;
+  border-color: black;
+  color: #f4a913;
+}
+
+.btn.btn-secondary:hover {
+  background-color: white;
+  border-color: black;
+  color: black;
 }

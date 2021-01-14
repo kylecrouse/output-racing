@@ -87,7 +87,7 @@ export default function Schedule(props) {
                 <div class="column col-6 col-sm-12 col-mx-auto">
                   <RichText {...props.description}/>
                   <p>
-                    <a href="/apply" className="btn btn-primary">Apply</a>
+                    <a href="/apply" className="btn btn-primary"><span>Apply</span></a>
                   </p>
                 </div>
               }
