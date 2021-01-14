@@ -3,6 +3,7 @@ import league from '../../lib/league/cache';
 import moment from 'moment';
 import Navbar from '../../components/Navbar'
 import DriverChip from '../../components/DriverChip'
+import RichText from '../../components/RichText';
 import Footer from '../../components/Footer';
 import { cars } from '../../constants'
 
@@ -22,20 +23,28 @@ export default function Schedule(props) {
 
           	<h2 className="text-center">{props.name} Schedule</h2>
             
-            { props.cars && 
-                <div className="columns col-gapless" style={{ margin: "2rem 0" }}>
-                  { props.cars.map(name => {
-                      const car = cars.find(car => car.name === name);
-                      return (
-                        <figure key={car.id} className={`col-${(12/props.cars.length).toFixed(0)} col-mx-auto text-center`} style={{ overflow: "hidden" }}>
-                          <img src={car.image} alt={car.name} style={{ maxHeight: "150px", maxWidth: "102%", marginLeft: "-1%" }}/>
-                          <figcaption style={{ fontSize: "0.6rem" }}>{car.name}</figcaption>
-                        </figure>
-                      );
-                    })
-                  }
-                </div>
-            }
+            <div class="columns" style={{ margin: "2rem 0" }}>
+              <div class="column col-6">
+                { props.description && <RichText {...props.description}/> }
+                <p>
+                  <a href="/apply" className="btn btn-primary">Apply</a>
+                </p>
+              </div>
+              { props.cars && 
+                  <div class="column col-6">
+                    { props.cars.map(name => {
+                        const car = cars.find(car => car.name === name);
+                        return (
+                          <figure key={car.id} className={`text-center`} style={{ overflow: "hidden", margin: "0 0 1rem" }}>
+                            <img src={car.image} alt={car.name} style={{ maxHeight: "150px", maxWidth: "102%", marginLeft: "-1%" }}/>
+                            <figcaption style={{ fontSize: "0.6rem" }}>{car.name}</figcaption>
+                          </figure>
+                        );
+                      })
+                    }
+                  </div>
+              }
+            </div>
 
         		<table>
               <thead>
@@ -49,7 +58,7 @@ export default function Schedule(props) {
         		  <tbody>
           			{ props.schedule.filter(({ raceNo }) => raceNo !== "").map((race) => (
               		  <tr key={props.raceNo}>
-                      <td>{moment(race.date).format('MMM D, YYYY')}</td>
+                      <td style={{ whiteSpace: "nowrap" }}>{moment(race.date).format('MMM D, YYYY')}</td>
                 			<td>
                         { race.raceId 
                             ? <a href={`/race/${race.raceId}/`}>{race.name}</a>
@@ -57,7 +66,7 @@ export default function Schedule(props) {
                         }
                         { !race.counts && <i style={{opacity:0.5}}> (non-points)</i>}
                       </td>
-                			<td>{race.track}</td>
+                			<td style={{ whiteSpace: "nowrap" }}>{race.track}</td>
                       <td>{race.laps}</td>
               		  </tr>
               		)) 

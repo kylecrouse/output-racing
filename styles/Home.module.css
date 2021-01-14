@@ -10,20 +10,30 @@
 
 .tagline {
   background: black;
+  margin-top: -2.4rem;
+  margin-bottom: 2rem;
+}
+
+.tagline p {
   text-align: center;
   color: #fff;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-weight: 400;
   text-transform: uppercase;
   font-style: oblique;
   line-height: 1.5em;
   letter-spacing: 1.8px;
-  padding: 20px 0;
-  margin-bottom: 2rem;
+  padding: 0.6rem 0 1rem;
 }
 
 .description {
-  margin: 1rem 0;
+  margin: 0 0 2rem;
+}
+
+.description h4 {
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0.4rem;
+  margin-bottom: 1rem;
 }
 
 .description p,
@@ -35,6 +45,39 @@
 .description li,
 .description li p {
   margin: 0;
+}
+
+.about {
+  font-size: 0.7rem;
+  margin-bottom: 2rem;
+}
+
+.about > div {
+  background: #f0f0f0;
+  border: 2px solid white;
+  padding: 1rem 0.8rem 0.2rem;
+}
+
+.about h2,
+.about h3 {
+  background: #212121;
+  color: white;
+  font-size: 0.6rem;
+  font-weight: bold;
+  margin: 0 -0.16rem 0 0.4rem;
+  padding: 0.4rem 0.85rem;
+  text-transform: uppercase;
+  transform: skew(-20deg);
+}
+
+.about h2 span,
+.about h3 span {
+  display: block;
+  transform: skew(20deg);
+}
+
+.about td {
+  font-size: 0.6rem;
 }
 
 @media (max-width: 600px) {

@@ -5,7 +5,7 @@ export default function RichText({ data, nodeType, content, marks, value }) {
 
   switch(nodeType) {
     case 'document':
-      return children;
+      return <div>{ children }</div>;
     case 'heading-1':
       return <h1>{ children }</h1>;
     case 'heading-2':
@@ -31,7 +31,7 @@ export default function RichText({ data, nodeType, content, marks, value }) {
     case 'text':
       return marks.length > 0 
         ? marks.reduce((children, el) => <Mark {...el}>{children}</Mark>, value)
-        : value;
+        : <span>{value}</span>;
   }
 }
 

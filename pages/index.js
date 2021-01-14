@@ -19,91 +19,42 @@ export default function Home(props) {
 
       <Navbar seasonId={props.seasonId}/>
       
-      <img src="/2020-11-04_15-13-02_0.png" style={{ display: "block", width: "100%", marginTop: "-2rem" }}/>
-      
-      <div className={styles.tagline}>An Asphalt Oval League for the Late Night Racer</div>
+      <div className={styles.tagline}>
+        <div className="columns hide-sm">
+          <img src="/Charlotte-Start.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
+          <img src="/Champ.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
+          <img src="/Chambliss.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
+          <img src="/Autoclub.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
+        </div>
+        <p>An Asphalt Oval League for the Late-Night Racer</p>
+      </div>
         
       <div className="container">
       
-        <div className="columns">
-          <div className="column col-8 col-xl-12 col-mx-auto">
-          
-            <div className="columns" style={{ marginBottom: "2rem" }}>
-              <div className="column col-6 col-md-12">
-                { props.leagueDescription && <RichText {...props.leagueDescription}/> }
-              </div>
-              <div className="column col-5 col-ml-auto col-md-12 hide-md">
-                <img src="/Autclub-ocvcbeysezsqrsibr3cet23yfi51isxfp6kw671qpc.png" style={{ display: "block", height: "100%", maxWidth: "100%", margin: "0 auto"}}/>
-              </div>
-            </div>
-            
-            <h6 className={styles.title}>Current Season</h6>
-                
-            <div className="columns" style={{ marginBottom: "2rem" }}>
-              <div className="column col-7 col-sm-12">
-              
-                <div className={styles.description}>
-                  <h5>{props.season.name}</h5>
-                  { props.season.description && <RichText {...props.season.description}/> }
-                </div>
+        <div className="columns" style={{ marginBottom: "2rem" }}>
+          <div className="column col-5 col-md-12 col-ml-auto">
 
-                { props.season.cars && 
-                    <div className="columns col-gapless" style={{ marginTop: "1rem" }}>
-                      { props.season.cars.map(name => {
-                          const car = cars.find(car => car.name === name);
-                          return (
-                            <figure key={car.id} className={`col-${(12/props.season.cars.length).toFixed(0)} col-mx-auto text-center`} style={{ overflow: "hidden" }}>
-                              <img src={car.image} alt={car.name} style={{ maxHeight: "150px", maxWidth: "102%", marginLeft: "-1%" }}/>
-                              <figcaption style={{ fontSize: "0.6rem" }}>{car.name}</figcaption>
-                            </figure>
-                          );
-                        })
-                      }
-                    </div>
-                }
-                
-              </div>
-              <div className="column col-5 col-sm-12">
-                { props.nextRace &&
-                  <div className="panel" style={{ marginTop: "1rem" }}>
-                    <div className="panel-header"><h6 className={`${styles.title} panel-title`}>Next Race</h6></div>
-                    <div className="panel-body text-center" style={{ margin: "1rem 0 2rem" }}>
-                      <h4>{props.nextRace.name}</h4>
-                      <img src={props.nextRace.track.logo} style={{ display: "block", margin: "0 auto", width: "50%" }}/>
-                      <p style={{ margin: 0 }}>{props.nextRace.track.name}</p>
-                      <p style={{ margin: 0 }}>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</p>
-                    </div>
-                  </div>   
-                }
-              </div>
+            <div className={styles.description}>
+              <h4>{props.season.name}</h4>
+              { props.season.description && <RichText {...props.season.description}/> }
             </div>
-  
-          </div>
-        </div>
-      
-      </div>
-      
-      <div style={{ backgroundColor: "black", marginBottom: "2rem", padding: "0.4rem 0" }}>
-        <div className="container">
-          <div className="columns">
-            <div className="column col-8 col-xl-12 col-mx-auto">
-              <div className="columns">
-                <img src="/Charlotte-Start.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
-                <img src="/Champ.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
-                <img src="/Chambliss.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
-                <img src="/Autoclub.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div className="container">
-      
-        <div className="columns">
-          <div className="column col-8 col-xl-12 col-mx-auto">
-          
-            <h6 className={styles.title}>Last Race</h6>
+
+            { props.season.cars && 
+                <div className="columns col-gapless" style={{ marginTop: "1rem", marginBottom: "2rem" }}>
+                  { props.season.cars.map(name => {
+                      const car = cars.find(car => car.name === name);
+                      return (
+                        <figure key={car.id} className={`col-${(12/props.season.cars.length).toFixed(0)} col-mx-auto text-center`} style={{ overflow: "hidden" }}>
+                          <img src={car.image} alt={car.name} style={{ maxHeight: "150px", maxWidth: "102%", marginLeft: "-1%" }}/>
+                          <figcaption style={{ fontSize: "0.6rem" }}>{car.name}</figcaption>
+                        </figure>
+                      );
+                    })
+                  }
+                </div>
+            }
+
+            <h6 className={styles.title}>Latest Results</h6>
                 
             <div style={{ marginBottom: "1rem" }}>
               { props.lastRace.broadcast &&
@@ -131,6 +82,9 @@ export default function Home(props) {
                           <li><h4>{props.lastRace.name}</h4></li>
                           <li style={{ marginTop: 0, lineHeight: 1.2 }}><b>{props.lastRace.track.name}</b></li>
                           <li style={{ marginTop: 0 }}>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</li>
+                          <li style={{ marginTop: "0rem", fontSize: "0.6rem" }}>{props.lastRace.laps} laps ({props.lastRace.duration})</li>
+                          <li style={{ marginTop: "0rem", fontSize: "0.6rem" }}>{props.lastRace.cautions} cautions for {props.lastRace.cautionLaps} laps</li>
+                          <li style={{ marginTop: "0rem", fontSize: "0.6rem" }}>{props.lastRace.leadChanges} lead changes between {props.lastRace.leaders} drivers</li>
                         </ul>
                       </div>
                       <div className="column col-6">
@@ -141,97 +95,92 @@ export default function Home(props) {
               }
             </div>
 
-            <div className="columns">
-              <div className="column col-7 col-md-12" style={{ marginBottom: "1rem" }}>
-
-                <h5 className="text-center">Results
-                  <span style={{ display: "block", fontSize: "0.6rem", marginTop: "0.2rem" }}>
-                    {props.lastRace.laps} laps ({props.lastRace.cautions} cautions for {props.lastRace.cautionLaps} laps)
-                  </span>
-                </h5>
-
-                <table>
-                  <thead>
-                    <tr>
-                      <th width="7%">F</th>
-                      <th className="hide-sm" width="7%">S</th>
-                      <th>Driver</th>
-                      <th width="10%">Interval</th>
-                      <th width="10%">Led</th>
-                      <th className="hide-sm" width="10%">Inc</th>
+            <table style={{ marginBottom: "1rem" }}>
+              <thead>
+                <tr>
+                  <th width="7%">F</th>
+                  <th className="hide-sm" width="7%">S</th>
+                  <th>Driver</th>
+                  <th width="10%">Interval</th>
+                  <th width="10%">Led</th>
+                  <th className="hide-sm" width="10%">Inc</th>
+                </tr>
+              </thead>
+              <tbody>
+                { 
+                  props.lastRace.results.map((props, index) => (
+                    <tr key={`standings${props.id}`}>
+                      <td><b>{props.finish}</b></td>
+                      <td className="hide-sm">{props.start}</td>
+                      <td><DriverChip {...props.driver}/></td>
+                      <td>{props.interval}</td>
+                      <td>{props.led}</td>
+                      <td className="hide-sm">{props.incidents}</td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    { 
-                      props.lastRace.results.slice(0,10).map((props, index) => (
-                        <tr key={`standings${props.id}`}>
-                          <td>{props.finish}</td>
-                          <td className="hide-sm">{props.start}</td>
+                  ))
+                }
+              </tbody>
+            </table>
+
+          </div>
+          <div className="column col-3 col-md-12 col-mr-auto">
+
+            { props.leagueDescription &&
+                <div className={styles.about}>
+                  <h3><span>About Us</span></h3>
+                  <div>
+                    <RichText {...props.leagueDescription}/>
+                    <p>
+                      <a href="/apply" className="btn btn-primary">Apply</a>
+                    </p>
+                  </div>
+                </div>
+            }
+
+            <div className={styles.about}>
+              <h3><span>Standings</span></h3>
+              <table style={{ marginBottom: "1rem" }}>
+                <tbody>
+                  { props.standings &&
+                    props.standings
+                      .map((props, index) => (
+                        <tr key={`standings${index}`} style={{opacity: props.driver.active ? 1 : 0.2}}>
+                          <td><b>{index + 1}</b></td>
                           <td><DriverChip {...props.driver}/></td>
-                          <td>{props.interval}</td>
-                          <td>{props.led}</td>
-                          <td className="hide-sm">{props.incidents}</td>
+                          <td>{props.behindLeader}</td>
                         </tr>
                       ))
-                    }
-                  </tbody>
-                </table>
-                <p className="text-center" style={{ marginTop: "1rem" }}><a href={`/race/${props.lastRace.raceId}`} className="btn btn-primary">View Results</a></p> 
-              </div>
-                
-              <div className="column col-5 col-md-12" style={{ marginBottom: "1rem" }}>
-
-                <h5 className="text-center">Standings
-                  <span style={{ display: "block", fontSize: "0.6rem", marginTop: "0.2rem" }}>through {props.results.filter(({ counts }) => counts).length} of {props.schedule.filter(({ counts }) => counts).length} races</span>
-                </h5>
-                <table>
-                  <thead>
-                    <tr>
-                      <th width="2%"></th>
-                      <th width="2%"></th>
-                      <th>Driver</th>
-                      <th width="7%">Behind</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    { props.standings &&
-                      props.standings
-                        .map((props, index) => (
-                          <tr key={`standings${index}`} style={{opacity: props.driver.active ? 1 : 0.2}}>
-                            <td>
-                              <b>{index + 1}</b>
-                            </td>
-                            <td>
-                              { parseInt(props.change, 10) > 0
-                                  ? <span style={{color:"green"}}>&#9650;&nbsp;{props.change.substr(1)}</span>
-                                  : parseInt(props.change, 10) < 0
-                                    ? <span style={{color:"red"}}>&#9660;&nbsp;{props.change.substr(1)}</span>
-                                    : ''
-                              }
-                            </td>
-                            <td>
-                              <a href={`/driver/${props.driver.id}/`} style={{ whiteSpace: "nowrap" }}>
-                                { props.driver.numberArt &&
-                                  <div style={{ display: "inline-block", marginRight: "6px", width: "22px", height: "22px", position: "relative", top: "6px", marginTop: "-6px" }}>
-                                    <img src={ props.driver.numberArt.fields.file.url } style={{ width: "100%" }} />
-                                  </div>
-                                }                      
-                                {(props.driver.nickname || props.driver.name).replace(/ /g, '\u00a0')}
-                              </a>
-                            </td>
-                            <td>{props.behindLeader}</td>
-                          </tr>
-                        ))
-                    }
-                  </tbody>
-                </table>   
-                <p className="text-center" style={{ marginTop: "1rem" }}><a href={`/standings/${props.seasonId}`} className="btn btn-primary">View Standings</a></p> 
-
-              </div>
+                  }
+                </tbody>
+              </table>   
             </div>
+
+            <div className={styles.about}>
+              <h3><span>Schedule</span></h3>
+              <table>
+                <tbody>
+                  { props.schedule &&
+                    props.schedule
+                      .map((props, index) => (
+                        <tr key={`schedule${index}`} style={{opacity: props.raceId ? 0.4 : 1}}>
+                          <td>{moment(props.date).format('M/D')}</td>
+                          <td>
+                            { props.raceId 
+                                ? <a href={`/race/${props.raceId}/`}>{props.track}</a>
+                                : props.track
+                            }
+                            { !props.counts && <i style={{ opacity: 0.5 }}> (non-points)</i>}
+                          </td>
+                        </tr>
+                      ))
+                  }
+                </tbody>
+              </table>
+            </div>
+
           </div>
         </div>
-        
+                    
       </div>
       
       <div style={{ backgroundColor: "black", margin: "3rem 0 -3rem" }}>
