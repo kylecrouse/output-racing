@@ -148,7 +148,7 @@ async function handleResults(args) {
   return embed;  
 }
 
-function handleSeason(args) {
+function handleSeason(seasonId) {
   return getSeason(seasonId);
 }
 
