@@ -5,7 +5,7 @@
 
 .tagline {
   background: black;
-  margin: -2.4rem -1.8rem 2rem;
+  margin: -2.4rem -2.5rem 2rem;
 }
 
 .tagline p {
@@ -119,7 +119,7 @@
 
 .promo > div {
   transform: skew(20deg);
-  padding: 1.2rem 0 0.2rem;
+  padding: 1.2rem;
   break-inside: avoid-column;
 }
 
@@ -133,6 +133,7 @@
   transform: skew(0) !important;
   overflow: hidden;
   display: flex;
+  padding: 0 !important;
 }
 
 .carcut figure {
@@ -176,6 +177,8 @@
   
   .promo > div {
     transform: skew(0);
+    padding-left: 0;
+    padding-right: 0;
   }
   
   .multicol {
