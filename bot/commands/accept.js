@@ -30,7 +30,7 @@ module.exports = {
         unique: true,
         reason: driver.Name,
         maxUses: 1,
-        maxAge: 604800
+        maxAge: 0
       });
       
       // Need to store this association in the spreadsheet and use it
