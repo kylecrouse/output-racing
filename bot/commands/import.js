@@ -21,6 +21,9 @@ module.exports = {
 	execute: async (message, args) => {
     
     if (!isAuthorized(message.author, message.channel)) return;
+
+    // Ensure data is primed
+    await league.init();
     
     try {
       let reply, embed;
@@ -41,15 +44,15 @@ module.exports = {
         break;
         
         case 'season':
-          await handleSeason(args);
+          await handleSeason(args[1] || league.season.id);
         break;
         
         case 'standings':
-          await handleStandings(args);
+          await handleSeason(args[1] || league.season.id);
         break;
         
         case 'stats':
-          await handleStats(args);
+          await handleSeason(args[1] || null);
         break;
         
         default: 
@@ -84,9 +87,6 @@ function handleDrivers(leagueId) {
 
 async function handleLatest(args) {
 
-  // Ensure data is primed
-  await league.init();
-  
   // Get the ID for the current season
   const seasonId = league.season.id;
   
@@ -148,7 +148,7 @@ async function handleResults(args) {
   return embed;  
 }
 
-function handleSeason(seasonId) {
+function handleSeason(args) {
   return getSeason(seasonId);
 }
 
