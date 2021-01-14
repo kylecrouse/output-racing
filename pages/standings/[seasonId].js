@@ -188,7 +188,9 @@ export default function Schedule(props) {
 export async function getStaticPaths() {
   const { seasons } = await league.load();
   return {
-  	paths: seasons.map(season => ({ params: { seasonId: season.id }})),
+  	paths: seasons
+      .filter(season => season.standings.length > 0)
+      .map(season => ({ params: { seasonId: season.id }})),
   	fallback: false,
   }
 }
