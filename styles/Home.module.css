@@ -1,8 +1,3 @@
-.thumbnail {
-  padding: 0.4rem;
-  height: auto;
-}
-
 .title {
   border-bottom: 1px solid #ccc;
   padding-bottom: .4rem;
@@ -10,8 +5,7 @@
 
 .tagline {
   background: black;
-  margin-top: -2.4rem;
-  margin-bottom: 2rem;
+  margin: -2.4rem -1.8rem 2rem;
 }
 
 .tagline p {
@@ -24,6 +18,20 @@
   line-height: 1.5em;
   letter-spacing: 1.8px;
   padding: 0.6rem 0 1rem;
+}
+
+.tagline figure {
+  border-left: 0.4rem solid black;
+  border-right: 0.4rem solid black;
+  margin: 0.4rem 0;
+  transform: skew(-20deg);
+  overflow: hidden;
+}
+
+.thumbnail {
+  height: auto;
+  max-width: 100%;
+  transform: skew(20deg) scale(1.3);
 }
 
 .description {
@@ -133,6 +141,11 @@
 }
 
 @media (max-width: 600px) {
+  .tagline {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
   .tagline p {
     font-size: 1rem;
     line-height: 1.2;
@@ -151,4 +164,22 @@
     flex-direction: column-reverse;
     margin: 0 0 1.2rem;
   }
+  
+  .promo {
+    margin-top: -2rem;
+    margin-left: -0.4rem;
+    margin-right: -0.4rem;
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
+    transform: skew(0);
+  }
+  
+  .promo > div {
+    transform: skew(0);
+  }
+  
+  .multicol {
+    columns: 1;
+  }
+  
 }

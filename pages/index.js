@@ -20,11 +20,19 @@ export default function Home(props) {
       <Navbar seasonId={props.seasonId}/>
       
       <div className={styles.tagline}>
-        <div className="columns hide-sm">
-          <img src="/img/dega.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
-          <img src="/img/Champ.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
-          <img src="/img/Chambliss.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
-          <img src="/img/Autoclub.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
+        <div className="columns col-gapless hide-sm">
+          <figure className="column col-3 col-sm-12">
+            <img src="/img/Champ.png" className={styles.thumbnail}/>
+          </figure>
+          <figure className="column col-3 col-sm-12">
+            <img src="/img/dega.png" className={styles.thumbnail}/>
+          </figure>
+          <figure className="column col-3 col-sm-12">
+            <img src="/img/Chambliss.png" className={styles.thumbnail}/>
+          </figure>
+          <figure className="column col-3 col-sm-12">
+            <img src="/img/Autoclub.png" className={styles.thumbnail}/>
+          </figure>
         </div>
         <p>An Asphalt Oval League for the Late-Night Racer</p>
       </div>
@@ -32,7 +40,7 @@ export default function Home(props) {
       <div className="container">
   
         <div className="columns">
-          <div className="column col-10 col-mx-auto">
+          <div className="column col-10 col-sm-12 col-mx-auto">
           
             <div className={`columns ${styles.promo}`}>
               <div className={`column col-7 col-sm-12 col-ml-auto`}>
@@ -47,7 +55,7 @@ export default function Home(props) {
                 </div>
               </div>
               { props.nextSeason.cars && 
-                  <div className={`column col-3 col-sm-12 col-mr-auto ${styles.carcut}`}>
+                  <div className={`column col-3 hide-sm col-mr-auto ${styles.carcut}`}>
                     { props.nextSeason.cars.map(name => {
                         const car = cars.find(car => car.name === name);
                         return (
