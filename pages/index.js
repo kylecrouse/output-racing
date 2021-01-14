@@ -21,10 +21,10 @@ export default function Home(props) {
       
       <div className={styles.tagline}>
         <div className="columns hide-sm">
-          <img src="/Charlotte-Start.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
-          <img src="/Champ.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
-          <img src="/Chambliss.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
-          <img src="/Autoclub.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
+          <img src="/img/dega.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
+          <img src="/img/Champ.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
+          <img src="/img/Chambliss.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
+          <img src="/img/Autoclub.png" className={`${styles.thumbnail} column col-3 col-sm-12`}/>
         </div>
         <p>An Asphalt Oval League for the Late-Night Racer</p>
       </div>
