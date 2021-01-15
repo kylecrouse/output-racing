@@ -74,7 +74,12 @@ module.exports = {
       
       // If the number was approved, save it  
       if (approved) {
-        await driver.put({ number: args[0] });
+        await Promise.all(
+          // Update iRacing
+          iracing.updateDriver('CarNumber', args[0], driver.custId, 2732),
+          // Update driver record
+          driver.put({ number: args[0] })
+        );
         message.react(REACTION_SUCCESS);        
       }
       
