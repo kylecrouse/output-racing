@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const moment = require('moment');
-const league = require(`${process.cwd()}/lib/league`);
+const league = require('../../lib/league');
 const { tracks } = require ('../../constants');
 const { websiteChannelId, announcementChannelId } = require('../config.json');
 
