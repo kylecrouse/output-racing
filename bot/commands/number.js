@@ -42,19 +42,21 @@ module.exports = {
     // Validate a 2-digit number not starting with 0
     if (!args[0].match(/^[1-9][0-9]$/)) return message.reply('Numbers must be between 1–99 and may not start with 0. Try again');
     
-    // If the author is authorized, assign it immediately
-    if (isAuthorized(message.author, message.channel)) {
-      await Promise.all(
-        // Update iRacing
-        iracing.updateDriver('CarNumber', args[0], driver.custId, 2732),
-        // Update driver record
-        driver.put({ number: args[0] })
-      );
-      message.react(REACTION_SUCCESS);
-    }
-    
-    // Otherwise send it for moderation
-    else {
+    // // If the author is authorized, assign it immediately
+    // if (isAuthorized(message.author, message.channel)) {
+    //   await Promise.all([
+    //     // Update iRacing
+    //     iracing.updateDriver('CarNumber', args[0], driver.custId, 2732),
+    //     // Update driver record
+    //     driver.put({ number: args[0] })
+    //   ]);
+    //   message.react(REACTION_SUCCESS);
+    // }
+    // 
+    // // Otherwise send it for moderation
+    // else {
+      
+      message.reply("Let's see what Jaren thinks about that...");
       
       // Set the collector filter for authorized users approving or denying
       const filter = (reaction, user) => {
@@ -64,8 +66,8 @@ module.exports = {
       
       // Send the message to the appropriate location
       const approval = message.guild
-        ? await message.guild.channels.cache.get(websiteChannelId).send(`@Admin ${message.member.displayName} wants to use **#${args[0]}**. ${REACTION_ACCEPT} to approve, ${REACTION_DENY} to deny.`)
-        : await message.channel.send(`@Admin ${message.author.username} wants to use **#${args[0]}**. React with ${REACTION_ACCEPT} to approve or ${REACTION_DENY} to deny.`);
+        ? await message.guild.channels.cache.get(websiteChannelId).send(`<@Admin> **${message.member.displayName}** wants to use **#${args[0]}**. ${REACTION_ACCEPT} to approve, ${REACTION_DENY} to deny.`)
+        : await message.channel.send(`<@Admin> **${message.author.username}** wants to use **#${args[0]}**. React with ${REACTION_ACCEPT} to approve or ${REACTION_DENY} to deny.`);
         
       // Wait for response and return decision as boolean
       const approved = approval.awaitReactions(filter, { max: 1 })
@@ -74,15 +76,15 @@ module.exports = {
       
       // If the number was approved, save it  
       if (approved) {
-        await Promise.all(
+        await Promise.all([
           // Update iRacing
           iracing.updateDriver('CarNumber', args[0], driver.custId, 2732),
           // Update driver record
           driver.put({ number: args[0] })
-        );
+        ]);
         message.react(REACTION_SUCCESS);        
       }
       
-    }
+    // }
   }
 };
