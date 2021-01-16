@@ -66,8 +66,8 @@ module.exports = {
       
       // Send the message to the appropriate location
       const approval = message.guild
-        ? await message.guild.channels.cache.get(websiteChannelId).send(`<@Admin> **${message.member.displayName}** wants to use **#${args[0]}**. ${REACTION_ACCEPT} to approve, ${REACTION_DENY} to deny.`)
-        : await message.channel.send(`<@Admin> **${message.author.username}** wants to use **#${args[0]}**. React with ${REACTION_ACCEPT} to approve or ${REACTION_DENY} to deny.`);
+        ? await message.guild.channels.cache.get(websiteChannelId).send(`<@Admin> **${driver.nickname || driver.name}** wants to use **#${args[0]}**. ${REACTION_ACCEPT} or ${REACTION_DENY}?`)
+        : await message.channel.send(`<@Admin> **${driver.nickname || driver.name}** wants to use **#${args[0]}**. ${REACTION_ACCEPT} or ${REACTION_DENY}?`);
         
       // Wait for response and return decision as boolean
       const approved = approval.awaitReactions(filter, { max: 1 })
