@@ -26,12 +26,12 @@ module.exports = {
     // Get the driver entry for the mentioned user or author
     const driver = await league.drivers.find(
       message.mentions.size > 0
-        ? driver => driver.discordId === message.mentions.firstKey()
-        : driver => driver.discordId === message.author.id
+        ? driver => driver.discordId == message.mentions.firstKey()
+        : driver => driver.discordId == message.author.id
     );
     
     // If no driver matched, bail out.
-    if (!driver) return;
+    if (!driver) return message.react(REACTION_FAILURE);
     
     // Check whether number is already in use
     const assigned = await league.drivers.find(driver => driver.active && driver.number === args[0]);
