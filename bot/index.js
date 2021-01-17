@@ -6,6 +6,7 @@ const handleGuildMemberAdd = require('./handlers/guildMemberAdd');
 const { handleApplication } = require('./lib/applications');
 const { prefix, superUsers } = require('./config.json');
 
+// const client = new discord.Client({ ws: { intents: discord.Intents.FLAGS.GUILD_MEMBERS }});
 const client = new discord.Client();
 
 // Set all recognized commands for bot from ./command/*.js
@@ -33,7 +34,7 @@ client.on('message', async (message) => {
     
   // Get message command (i.e., !command) and args
   // Use regex that doesn't split inside quotes but doesn't match them either
-  const regex = /[^\s"]+|"([^"]*)"/gi;
+  const regex = /[^\s"“]+|["“]([^"”]*)["”]/gi;
   const string = message.content.slice(prefix.length).trim();
   let args = [], match = null;
   //Each call to exec returns the next regex match as an array
@@ -72,10 +73,9 @@ client.on('guildMemberAdd', handleGuildMemberAdd);
 
 client.login(process.env.DISCORD_ACCESS_TOKEN);
 
-let connections = [];
 const server = http.createServer((req, res) => {
   const headers = {
-    "Access-Control-Allow-Origin": 'http://192.168.7.131',
+    "Access-Control-Allow-Origin": '*',
     "Access-Control-Allow-Methods": "OPTIONS, POST, GET",
     "Access-Control-Allow-Headers": 'Content-Type',
     "Access-Control-Max-Age": 2592000
@@ -96,9 +96,6 @@ const server = http.createServer((req, res) => {
       if (req.url === '/apply')
         await handleApplication(client, JSON.parse(body));
         
-      if (req.url === '/session') 
-        connections.forEach(ws => ws.send(body));
-
       res.writeHead(200, 'OK', {...headers, 'Content-Type': 'text/plain'});
       res.end();
     });
@@ -108,20 +105,38 @@ const server = http.createServer((req, res) => {
   }
 });
 
-const wss = new WebSocket.Server({ server });
+// Create data cache for received messages (need to purge at some point)
+let cache = {};
 
+// Create new socket server piggy-backing on http server
+const wss = new WebSocket.Server({ 
+  server,
+  verifyClient: info => {
+    console.log(info);
+    return true;
+  }
+});
+
+// Listen for new connections
 wss.on('connection', function connection(ws) {
-  connections.push(ws);
   
-  ws.on('message', function incoming(message) {
-    console.log('received: %s', message);
+  // Send cached data to newly connected clients
+  ws.send(JSON.stringify(cache));
+  
+  // Handle messages received from iRacing
+  ws.on('message', function incoming(data) {
+    
+    // Update data cache
+    cache = { ...cache, ...data };
+    
+    // Broadcast data to all clients (except self)
+    wss.clients.forEach(function each(client) {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        client.send(data);
+      }
+    });
   });
   
-  ws.on('close', function close() {
-    connections.splice(connections.indexOf(ws), 1);
-  });
-
-  // ws.send('Hello, World!');
 });
 
 const port = process.env.PORT || 3001;

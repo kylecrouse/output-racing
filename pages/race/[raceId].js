@@ -184,12 +184,14 @@ export default function Race(props) {
 export async function getStaticPaths() {
   const { seasons } = await league.load();
   return {
-    paths: seasons.reduce(
-      (ids, season) => ids.concat(
-        season.results.map(item => ({ params: { raceId: item.raceId.toString() }}))
+    paths: seasons
+      .filter(season => season.results)
+      .reduce(
+        (ids, season) => ids.concat(
+          season.results.map(item => ({ params: { raceId: item.raceId.toString() }}))
+        ),
+        []
       ),
-      []
-    ),
     fallback: false,
   }
 }
@@ -197,9 +199,11 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   const { name, season: currentSeason, seasons } = await league.load();
   
-  const season = seasons.find(
-    season => season.results.find(item => item.raceId == params.raceId)
-  );
+  const season = seasons
+    .filter(season => season.results)
+    .find(
+      season => season.results.find(item => item.raceId == params.raceId)
+    );
   
   const race = season.results.find(item => item.raceId == params.raceId);
   

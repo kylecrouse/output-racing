@@ -29,7 +29,8 @@ module.exports = {
       const invite = await message.guild.channels.cache.get(welcomeChannelId).createInvite({
         unique: true,
         reason: driver.Name,
-        maxUses: 1
+        maxUses: 1,
+        maxAge: 0
       });
       
       // Need to store this association in the spreadsheet and use it

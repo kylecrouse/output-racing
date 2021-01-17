@@ -18,6 +18,7 @@ export default function Nav(props) {
       <a href="/apply/" className={props.page === 'apply' ? styles.active : ''}>
         <span>Apply</span>
       </a>
+      <a href="https://shop.champsspeedshop.com/collections/t-shirts/products/output-racing-league-t-shirt" target="_blank"><span>Merch</span></a>
     </nav>
   );
 }

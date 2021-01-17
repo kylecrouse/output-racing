@@ -24,14 +24,14 @@ module.exports = {
     await league.init();
     
     // Get the driver entry for the mentioned user or author
-    const driver = await league.drivers.find(
+    const driver = league.drivers.find(
       message.mentions.size > 0
-        ? driver => driver.discordId === message.mentions.firstKey()
-        : driver => driver.discordId === message.author.id
+        ? driver => driver.discordId == message.mentions.firstKey()
+        : driver => driver.discordId == message.author.id
     );
     
     // If no driver matched, bail out.
-    if (!driver) return;
+    if (!driver) return message.react(REACTION_FAILURE);
     
     // Check whether number is already in use
     const assigned = await league.drivers.find(driver => driver.active && driver.number === args[0]);
@@ -44,17 +44,19 @@ module.exports = {
     
     // If the author is authorized, assign it immediately
     if (isAuthorized(message.author, message.channel)) {
-      await Promise.all(
+      await Promise.all([
         // Update iRacing
         iracing.updateDriver('CarNumber', args[0], driver.custId, 2732),
         // Update driver record
         driver.put({ number: args[0] })
-      );
+      ]);
       message.react(REACTION_SUCCESS);
     }
     
     // Otherwise send it for moderation
     else {
+      
+      message.reply("Let's see what Jaren thinks about that...");
       
       // Set the collector filter for authorized users approving or denying
       const filter = (reaction, user) => {
@@ -64,8 +66,8 @@ module.exports = {
       
       // Send the message to the appropriate location
       const approval = message.guild
-        ? await message.guild.channels.cache.get(websiteChannelId).send(embed)
-        : await message.channel.send(embed);
+        ? await message.guild.channels.cache.get(websiteChannelId).send(`**${driver.nickname || driver.name}** wants to use **#${args[0]}**. ${REACTION_ACCEPT} or ${REACTION_DENY}?`)
+        : await message.channel.send(`**${driver.nickname || driver.name}** wants to use **#${args[0]}**. ${REACTION_ACCEPT} or ${REACTION_DENY}?`);
         
       // Wait for response and return decision as boolean
       const approved = approval.awaitReactions(filter, { max: 1 })
@@ -74,7 +76,12 @@ module.exports = {
       
       // If the number was approved, save it  
       if (approved) {
-        await driver.put({ number: args[0] });
+        await Promise.all([
+          // Update iRacing
+          iracing.updateDriver('CarNumber', args[0], driver.custId, 2732),
+          // Update driver record
+          driver.put({ number: args[0] })
+        ]);
         message.react(REACTION_SUCCESS);        
       }
       

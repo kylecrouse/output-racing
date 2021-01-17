@@ -3,6 +3,7 @@ import styles from '../styles/Home.module.css'
 import league from '../lib/league/cache';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import RichText from '../components/RichText';
 
 export default function Rules(props) {
   return (
@@ -17,26 +18,26 @@ export default function Rules(props) {
       <div className="container">
         
         <main className="columns">
-          <div className="column col-6 col-sm-12 col-mx-auto">
+          <div className="column col-6 col-md-8 col-sm-12 col-mx-auto">
             
             { props.raceInfo && 
               <div>
                 <h2 className="text-center">Race Information</h2>
-                { props.raceInfo.content.map(el => renderNode(el)) }
+                <RichText {...props.raceInfo}/>
               </div>
             }
 
             { props.rules && 
               <div>
                 <h2 className="text-center">Rules</h2>
-                { props.rules.content.map(el => renderNode(el)) }
+                <RichText {...props.rules}/>
               </div>
             }
 
             { props.codeOfConduct && 
               <div>
                 <h2 className="text-center">Code of Conduct</h2>
-                { props.codeOfConduct.content.map(el => renderNode(el)) }
+                <RichText {...props.codeOfConduct}/>
               </div>
             }
 
@@ -62,36 +63,4 @@ export async function getStaticProps() {
     raceInfo,
     codeOfConduct
   }};
-}
-
-function renderNode({ data, nodeType, content, marks, value }) {
-  switch(nodeType) {
-    case 'heading-3':
-      return <h3>{content.map(el => renderNode(el))}</h3>;
-    case 'paragraph':
-      return <p>{content.map(el => renderNode(el))}</p>;
-    case 'unordered-list':
-      return <ul>{content.map(el => renderNode(el))}</ul>;
-    case 'ordered-list':
-      return <ol>{content.map(el => renderNode(el))}</ol>;
-    case 'list-item':
-      return <li>{content.map(el => renderNode(el))}</li>;
-    case 'hyperlink':
-      return <a href={data.uri}>{content.map(el => renderNode(el))}</a>
-    case 'text':
-      return marks.length > 0 
-        ? marks.reduce((html, el) => renderMark(el, html), value)
-        : value;
-  }
-}
-
-function renderMark(mark, content) {
-  switch(mark.type) {
-    case 'bold':
-      return <b>{content}</b>;
-    case 'italic':
-      return <i>{content}</i>;
-    default:
-      return content;
-  }
 }
