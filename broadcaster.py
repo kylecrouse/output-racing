@@ -116,8 +116,10 @@ async def loop():
             state.last_session_num_tick = session_num_tick
             # await send(json.dumps({ "sessionNum": session_num }))
     
-    # send(json.dumps({ "state": session_state }))
-    # send(json.dumps({ "flags": session_flags }))
+    # QualifyResultsInfo.Results [{ Position, CarIdx, FastestTime }]
+    # CarIdxOnPitRoad
+    # SessionFlags
+    # SessionTimeRemain
 
 
 if __name__ == '__main__':
