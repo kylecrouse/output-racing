@@ -27,7 +27,6 @@ export default function Home(props) {
         id="raceday" 
         data-race={ JSON.stringify(props.nextRace) } 
         data-drivers={ JSON.stringify(props.drivers) }
-        style={{ marginBottom: "4rem" }}
       />
 
       <div className={styles.tagline}>

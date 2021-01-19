@@ -92,6 +92,12 @@
   margin: 1rem 0;
 }
 
+.resultsHeader > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .resultsHeader ul {
   list-style: none;
   margin: 0;
