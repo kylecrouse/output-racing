@@ -189,7 +189,7 @@ function RaceInfo(props) {
             { !!props.ResultsOfficial
                 ? 'Completed'
                 : props.SessionLaps === 'unlimited' 
-                  ? `${ props.SessionTime } remaining`
+                  ? `${ props.SessionTimeRemain } remaining`
                   : `Lap ${ props.ResultsLapsComplete } of ${ props.SessionLaps }`
             }
           </b>
