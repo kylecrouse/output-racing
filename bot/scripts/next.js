@@ -66,7 +66,7 @@ client.on('ready', async () => {
       )    	
       .setTimestamp();
             
-    await client.channels.cache.get(websiteChannelId).send("@everyone", embed);
+    await client.channels.cache.get(announcementChannelId).send("@everyone", embed);
     
     client.destroy();
 
