@@ -16,6 +16,7 @@
   display: block;
   width: 60%;
   margin: 0 auto; 
+  max-height: 3rem;
 }
 
 @media (max-width: 600px) {
