@@ -7,9 +7,11 @@
 }
 
 .number {
-  font-size: 2rem;
+  font-size: 1.4rem;
   color: #ccc;
   text-align: center;
+  width: 5%;
+  height: 2.6rem;
 }
 
 .numberArt {
