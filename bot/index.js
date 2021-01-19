@@ -127,7 +127,15 @@ wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(data) {
     
     // Update data cache
-    cache = { ...cache, ...data };
+    try {
+      const json = JSON.parse(data);
+      if (json.SubSessionID !== undefined && json.SubSessionID !== cache.SubSessionID)
+        cache = json;
+      else 
+        cache = { ...cache, ...json };
+    } catch(err) {
+      console.log(err);
+    }
     
     // Broadcast data to all clients (except self)
     wss.clients.forEach(function each(client) {
