@@ -31,23 +31,12 @@ export default function StandingsPage(props) {
   )
 }
 
-export async function getStaticPaths() {
-  const { seasons } = await league.load();
-  return {
-  	paths: seasons
-      .filter(season => season.standings.length > 0)
-      .map(season => ({ params: { seasonId: season.id }})),
-  	fallback: false,
-  }
-}
-
 export async function getStaticProps({ params }) {
-  const { name, seasons } = await league.load();
-  const season = seasons.find(season => season.id === params.seasonId);
+  const { name, season, seasons } = await league.load();
 
   return { props: {
     leagueName: name,
     ...season,
-    seasons: seasons.filter(season => season.id !== params.seasonId)
+    seasons: seasons.filter(({ id }) => id !== season.id)
   }};
 };
