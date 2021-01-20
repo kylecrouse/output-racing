@@ -62,6 +62,8 @@ module.exports = {
       
       await buildAndDeploy();
       
+      await league.load();
+      
       message.react(REACTION_SUCCESS);
       
       if (reply && embed) message.reply(reply, embed);
