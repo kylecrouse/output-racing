@@ -31,31 +31,10 @@ export default function(props) {
   )
 }
 
-export async function getStaticPaths() {
-  const { seasons } = await league.load();
-  return {
-    paths: seasons
-      .filter(season => season.results)
-      .reduce(
-        (ids, season) => ids.concat(
-          season.results.map(item => ({ params: { raceId: item.raceId.toString() }}))
-        ),
-        []
-      ),
-    fallback: false,
-  }
-}
-
 export async function getStaticProps({ params }) {
-  const { name, seasons } = await league.load();
+  const { name, season } = await league.load();
   
-  const season = seasons
-    .filter(season => season.results)
-    .find(
-      season => season.results.find(item => item.raceId == params.raceId)
-    );
-  
-  const race = season.results.find(item => item.raceId == params.raceId);
+  const [race] = season.results.slice(-1);
   
   return { props: { 
     leagueName: name,
