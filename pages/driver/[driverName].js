@@ -12,7 +12,7 @@ export default function Driver(props) {
     		<link rel="icon" href="/favicon.ico" />
   	  </Head>
       
-      <Navbar seasonId={props.seasonId} page="drivers"/>
+      <Navbar page="drivers"/>
       
       <style jsx>{`
         th {
@@ -264,7 +264,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const { name, season, seasons, drivers } = await league.load();
+  const { name, seasons, drivers } = await league.load();
 
   const driver = drivers.find(driver => 
     driver.name.toLowerCase() === params.driverName.replace(/-/g, ' ').toLowerCase()
@@ -273,7 +273,6 @@ export async function getStaticProps({ params }) {
   return { props: { 
     ...driver, 
     leagueName: name,
-    seasonId: season.id, 
     seasonStats: seasons
       .filter(({ stats }) => stats.find(item => item.driver === driver.name))
       .sort((a, b) => moment(b.schedule[0].date).diff(a.schedule[0].date))

@@ -17,7 +17,7 @@ export default function Home(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Navbar seasonId={props.seasonId}/>
+      <Navbar />
       
       <div className={styles.tagline}>
         <div className="columns col-gapless hide-sm">
@@ -247,7 +247,6 @@ export async function getStaticProps() {
   return { props: { 
     leagueName: name,
     leagueDescription: description,
-    seasonId: season.id,
     season,
     results: season.results,
     schedule: season.schedule,

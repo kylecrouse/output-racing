@@ -12,7 +12,7 @@ export default function Drivers(props) {
   		<link rel="icon" href="/favicon.ico" />
 	  </Head>
 
-    <Navbar seasonId={props.seasonId} page="drivers"/>
+    <Navbar page="drivers"/>
     
     <main className="container">
   	  <div className="columns">
@@ -64,10 +64,9 @@ export default function Drivers(props) {
 }
 
 export async function getStaticProps() {
-  const { name, season, drivers } = await league.load();
+  const { name, drivers } = await league.load();
   return { props: {
     leagueName: name,
-    seasonId: season.id,
     drivers: drivers
       .filter(driver => driver.active)
       .sort((a, b) => parseInt(a.number, 10) - parseInt(b.number, 10))

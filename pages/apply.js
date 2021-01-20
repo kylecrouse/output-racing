@@ -12,7 +12,7 @@ export default function Rules(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Navbar seasonId={props.seasonId} page="apply"/>
+      <Navbar page="apply"/>
       
       <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfqlx-RMiOXR0e0CPrpfhZ-7LLH4ewtaS__O5EkM-q7TGwXEg/viewform?embedded=true"  frameBorder="0">Loading…</iframe>
 
@@ -24,10 +24,9 @@ export default function Rules(props) {
 
 export async function getStaticProps() {
   // Get data from CMS
-  const { name, season } = await league.load();
+  const { name } = await league.load();
 
   return { props: { 
-    leagueName: name,
-    seasonId: season.id
+    leagueName: name
   }};
 }
