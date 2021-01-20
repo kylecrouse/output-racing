@@ -31,14 +31,6 @@ export default function(props) {
   )
 }
 
-export async function getStaticPaths() {
-  const { seasons } = await league.load();
-  return {
-  	paths: seasons.map(season => ({ params: { seasonId: season.id }})),
-  	fallback: false,
-  }
-}
-
 export async function getStaticProps({ params }) {
   const { name, season, seasons } = await league.load();
 
