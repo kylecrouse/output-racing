@@ -1,10 +1,9 @@
 const Discord = require('discord.js');
-const { exec } = require('child_process');
 const league = require(`${process.cwd()}/lib/league`);
 const iracing = require(`${process.cwd()}/lib/iracing`);
 const { kick } = require('../lib/applications');
 const { isAuthorized } = require('../lib/authorization');
-const { websiteChannelId } = require('../config.json');
+const { buildAndDeploy } = require('../lib/builder');
 const REACTION_ACCEPT = '👍';
 const REACTION_DENY = '👎';
 const REACTION_SUCCESS = '✅';
@@ -60,8 +59,11 @@ module.exports = {
       // Mark as kicked in spreadsheet
       await kick(driver.name, args[1]);
           
-      // Rebuild website to update driver roster
-      await exec('npm run build && aws s3 sync ./out s3://output-racing/ && aws cloudfront create-invalidation --distribution-id E2HCYIFSR21K3R');
+      // Rebuild website
+      await buildAndDeploy();
+      
+      // Update cached data
+      await league.load();
   
       message.reply(`**${args[0]}** is gone. Fuck that guy.`);
     }
