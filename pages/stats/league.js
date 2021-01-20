@@ -12,7 +12,7 @@ export default function StatsPage(props) {
     		<link rel="icon" href="/favicon.ico" />
   	  </Head>
 
-      <Navbar page="standings"/>
+      <Navbar/>
       
       <main className="container">
 	  	  <div className="columns">
