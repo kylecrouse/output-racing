@@ -15,6 +15,7 @@ module.exports = {
   args: true,
   usage: '<number> [@<name>]',
 	execute: async (message, args) => {
+    console.log(message);
     
     // Exit if trying to assign without authorization
     if (message.mentions.size > 0 && !isAuthorized(message.author, message.channel))
