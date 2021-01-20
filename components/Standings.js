@@ -6,8 +6,8 @@ export default function Standings(props) {
   	<div>
 	    
       <style jsx>{`
-        .standings th {
-          width: 8.33%;
+        .standings th:nth-of-type(3) ~ th {
+          width: 7%;
         }
 
         @media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
