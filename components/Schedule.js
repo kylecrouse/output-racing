@@ -108,7 +108,7 @@ export default function Schedule(props) {
               <td style={{ whiteSpace: "nowrap" }}>{moment(race.date).format('MMM D, YYYY')}</td>
         			<td>
                 { race.raceId 
-                    ? <a href={`/race/${race.raceId}/`}>{race.name}</a>
+                    ? <a href={`/results/${race.raceId}/`}>{race.name}</a>
                     : race.offWeek ? <i>{race.name}</i> : race.name
                 }
                 { !race.counts && !race.offWeek && <i style={{opacity:0.5}}> (non-points)</i>}

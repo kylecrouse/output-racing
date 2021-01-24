@@ -125,7 +125,7 @@ async function handleResults(args) {
 
   const embed = new Discord.MessageEmbed()
   	.setTitle(race.name)
-  	.setURL(`https://outputracing.com/race/${args[1]}/`)
+  	.setURL(`https://outputracing.com/results/${args[1]}/`)
   	.addFields(
   		{ name: 'P', value: results.map(item => `\`${item.finish}\``), inline: true },
   		{ name: 'Driver', value: results.map(item=> `\`${item.name}\``), inline: true },

@@ -207,7 +207,7 @@ export default function Home(props) {
                           <td>{moment(props.date).format('M/D')}</td>
                           <td>
                             { props.raceId 
-                                ? <a href={`/race/${props.raceId}/`}>{props.track}</a>
+                                ? <a href={`/results/${props.raceId}/`}>{props.track}</a>
                                 : props.track
                             }
                             { !props.counts && <i style={{ opacity: 0.5 }}> (non-points)</i>}
