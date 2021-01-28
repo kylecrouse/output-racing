@@ -1,4 +1,3 @@
-const Discord = require('discord.js');
 const getDrivers = require(`${process.cwd()}/lib/scraper/drivers`);
 const getLatestResults = require(`${process.cwd()}/lib/scraper/latest`);
 const getResults = require(`${process.cwd()}/lib/scraper/results`);
@@ -8,7 +7,9 @@ const getStats = require(`${process.cwd()}/lib/scraper/stats`);
 const league = require(`${process.cwd()}/lib/league`);
 const cms = require(`${process.cwd()}/lib/contentful`);
 const { isAuthorized } = require('../lib/authorization');
+const { getResultsEmbed, getStandingsEmbed, getUpcomingEmbed } = require('../lib/embeds');
 const { buildAndDeploy } = require('../lib/builder');
+const { resultsChannelId } = require('../config.json');
 const { tracks } = require ('../../constants');
 const REACTION_SUCCESS = '✅';
 const REACTION_FAILURE = '😢';
@@ -26,7 +27,7 @@ module.exports = {
     await league.init();
     
     try {
-      let reply, embed;
+      let reply, embed, race;
       
       switch(args[0]) {
         case 'drivers':
@@ -36,11 +37,11 @@ module.exports = {
         break;
         
         case 'latest':
-          embed = await handleLatest(args);
+          race = await handleLatest(args);
         break;
         
         case 'results':        
-          embed = await handleResults(args);
+          embed = await getResultsEmbed(await handleResults(args));
         break;
         
         case 'season':
@@ -65,6 +66,27 @@ module.exports = {
       await league.load();
       
       message.react(REACTION_SUCCESS);
+      
+      // If is 'latest' import, update the results channel with the new data
+      if (race && args[0] === 'latest') {
+        // Get the results channel
+        const channel = message.client.channels.cache.get(resultsChannelId);
+        // Fetch and iterate messages in channel to remove previous bot messages
+        await Promise.all(channel.messages.fetch({ limit: 5 }).then(
+          messages => messages.map(
+            // Delete messages from the bot
+            (item) => item.author.id === message.client.user.id
+              ? channel.delete(item)
+              : item
+          )
+        ));
+        // Send latest results
+        channel.send(await getResultsEmbed(race));
+        // Send season standings
+        channel.send(getStandingsEmbed(league.season));
+        // Send next race
+        channel.send(getUpcomingEmbed(league.season));
+      }
       
       if (reply && embed) message.reply(reply, embed);
       else if (reply) message.reply(reply);
@@ -113,41 +135,11 @@ async function handleLatest(args) {
   ]);
 }
 
-async function handleResults(args) {
-  const race = await getResults(args[1], {
+function handleResults(args) {
+  return getResults(args[1], {
     name: (args.length > 2) ? args[2] : undefined,
     broadcast: (args.length > 3) ? args[3] : undefined
   });
-  
-  const results = race.results
-    .sort((a,b) => a.finish - b.finish)
-    .slice(0,5);
-
-  const embed = new Discord.MessageEmbed()
-  	.setTitle(race.name)
-  	.setURL(`https://outputracing.com/results/${args[1]}/`)
-  	.addFields(
-  		{ name: 'P', value: results.map(item => `\`${item.finish}\``), inline: true },
-  		{ name: 'Driver', value: results.map(item=> `\`${item.name}\``), inline: true },
-  		{ name: 'Interval', value: results.map(item=> `\`${item.interval}\``), inline: true },
-  	)
-  	.setTimestamp()
-    
-  if (race.logo) {
-    const logo = await cms.getAsset(race.logo.sys.id);
-    embed.setThumbnail(`https:${logo.fields.file['en-US'].url}`);
-  } else {
-    embed.setThumbnail(
-      tracks.find(({ name }) => race.track.indexOf(name) >= 0).logo
-    );
-  }
-  
-  if (race.media) {
-    const media = await cms.getAsset(race.media[0].sys.id);
-    embed.setImage(`https:${media.fields.file['en-US'].url}`);
-  }
-
-  return embed;  
 }
 
 function handleSeason(seasonId) {
