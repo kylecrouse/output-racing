@@ -41,7 +41,7 @@ module.exports = {
     if (assigned) return message.reply(`That number is already assigned. Try again.`);
     
     // Validate a 2-digit number not starting with 0
-    if (!args[0].match(/^[1-9][0-9]$/)) return message.reply('Numbers must be between 1–99 and may not start with 0. Try again');
+    if (!args[0].match(/^[1-9][0-9]?$/)) return message.reply('Numbers must be between 1–99 and may not start with 0. Try again');
     
     // If the author is authorized, assign it immediately
     if (isAuthorized(message.author, message.channel)) {
