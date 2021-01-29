@@ -7,4 +7,7 @@ module.exports = {
     // Or allow admins of non-DMChannel
     || (channel.type !== 'dm' && channel.permissionsFor(user).has('ADMINISTRATOR'))
   ),
+  isCouncil: (user) => (
+    user.roles && user.roles.cache.has('563049954256355331')
+  ),
 }

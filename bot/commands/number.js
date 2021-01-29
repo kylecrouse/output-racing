@@ -1,6 +1,6 @@
 const discord = require('discord.js');
-const { isAuthorized } = require('../lib/authorization');
-const { websiteChannelId } = require('../config.json');
+const { isAuthorized, isCouncil } = require('../lib/authorization');
+const { councilChannelId } = require('../config.json');
 const league = require(`${process.cwd()}/lib/league`);
 const iracing = require(`${process.cwd()}/lib/iracing`);
 
@@ -57,17 +57,17 @@ module.exports = {
     // Otherwise send it for moderation
     else {
       
-      message.reply("Let's see what Jaren thinks about that...");
+      message.reply("your request is being reviewed.");
       
       // Set the collector filter for authorized users approving or denying
       const filter = (reaction, user) => {
-        return isAuthorized(user, reaction.message.channel) 
+        return (isAuthorized(user, reaction.message.channel) || isCouncil(user))
           && (reaction.emoji.name === REACTION_ACCEPT || reaction.emoji.name === REACTION_DENY);
       };
       
       // Send the message to the appropriate location
       const approval = message.guild
-        ? await message.guild.channels.cache.get(websiteChannelId).send(`**${driver.nickname || driver.name}** wants to use **#${args[0]}**. ${REACTION_ACCEPT} or ${REACTION_DENY}?`)
+        ? await message.guild.channels.cache.get(councilChannelId).send(`**${driver.nickname || driver.name}** wants to use **#${args[0]}**. ${REACTION_ACCEPT} or ${REACTION_DENY}?`)
         : await message.channel.send(`**${driver.nickname || driver.name}** wants to use **#${args[0]}**. ${REACTION_ACCEPT} or ${REACTION_DENY}?`);
         
       // Wait for response and return decision as boolean
@@ -83,7 +83,16 @@ module.exports = {
           // Update driver record
           driver.put({ number: args[0] })
         ]);
-        message.react(REACTION_SUCCESS);        
+        
+        // Update guild nickname to number + name.
+        await message.member.setNickname(
+          message.member.displayName.replace(/^(#[0-9]*\s)?/i, `#${number} `), 
+          'League guidelines'
+        );
+
+        message.reply("you're approved. I updated your number and nickname.");        
+      } else {
+        message.reply('your choice was denied. Try a different number.');
       }
       
     }
