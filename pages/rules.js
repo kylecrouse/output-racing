@@ -13,7 +13,7 @@ export default function Rules(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Navbar seasonId={props.seasonId} page="rules"/>
+      <Navbar page="rules"/>
       
       <div className="container">
         
@@ -54,11 +54,10 @@ export default function Rules(props) {
 
 export async function getStaticProps() {
   // Get data from CMS
-  const { name, rules, raceInfo, codeOfConduct, season } = await league.load();
+  const { name, rules, raceInfo, codeOfConduct } = await league.load();
 
   return { props: { 
     leagueName: name,
-    seasonId: season.id,
     rules,
     raceInfo,
     codeOfConduct

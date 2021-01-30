@@ -31,21 +31,12 @@ export default function(props) {
   )
 }
 
-export async function getStaticPaths() {
-  const { seasons } = await league.load();
-  return {
-  	paths: seasons.map(season => ({ params: { seasonId: season.id }})),
-  	fallback: false,
-  }
-}
-
 export async function getStaticProps({ params }) {
-  const { name, seasons } = await league.load();
-  const season = seasons.find(season => season.id === params.seasonId);
+  const { name, season, seasons } = await league.load();
 
   return { props: { 
     leagueName: name,
     ...season,
-    seasons: seasons.filter(season => season.id !== params.seasonId),
+    seasons: seasons.filter(({ id }) => id !== season.id),
   }};
 };

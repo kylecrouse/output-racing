@@ -4,7 +4,7 @@ module.exports = {
 	name: 'link',
 	description: 'Link Discord ID to driver profile, or link the mentioned user.',
   args: true,
-  usage: '<car number> [@<user>]',
+  usage: '<iRacing ID> [@<user>]',
 	execute: async (message, args) => {
 
     // Ensure dependencies are initialized
@@ -12,7 +12,7 @@ module.exports = {
 
     // Find driver matching current car number
     const driver = await league.drivers.find(
-      driver => driver.number === args[0]
+      driver => driver.custId === args[0]
     );
     
     if (!driver) return message.react('🤷‍♀️');

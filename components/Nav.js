@@ -6,10 +6,10 @@ export default function Nav(props) {
       <a href="/drivers/" className={props.page === 'drivers' ? styles.active : ''}>
         <span>Drivers</span>
       </a>
-      <a href={`/schedule/${props.seasonId}/`} className={props.page === 'schedule' ? styles.active : ''}>
+      <a href={`/schedule/`} className={props.page === 'schedule' ? styles.active : ''}>
         <span>Schedule</span>
       </a>
-      <a href={`/standings/${props.seasonId}/`} className={props.page === 'standings' ? styles.active : ''}>
+      <a href={`/standings/`} className={props.page === 'standings' ? styles.active : ''}>
         <span>Standings</span>
       </a>
       <a href="/rules/" className={props.page === 'rules' ? styles.active : ''}>
