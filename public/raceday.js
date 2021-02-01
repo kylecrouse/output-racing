@@ -1,21 +1,138 @@
+const initialSessionState = {
+  id: -1,
+  type: '',
+  name: '',
+  laps: -1,
+  time: -1.0,
+  cautions: -1,
+  cautionLaps: -1,
+  leadChanges: -1,
+  leaders: -1,
+  lapsCompleted: -1,
+  fastestLap: -1.0,
+  positions: [],
+  official: false
+};
+
+const initialDriverState = {
+  position: -1,
+  start: -1,
+  car: -1,
+  bestLap: -1,
+  bestTime: -1.0,
+  led: -1,
+  interval: -1.0,
+  gap: -1.0,
+  incidents: -1,
+  status: ''
+};
+
 function RaceDay(props) {
-  const [data, setData] = React.useState({});
-  const [socket, setSocket] = React.useState({});
+  const [raceday, setRaceday] = React.useState(true);
+  const [track, setTrack] = React.useState(props.track.name);
+  const [session, setSession] = React.useState(initialSessionState);
+  const [drivers, setDrivers] = React.useState([initialDriverState]);
+  const [readyState, setReadyState] = React.useState(WebSocket.CLOSED);
   
   React.useEffect(() => {
-    if (!socket.readyState || socket.readyState == WebSocket.CLOSED) {
-      const ws = connect(setSocket, setData);
-      return () => { 
-        // Cleanup open sockets if unmounted
-        ws.close();
-      };
-    }
-  }, socket.readyState);
+    if (readyState === WebSocket.CLOSED) {
+      let ws = new WebSocket('ws://orldiscordbot-env.eba-zhcidp9s.us-west-2.elasticbeanstalk.com');
+      // let ws = new WebSocket('ws://localhost');
+    
+      ws.onopen = () => {
+        console.log('Socket connected');  
+        setReadyState(ws.readyState);
+      }
+    
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          console.log(data);
 
-  const { sessions = [], drivers = [], trackName = null } = data;
-  const [session] = sessions.slice(-1);
-  
-  return !session ? null : (
+          if (data.trackName) 
+            setTrack(data.trackName);
+            
+          if (data.drivers) 
+            setDrivers(data.drivers);
+            
+          if (data.sessions) {
+            data.sessions = data.sessions.map((s, i) => {
+              const leaders = s.ResultsPositions.reduce(
+                (count, { LapsLed }) => count += LapsLed > 0 ? 1 : 0, 
+                0
+              );
+              return {
+                id: s.SessionNum,
+                type: s.SessionType,
+                name: s.SessionName,
+                laps: s.SessionLaps,
+                time: s.SessionTime,
+                positions: s.ResultsPositions.map((p, i) => {
+                  const o = {
+                    ...drivers[p.CarIdx],
+                    car: p.CarIdx,
+                    position: p.Position,
+                    start: data.QualifyResultsInfo && data.QualifyResultsInfo.Results
+                      ? data.QualifyResultsInfo.Results.findIndex(({ CarIdx }) => CarIdx === p.carIdx) + 1
+                      : -1,
+                    bestLap: p.FastestLap,
+                    bestTime: p.FastestTime,
+                    led: p.LapsLed,
+                    interval: 0,
+                    gap: 0,
+                    incidents: p.Incidents,
+                    status: p.ReasonOutStr
+                  };
+                  return o;
+                }),
+                cautions: s.ResultsNumCautionFlags,
+                cautionLaps: s.ResultsNumCautionLaps,
+                leadChanges: Math.max(leaders, s.ResultsNumLeadChanges),
+                leaders: leaders,
+                lapsCompleted: s.ResultsLapsComplete,
+                fastestLap: s.ResultsFastestLap.map(({ CarIdx }) => CarIdx),
+                official: !!s.ResultsOfficial
+              };
+            });
+            
+            setSession(data.sessions[data.sessions.length - 1]);
+          }
+          
+          if (data.pitting && session.type === 'Race') {
+            setSession({ 
+              ...session,
+              positions: session.positions.map(p => ({
+                ...p,
+                pitting: data.pitting[p.car],
+                pitted: data.pitting[p.car] ? session.lapsCompleted + 1 : data.pitted
+              }))
+            });
+          }
+          
+        } catch(error) {
+          console.log(error, event.data);
+        }
+      }
+    
+      ws.onclose = (event) => {
+        console.log(`Socket closed`, event.reason);
+        setReadyState(ws.readyState);
+      }
+      
+      ws.onerror = (err) => {
+        console.error(
+            "Socket encountered error: ",
+            err.message,
+            "Closing socket"
+        );
+    
+        ws.close();
+      };   
+
+    }
+  }, [readyState]);
+
+  return raceday && (
     <div className="container">
     
       <hgroup className="columns">
@@ -23,24 +140,29 @@ function RaceDay(props) {
           <img src="http://images.ctfassets.net/38idy44jf6uy/77oyBku7I2JxxTk6JWl3S7/4b6409e801a89eba830ea54a732e32f7/image.png"/>
           <div>
             <h1>{ props.name }</h1>
-            <h2>{ props.trackName }</h2>
+            <h2>{ track }</h2>
           </div>
         </div>
       </hgroup>
       
       <div className="columns">
-      
-        <div className="column col-5">
-          <RaceInfo { ...session } />
-          <Leaderboard 
-            { ...session } 
-            drivers={ drivers.map(
-              driver => props.drivers.find(({ custId }) => custId == driver.id) || driver
-            )} 
-          />
-        </div>
         
-        <div className="column col-7">
+        { session.id > -1 
+            ? <div className="column col-5 col-mx-auto">
+                <RaceInfo { ...session } />
+                <Leaderboard 
+                  { ...session } 
+                  drivers={ drivers.map(
+                    driver => props.drivers.find(({ custId }) => custId == driver.id) || driver
+                  )} 
+                />
+              </div>
+            : <div className="column col-5 col-mx-auto teaser">
+                <h3>Coverage begins at 8:00pm PT</h3>
+              </div> 
+        }
+        
+        <div className="column col-7 col-mx-auto">
         
           <div className="twitch">
             <div className="twitch-stream">
@@ -71,42 +193,6 @@ function RaceDay(props) {
   
 }
 
-function connect(setSocket, setData) {
-  // let ws = new WebSocket('ws://orldiscordbot-env.eba-zhcidp9s.us-west-2.elasticbeanstalk.com');
-  let ws = new WebSocket('ws://localhost');
-
-  ws.onopen = () => {
-    console.log('Socket connected');  
-    setSocket(ws);
-  }
-
-  ws.onmessage = (event) => {
-    try {
-      const data = JSON.parse(event.data);
-      console.log(data);
-      setData(data);
-    } catch(error) {
-      console.log(error, event.data);
-    }
-  }
-
-  ws.onclose = (event) => {
-    console.log(`Socket closed`, event.reason);
-  }
-  
-  ws.onerror = (err) => {
-    console.error(
-        "Socket encountered error: ",
-        err.message,
-        "Closing socket"
-    );
-
-    ws.close();
-  };   
-  
-  return ws; 
-}
-
 const domContainer = document.querySelector('#raceday');
 ReactDOM.render(
   <RaceDay 
@@ -118,26 +204,24 @@ ReactDOM.render(
 
 function Flag(props) {
   return (
-    <h1 className={`session ${ props.flag || "green" }`}>{ props.SessionName }</h1>
+    <h1 className={`session ${ props.flag || "green" }`}>{ props.name }</h1>
   );
 }
 
 
 function DriverChip(props) {
-  return props.active ? (
-    <a 
-      href={`/driver/${props.name.replace(/\s/g, '-').toLowerCase()}/`} 
-      className="driver"
-    >
-      { props.numberArt && <NumberArt { ...props.numberArt.fields.file }/> }
-      { props.nickname || props.name }
-    </a>    
-  ) : (
-    <div className="driver">
-      { props.numberArt && <NumberArt { ...props.numberArt.fields.file }/> }
-      { props.nickname || props.name }
-    </div>    
-  );
+  return props.active 
+    ? <a 
+        href={`/driver/${props.name.replace(/\s/g, '-').toLowerCase()}/`} 
+        className="driver"
+      >
+        { props.numberArt && <NumberArt { ...props.numberArt.fields.file }/> }
+        { props.nickname || props.name }
+      </a>    
+    : <div className="driver">
+        { props.numberArt && <NumberArt { ...props.numberArt.fields.file }/> }
+        { props.nickname || props.name }
+      </div>
 }
 
 function NumberArt(props) {
@@ -176,32 +260,28 @@ function Stream(props) {
 }
 
 function RaceInfo(props) {
-  const ResultsNumLeaders = props.props.ResultsPositions.filter(
-    ({ LapsLed }) => LapsLed > 0
-  ).length;
-  
   return (
     <div>
       <Flag { ...props }/>
       <ul className="columns">
         <li className="column col-6">
           <b>
-            { !!props.ResultsOfficial
+            { props.official
                 ? 'Completed'
-                : props.SessionLaps === 'unlimited' 
-                  ? `${ props.SessionTimeRemain } remaining`
-                  : `Lap ${ props.ResultsLapsComplete } of ${ props.SessionLaps }`
+                : props.laps === 'unlimited' 
+                  ? `${ props.timeRemaining } remaining`
+                  : `Lap ${ props.lapsCompleted } of ${ props.laps }`
             }
           </b>
         </li>
-        { props.SessionType === 'Race' && 
+        { props.type === 'Race' && 
             <li className="column col-6 text-right">
-              { props.ResultsNumCautionFlags } cautions for { props.ResultsNumCautionLaps } laps
+              { props.cautions } cautions for { props.cautionLaps } laps
             </li>
         }
-        { props.SessionType === 'Race' && 
+        { props.type === 'Race' && 
             <li className="column col-6 col-ml-auto text-right">
-              { props.ResultsNumLeadChanges } lead changes among { ResultsNumLeaders } drivers
+              { props.leadChanges } lead changes among { props.leaders } drivers
             </li>
         }
       </ul>
@@ -210,16 +290,17 @@ function RaceInfo(props) {
 }
 
 function Leaderboard(props) {
+  console.log(props);
   return (
     <table>
       <thead>
-        { props.SessionType === 'Race' 
+        { props.type === 'Race' 
             ? <RaceHeaders { ...props } /> 
             : <TimeHeaders { ...props } />
         }
       </thead>
       <tbody>
-        { props.SessionType === 'Race' 
+        { props.type === 'Race' 
             ? <RaceItems { ...props } /> 
             : <TimeItems { ...props } />
         }
@@ -245,36 +326,41 @@ function RaceHeaders(props) {
 }
 
 function RaceItems(props) {
-  return props.ResultsPositions.map(
-    (value, index) => <RaceItem { ...value } Driver={ props.drivers[value.CarIdx] } />
+  return props.positions.map(
+    (value, index) => (
+      <RaceItem 
+        key={`RaceItem${index}`} 
+        { ...value } 
+        Driver={ props.drivers[value.car] } 
+      />
+    )
   );
 }
 
 function RaceItem(props) {
-  const [state, setState] = React.useState(props);
-  
   return (
-    <tr className={ props.status.toLowerCase() !== 'Running' ? "out" : "" }>
+    <tr className={ props.status !== 'Running' ? "out" : "" }>
       <td>
         <b>{ props.position }</b>
-        { props.position < 10 ? '&nbsp;&nbsp;' : '&nbsp;' }
-        { props.position !== props.start &&
-            props.position > props.start
+        { props.position < 10 && '\u00a0' }
+        { props.start > 0 && (
+            props.position !== props.start && props.position > props.start
               ? <span className="gain"> ▲ { props.start - props.position }</span>
               : <span className="lose"> ▼ { props.position - props.start }</span>
+          )
         }
       </td>
       <td>
         <DriverChip { ...props.Driver } />
       </td>
-      <td>{ props.bestLap }</td>
-      <td>{ props.interval }</td>
-      <td>{ props.gap }</td>
-      <td>{ props.led }</td>
-      <td>{ props.incidents }</td>
+      <td className="text-right">{ props.bestTime.toFixed(3) }</td>
+      <td className="text-right">{ props.interval.toFixed(1) }</td>
+      <td className="text-right">{ props.gap.toFixed(1) }</td>
+      <td className="text-right">{ props.led }</td>
+      <td className="text-right">{ props.incidents }</td>
       { props.pitting 
          ? <td className="pit"><span>PIT</span></td>
-         : <td>L{ props.pitted }</td>
+         : <td className="text-right">L{ props.pitted }</td>
       }
     </tr>
     
@@ -295,22 +381,26 @@ function TimeHeaders(props) {
 }
 
 function TimeItems(props) {
-  return props.ResultsPositions.map(
-    (value, index) => <TimeItem { ...value } Driver={ props.drivers[value.CarIdx] } />
+  return props.positions.map(
+    (value, index) => (
+      <TimeItem 
+        key={`TimeItem${index}`} 
+        { ...value } 
+        Driver={ props.drivers[value.car] } 
+      />
+    )
   );
 }
 
 function TimeItem(props) {
-  const [state, setState] = React.useState(props);
-  
   return (
-    <tr className={ state.ReasonOutStr !== 'Running' ? "out" : "" }>
-      <td><b>{ state.Position }</b></td>
-      <td><DriverChip { ...state.Driver } /></td>
-      <td>{ state.LapsComplete }</td>
-      <td>{ state.FastestTime.toFixed(3) }</td>
-      <td>{ state.FastestLap }</td>
-      <td>{ state.Incidents }</td>
+    <tr className={ props.status !== 'Running' ? "out" : "" }>
+      <td><b>{ props.position }</b></td>
+      <td><DriverChip { ...props.Driver } /></td>
+      <td>{ props.laps }</td>
+      <td>{ props.bestTime.toFixed(3) }</td>
+      <td>{ props.bestLap }</td>
+      <td>{ props.incidents }</td>
     </tr>
     
   )
