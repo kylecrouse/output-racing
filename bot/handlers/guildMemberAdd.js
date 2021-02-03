@@ -100,8 +100,7 @@ module.exports = async (member) => {
 
     // Wait for the number to be approved
     approved = await approval.awaitReactions((reaction, user) => {
-      return isAuthorized(user, reaction.message.channel) 
-        && (reaction.emoji.name === REACTION_ACCEPT || reaction.emoji.name === REACTION_DENY)
+      return reaction.emoji.name === REACTION_ACCEPT || reaction.emoji.name === REACTION_DENY
     }, { max: 1 }).then(collected => collected.firstKey() === REACTION_ACCEPT);
     
     // If not approved, repeat the above process.
