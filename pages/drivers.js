@@ -69,6 +69,6 @@ export async function getStaticProps() {
     leagueName: name,
     drivers: drivers
       .filter(driver => driver.active)
-      .sort((a, b) => parseInt(a.number, 10) - parseInt(b.number, 10))
+      .sort((a, b) => parseInt(a.number || 1000, 10) - parseInt(b.number || 1000, 10))
   }};
 }

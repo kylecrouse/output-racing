@@ -11,7 +11,7 @@ module.exports = {
     
     const drivers = league.drivers
       .filter(driver => driver.active)
-      .sort((a, b) => parseInt(a.number) - parseInt(b.number));
+      .sort((a, b) => parseInt(a.number || 1000) - parseInt(b.number || 1000));
     
     const embed = new Discord.MessageEmbed()
     	.setTitle('Output Racing League Drivers')
