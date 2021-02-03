@@ -27,6 +27,48 @@ const initialDriverState = {
   status: ''
 };
 
+function Broadcast(props) {
+  const [online, setOnline] = React.useState(false);
+  
+  React.useEffect(() => {
+    // TODO: Set this to a timer to activate when stream is active.
+    setOnline(moment().isBetween(moment(props.date).hour(20), moment(props.date).hour(23)));
+  });
+  
+  return online && (
+    <div className="container">
+    
+      <hgroup className="columns">
+        <div className="col-10 col-mx-auto">
+          <img src={ props.logo }/>
+          <div>
+            <h1>{ props.name }</h1>
+            <h2>{ props.track.name }</h2>
+          </div>
+        </div>
+      </hgroup>
+      
+      <div className="columns">
+        <div className="column col-9 col-lg-12 col-mx-auto">
+        
+          <div className="twitch">
+            <div className="twitch-stream">
+              <iframe 
+                src="https://player.twitch.tv/?channel=aussie_sim_commentator&parent=localhost" 
+                frameBorder="0" 
+                allowFullScreen="true" 
+                scrolling="no"
+              />
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+    </div>
+  );
+}
+
 function RaceDay(props) {
   const [raceday, setRaceday] = React.useState(true);
   const [track, setTrack] = React.useState(props.track.name);
@@ -195,7 +237,7 @@ function RaceDay(props) {
 
 const domContainer = document.querySelector('#raceday');
 ReactDOM.render(
-  <RaceDay 
+  <Broadcast 
     {...JSON.parse(domContainer.dataset.race)} 
     drivers={JSON.parse(domContainer.dataset.drivers)}
   />, 

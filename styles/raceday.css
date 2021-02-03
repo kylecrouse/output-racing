@@ -6,7 +6,7 @@
 #raceday .container {
   background: black;
   color: #909090;
-  min-height: calc(100vh - 2.5rem);
+  /* min-height: calc(100vh - 2.5rem); */
   margin-top: -2rem;
   padding-top: 0;
   padding-bottom: 4rem;
