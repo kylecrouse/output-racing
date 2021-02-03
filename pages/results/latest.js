@@ -41,7 +41,7 @@ export async function getStaticProps({ params }) {
       ...race 
     }};
   } else {
-    const [race] = seasons[1].results.slice(-1);
+    const [race] = seasons.find(({ id }) => season.id !== id).results.slice(-1);
     return { props: { 
       leagueName: name,
       ...race 
