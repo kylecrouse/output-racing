@@ -32,12 +32,19 @@ export default function(props) {
 }
 
 export async function getStaticProps({ params }) {
-  const { name, season } = await league.load();
+  const { name, season, seasons } = await league.load();
   
-  const [race] = season.results.slice(-1);
-  
-  return { props: { 
-    leagueName: name,
-    ...race 
-  }};
+  if (season.results) {
+    const [race] = season.results.slice(-1);
+    return { props: { 
+      leagueName: name,
+      ...race 
+    }};
+  } else {
+    const [race] = seasons[1].results.slice(-1);
+    return { props: { 
+      leagueName: name,
+      ...race 
+    }};
+  }
 };
