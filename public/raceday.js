@@ -30,10 +30,23 @@ const initialDriverState = {
 function Broadcast(props) {
   const [online, setOnline] = React.useState(false);
   
-  React.useEffect(() => {
-    // TODO: Set this to a timer to activate when stream is active.
-    setOnline(moment().isBetween(moment(props.date).hour(20), moment(props.date).hour(23)));
-  });
+  const check = () => {
+    let timeout;
+    let now = moment();
+    
+    if (now.day() === 2) {
+      if (now.hour >= 20)
+        setOnline(true);
+      else
+        timeout = setTimeout(() => check(), 60000);
+    }
+    else 
+      setOnline(false);
+      
+    return () => clearTimeout(timeout);
+  };
+
+  React.useEffect(check, []);
   
   return online && (
     <div className="container">
