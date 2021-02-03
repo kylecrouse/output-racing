@@ -1,6 +1,5 @@
-const moment = require('moment');
+const Discord = require('discord.js');
 const league = require('../../lib/league');
-const { tracks } = require ('../../constants');
 const { announcementChannelId } = require('../config.json');
 const { getUpcomingEmbed } = require('../lib/embeds');
 

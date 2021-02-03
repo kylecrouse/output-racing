@@ -32,6 +32,8 @@ async function resolveApplicant(name, row) {
     // Get iRacing customer ID that matches submitted name
   const custId = await iracing.getDriverId(name);
   
+  if (!custId) return { custId: null };
+  
   // Get member profile data for custId
   const { license = {}, stats = {}, memberSince, clubId } = await iracing.getCareerStats(custId);
   
@@ -39,7 +41,7 @@ async function resolveApplicant(name, row) {
   const sheet = await getSheet('Applications');
   
   // Write retrieved data back to spreadsheet
-  await sheet.loadCells(`A${row}:T${row}`);
+  await sheet.loadCells(`A${row}:Y${row}`);
   
   // Get the cells to be updated
   const cellStatus = sheet.getCellByA1(`A${row}`);
@@ -54,9 +56,13 @@ async function resolveApplicant(name, row) {
   const celliR = sheet.getCellByA1(`R${row}`);
   const cellInc = sheet.getCellByA1(`S${row}`);
   const cellCustId = sheet.getCellByA1(`T${row}`);
+  const cellAvgFinish = sheet.getCellByA1(`V${row}`);
+  const cellTotalLaps = sheet.getCellByA1(`W${row}`);
+  const cellMemberSince = sheet.getCellByA1(`X${row}`);
+  const cellLicenseGroup = sheet.getCellByA1(`Y${row}`);
   
   // Set new data for each cell
-  cellStatus.value = 'PENDING';
+  cellStatus.value = cellStatus.value == '' ? 'PENDING' : cellStatus.value;
   cellRating.value = `${stats.avgIncPerRace.toFixed(2)} inc / ${license.iRating} iR / ${license.licGroupDisplayName} / ${license.srPrime}.${license.srSub} SR`;
   cellStarts.value = stats.starts;
   cellWin.value = `${stats.winPerc.toFixed(2)}%`;
@@ -68,6 +74,10 @@ async function resolveApplicant(name, row) {
   celliR.value = license.iRating;
   cellInc.value = stats.avgIncPerRace.toFixed(2);
   cellCustId.value = custId;
+  cellAvgFinish.value = stats.avgFinish.toFixed(2);
+  cellTotalLaps.value = stats.totalLaps;
+  cellMemberSince.value = memberSince;
+  cellLicenseGroup.value = license.licGroup;
   
   // Save all cells back to spreadsheet
   await sheet.saveUpdatedCells();
@@ -76,6 +86,20 @@ async function resolveApplicant(name, row) {
 }
 
 module.exports = {
+  resolveApplicant,
+  getUnresolved: async () => {
+    const sheet = await getSheet('Applications');
+    const rows = await sheet.getRows();
+    return rows.filter(row => !row.custId);
+  },
+  getApplicants: async () => {
+  
+    // Get the applications sheet
+    const sheet = await getSheet('Applications');
+    
+    // Get all rows
+    return sheet.getRows();
+  },
   getPending: async (name) => {
     
     // Get the applications sheet
