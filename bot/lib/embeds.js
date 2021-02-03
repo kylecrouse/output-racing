@@ -89,13 +89,26 @@ module.exports = {
     
     return embed;
   },
-  getStandingsEmbed: (season) => {
-    const standings = season.standings.sort((a,b) => a.position - b.position);
+  getStandingsEmbed: (league) => {
+    const { season, drivers } = league;
+    const standings = season.standings.length > 0 
+      ? season.standings.sort((a,b) => a.position - b.position)
+      : drivers.filter(driver => driver.active)
+          .sort((a, b) => parseInt(a.number || 1000, 10) - parseInt(b.number || 1000, 10))
+          .map((driver, index) => ({
+            position: index + 1,
+            driver: driver.nickname || driver.name,
+            points: 0,
+            change: '-',
+            behindNext: '-'
+          }));
     
     const scheduled = season.schedule.filter(race => race.counts);
-    const completed = season.results.filter(
-      race => scheduled.find(({ raceId }) => raceId == race.raceId)
-    );
+    const completed = Array.isArray(season.results)
+      ? season.results.filter(
+          race => scheduled.find(({ raceId }) => raceId == race.raceId)
+        )
+      : [];
     
     const embed = new Discord.MessageEmbed()
     	.setTitle('Current Standings')

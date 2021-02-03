@@ -9,7 +9,7 @@ module.exports = {
     
     await league.init();
           
-    message.channel.send(getStandingsEmbed(league.season));
+    message.channel.send(getStandingsEmbed(league));
 
 	},
 };

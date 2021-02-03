@@ -83,7 +83,7 @@ module.exports = {
         // Send latest results
         channel.send(await getResultsEmbed(race));
         // Send season standings
-        channel.send(getStandingsEmbed(league.season));
+        channel.send(getStandingsEmbed(league));
         // Send next race
         channel.send(getUpcomingEmbed(league.season));
       }
