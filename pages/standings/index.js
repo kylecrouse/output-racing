@@ -32,11 +32,12 @@ export default function StandingsPage(props) {
 }
 
 export async function getStaticProps({ params }) {
-  const { name, season, seasons } = await league.load();
+  const { name, season, seasons, drivers } = await league.load();
 
   return { props: {
     leagueName: name,
     ...season,
-    seasons: seasons.filter(({ id }) => id !== season.id)
+    seasons: seasons.filter(({ id }) => id !== season.id),
+    drivers
   }};
 };

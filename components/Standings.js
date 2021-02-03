@@ -82,7 +82,7 @@ export default function Standings(props) {
       `}</style>
     
   		<h2 className="text-center">{props.name} Standings</h2>
-      <h6 className="text-center" style={{ margin: "1rem 0 2rem" }}>After {props.results.filter(({ counts }) => counts).length} of {props.schedule.filter(({ counts }) => counts).length} Races</h6>
+      <h6 className="text-center" style={{ margin: "1rem 0 2rem" }}>After {props.results ? props.results.filter(({ counts }) => counts).length : 0} of {props.schedule.filter(({ counts }) => counts).length} Races</h6>
 
       <table className="standings">
         <thead>
@@ -102,8 +102,8 @@ export default function Standings(props) {
           </tr>
         </thead>
         <tbody>
-          { props.standings &&
-              props.standings.map((driver, index) => ( driver.driver &&
+          { Array.isArray(props.standings) && props.standings.length > 0 
+            ? props.standings.map((driver, index) => ( driver.driver &&
                 <tr key={index} style={{opacity: driver.driver.active ? 1 : 0.3}}>
                   <td><b>{index + 1}</b></td>
                   <td>
@@ -124,6 +124,25 @@ export default function Standings(props) {
                   <td>{driver.t10s}</td>
                   <td>{driver.laps}</td>
                   <td>{(driver.incidents / driver.starts).toFixed(2)}</td>
+                </tr>
+              ))
+            : props.drivers
+                .filter(driver => driver.active)
+                .sort((a, b) => parseInt(a.number || 1000, 10) - parseInt(b.number || 1000, 10))
+                .map((driver, index) => ( driver &&
+                <tr key={index} style={{opacity: driver.active ? 1 : 0.3}}>
+                  <td><b>{index + 1}</b></td>
+                  <td></td>
+                  <td><DriverChip {...driver}/></td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0.00</td>
                 </tr>
               ))
           }

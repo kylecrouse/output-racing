@@ -42,12 +42,13 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const { name, seasons } = await league.load();
+  const { name, seasons, drivers } = await league.load();
   const season = seasons.find(season => season.id === params.seasonId);
 
   return { props: {
     leagueName: name,
     ...season,
-    seasons: seasons.filter(season => season.id !== params.seasonId)
+    seasons: seasons.filter(season => season.id !== params.seasonId),
+    drivers
   }};
 };
