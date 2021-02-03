@@ -62,7 +62,9 @@ async function resolveApplicant(name, row) {
   const cellLicenseGroup = sheet.getCellByA1(`Y${row}`);
   
   // Set new data for each cell
-  cellStatus.value = cellStatus.value == '' ? 'PENDING' : cellStatus.value;
+  cellStatus.value = !cellStatus.value ? 'PENDING' : cellStatus.value;
+  cellStatus.textFormat = { bold: true };
+  cellStatus.horizontalAlignment = 'CENTER';
   cellRating.value = `${stats.avgIncPerRace.toFixed(2)} inc / ${license.iRating} iR / ${license.licGroupDisplayName} / ${license.srPrime}.${license.srSub} SR`;
   cellStarts.value = stats.starts;
   cellWin.value = `${stats.winPerc.toFixed(2)}%`;
