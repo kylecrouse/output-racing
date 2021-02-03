@@ -224,13 +224,16 @@ export default function Home(props) {
                       .map((props, index) => (
                         <tr key={`schedule${index}`} style={{opacity: props.raceId ? 0.4 : 1}}>
                           <td>{moment(props.date).format('M/D')}</td>
-                          <td>
-                            { props.raceId 
-                                ? <a href={`/results/${props.raceId}/`}>{props.track}</a>
-                                : props.track
-                            }
-                            { !props.counts && <i style={{ opacity: 0.5 }}> (non-points)</i>}
-                          </td>
+                          { props.offWeek
+                              ? <td><i>Off Week</i></td>
+                              : <td>
+                                  { props.raceId 
+                                      ? <a href={`/results/${props.raceId}/`}>{props.track}</a>
+                                      : props.track
+                                  }
+                                  { !props.counts && <i style={{ opacity: 0.5 }}> (non-points)</i>}
+                                </td>
+                          }
                         </tr>
                       ))
                   }
