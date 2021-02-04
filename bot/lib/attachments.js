@@ -1,6 +1,6 @@
 const discord = require('discord.js');
 const { isAuthorized } = require('../lib/authorization');
-const { websiteChannelId } = require('../config.json');
+const { councilChannelId } = require('../config.json');
 
 const REACTION_ACCEPT = '👍';
 const REACTION_DENY = '👎';
@@ -57,9 +57,7 @@ async function moderate(message, description) {
   };
   
   // Send the message to the appropriate location
-  const approval = message.guild
-    ? await message.guild.channels.cache.get(websiteChannelId).send(embed)
-    : await message.channel.send(embed);
+  const approval = await message.client.channels.cache.get(councilChannelId).send(embed);
     
   // Wait for response and return decision as boolean
   return approval.awaitReactions(filter, { max: 1 })
