@@ -71,7 +71,7 @@ module.exports = {
         : await message.channel.send(`**${driver.nickname || driver.name}** wants to use **#${args[0]}**. ${REACTION_ACCEPT} or ${REACTION_DENY}?`);
         
       // Wait for response and return decision as boolean
-      const approved = approval.awaitReactions(filter, { max: 1 })
+      const approved = await approval.awaitReactions(filter, { max: 1 })
         .then(collected => collected.firstKey() === REACTION_ACCEPT)
         .catch(collected => approval.react(REACTION_FAILURE));
       
