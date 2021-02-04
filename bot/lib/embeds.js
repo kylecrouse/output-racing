@@ -127,7 +127,7 @@ module.exports = {
   getIncidentsEmbed: (season) => {
     
     const stats = season.stats
-      .sort((a, b) => a.incidentsLap - b.incidentsLap);
+      .sort((a, b) => (a.incidentsLap - b.incidentsLap) || (a.incidentsRace - b.incidentsRace));
     
     const scheduled = season.schedule.filter(race => race.counts);
     const completed = Array.isArray(season.results)
@@ -167,7 +167,7 @@ module.exports = {
           }, 0);
         return { starts, driver, streak };
       })
-      .sort((a, b) => b.starts - a.starts);
+      .sort((a, b) => (b.starts - a.starts) || (a.streak - b.streak));
     
     const scheduled = season.schedule.filter(race => race.counts);
     const completed = Array.isArray(season.results)
