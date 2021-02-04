@@ -25,28 +25,37 @@ module.exports = async (member) => {
   const invites = await member.guild.fetchInvites();
   
   // Find the missing applicant code from guild
-  const [applicant] = _.differenceWith(applicants, invites, 
+  const invited = _.differenceWith(applicants, invites, 
     (applicant, invite) => applicant.inviteCode == invite.code
   );
   
   // If nothing is found, send commands message and exit.
-  if (!applicant) 
-    return channel.send(`Check out \`!help\` for things to do, like get the current league standings with \`!standings\` or the latest race results with \`!results latest\`. Have fun!`);
+  if (!(Array.isArray(invited) && invited.length > 0)) 
+    return channel.send(`Check out \`!help\` for things to do, like get the current league standings with \`!standings\` or the latest race results with \`!results\`. Have fun!`);
 
-  // Confirm with driver that we matched them correctly?
-  channel.send(`First, can you confirm that you are **${applicant.Name}**?`);
-
-  // Wait for messages, filtered by matching positive or negative
-  // return boolean to indicate response
-  const confirmed = await channel.awaitMessages(
-    msg => !msg.author.bot && msg.content.match(/yes|y|sure|ok|yeah|correct|no|nope|n|nah|negative|wrong/i),
-    { max: 1 }
-  ).then(
-    collected => {
-     const msg = collected.first();
-     return !!msg.content.match(/yes|y|sure|ok|yeah|correct/i);
-    }
-  );
+  channel.send(`First, I need to match up your Discord and iRacing accounts.`);
+  
+  // Loop through applicants to find the match
+  let confirmed = false;
+  let applicant;
+  do {
+    applicant = invited.shift();
+    
+    // Confirm with driver that we matched them correctly?
+    channel.send(`Are you **${applicant.Name}**?`);
+  
+    // Wait for messages, filtered by matching positive or negative
+    // return boolean to indicate response
+    confirmed = await channel.awaitMessages(
+      msg => !msg.author.bot && msg.content.match(/yes|y|sure|ok|yeah|correct|no|nope|n|nah|negative|wrong/i),
+      { max: 1 }
+    ).then(
+      collected => {
+       const msg = collected.first();
+       return !!msg.content.match(/yes|y|sure|ok|yeah|correct/i);
+      }
+    );
+  } while (!confirmed && invited.length > 0)
 
   if (!confirmed) 
     return channel.send(`Oops. Can you let **@kylecrouse** know I screwed up?`);
