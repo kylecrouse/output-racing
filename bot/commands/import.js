@@ -7,9 +7,9 @@ const getStats = require(`${process.cwd()}/lib/scraper/stats`);
 const league = require(`${process.cwd()}/lib/league`);
 const cms = require(`${process.cwd()}/lib/contentful`);
 const { isAuthorized } = require('../lib/authorization');
-const { getResultsEmbed, getStandingsEmbed, getUpcomingEmbed } = require('../lib/embeds');
+const { getResultsEmbed, getStandingsEmbed, getUpcomingEmbed, getIncidentsEmbed, getAttendanceEmbed } = require('../lib/embeds');
 const { buildAndDeploy } = require('../lib/builder');
-const { resultsChannelId } = require('../config.json');
+const { resultsChannelId, councilChannelId } = require('../config.json');
 const { tracks } = require ('../../constants');
 const REACTION_SUCCESS = '✅';
 const REACTION_FAILURE = '😢';
@@ -73,7 +73,7 @@ module.exports = {
         const channel = message.client.channels.cache.get(resultsChannelId);
         // Fetch and iterate messages in channel to remove previous bot messages
         await Promise.all(channel.messages.fetch({ limit: 5 }).then(
-          messages => messages.map(
+          messages => Array.isArray(messages) && messages.map(
             // Delete messages from the bot
             (item) => item.author.id === message.client.user.id
               ? channel.delete(item)
@@ -86,6 +86,13 @@ module.exports = {
         channel.send(getStandingsEmbed(league));
         // Send next race
         channel.send(getUpcomingEmbed(league.season));
+        
+        // Get Drivers' Council channel
+        const council = message.client.channels.cache.get(councilChannelId);
+        // Send incident report
+        council.send(getIncidentsEmbed(league.season));
+        // Send attendance report
+        council.send(getAttendanceEmbed(league.season));
       }
       
       if (reply && embed) message.reply(reply, embed);
