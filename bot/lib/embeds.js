@@ -123,5 +123,71 @@ module.exports = {
     	.setTimestamp()
 
     return embed;
-  }
+  },
+  getIncidentsEmbed: (season) => {
+    
+    const stats = season.stats
+      .sort((a, b) => a.incidentsLap - b.incidentsLap);
+    
+    const scheduled = season.schedule.filter(race => race.counts);
+    const completed = Array.isArray(season.results)
+      ? season.results.filter(
+          race => scheduled.find(({ raceId }) => raceId == race.raceId)
+        )
+      : [];    
+
+    const embed = new Discord.MessageEmbed()
+    	.setTitle('Incident Report')
+      .addField(season.name, `After ${completed.length} of ${scheduled.length} races`)
+      .setThumbnail('http://output-racing.s3-website.us-west-2.amazonaws.com/logo-stacked.png')
+    	.addFields(
+    		{ name: 'Driver', value: stats.map(item => `\`${item.driver}\``), inline: true },
+    		{ name: 'Inc/Lap', value: stats.map(item => `\`${item.incidentsLap}\``), inline: true },
+    		{ name: 'Inc/Race', value: stats.map(item => `\`${item.incidentsRace}\``), inline: true },
+    	)
+    	.setTimestamp()
+
+    return embed;
+    
+  },
+  getAttendanceEmbed: (season) => {
+    
+    const stats = season.stats
+      .map(({ starts, driver }) => {
+        const streak = season.results
+          .filter(({ raceId }) => {
+            const race = season.schedule.find(race => race.raceId == raceId);
+            return race.counts;
+          })
+          .sort((a, b) => new Date(a.date) - new Date(b.date))
+          .reduce((streak, race) => {
+            return !!race.results.find(({ name }) => name == driver)
+              ? 0 
+              : ++streak;
+          }, 0);
+        return { starts, driver, streak };
+      })
+      .sort((a, b) => b.starts - a.starts);
+    
+    const scheduled = season.schedule.filter(race => race.counts);
+    const completed = Array.isArray(season.results)
+      ? season.results.filter(
+          race => scheduled.find(({ raceId }) => raceId == race.raceId)
+        )
+      : [];    
+
+    const embed = new Discord.MessageEmbed()
+    	.setTitle('Attendance Report')
+      .addField(season.name, `After ${completed.length} of ${scheduled.length} races`)
+      .setThumbnail('http://output-racing.s3-website.us-west-2.amazonaws.com/logo-stacked.png')
+    	.addFields(
+    		{ name: 'Driver', value: stats.map(item => `\`${item.driver}\``), inline: true },
+    		{ name: 'Starts', value: stats.map(item => `\`${item.starts}\``), inline: true },
+    		{ name: 'Streak', value: stats.map(item => `\`${item.streak}\``), inline: true },
+    	)
+    	.setTimestamp()
+
+    return embed;
+    
+  }  
 }
