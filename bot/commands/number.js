@@ -15,10 +15,10 @@ module.exports = {
   args: true,
   usage: '<number> [@<name>]',
 	execute: async (message, args) => {
-    console.log(message);
+    // console.log(message);
     
     // Exit if trying to assign without authorization
-    if (message.mentions.size > 0 && !isAuthorized(message.author, message.channel))
+    if (message.mentions.users.size > 0 && !isAuthorized(message.author, message.channel))
       return;
       
     // Ensure dependencies are initialized
@@ -66,10 +66,8 @@ module.exports = {
       };
       
       // Send the message to the appropriate location
-      const approval = message.guild
-        ? await message.guild.channels.cache.get(councilChannelId).send(`**${driver.nickname || driver.name}** wants to use **#${args[0]}**. ${REACTION_ACCEPT} or ${REACTION_DENY}?`)
-        : await message.channel.send(`**${driver.nickname || driver.name}** wants to use **#${args[0]}**. ${REACTION_ACCEPT} or ${REACTION_DENY}?`);
-        
+      const approval = await message.client.channels.cache.get(councilChannelId).send(`**${driver.nickname || driver.name}** wants to use **#${args[0]}**. ${REACTION_ACCEPT} or ${REACTION_DENY}?`);
+              
       // Wait for response and return decision as boolean
       const approved = await approval.awaitReactions(filter, { max: 1 })
         .then(collected => collected.firstKey() === REACTION_ACCEPT)
