@@ -146,8 +146,8 @@ module.exports = {
       .setThumbnail('http://output-racing.s3-website.us-west-2.amazonaws.com/logo-stacked.png')
     	.addFields(
     		{ name: 'Driver', value: stats.map(item => `\`${item.driver}\``), inline: true },
-    		{ name: 'Inc/Lap', value: stats.map(item => `\`${item.incidentsLap}\``), inline: true },
-    		{ name: 'Inc/Race', value: stats.map(item => `\`${item.incidentsRace}\``), inline: true },
+    		{ name: 'Incidents', value: stats.map(item => `\`${item.incidentsLap} / ${item.incidentsRace}\``), inline: true },
+    		{ name: 'Laps / Starts', value: stats.map(item => `\`${item.laps.length == 3 ? '\u00a0\u00a0' : ''}${item.laps} / ${item.starts.length == 1 ? '\u00a0' : ''}${item.starts}\``), inline: true },
     	)
     	.setTimestamp()
 
