@@ -90,9 +90,9 @@ module.exports = {
         // Get Drivers' Council channel
         const council = message.client.channels.cache.get(councilChannelId);
         // Send incident report
-        council.send(getIncidentsEmbed(league.season));
+        council.send(getIncidentsEmbed(league.season, league.drivers));
         // Send attendance report
-        council.send(getAttendanceEmbed(league.season));
+        council.send(getAttendanceEmbed(league.season, league.drivers));
       }
       
       if (reply && embed) message.reply(reply, embed);

@@ -21,7 +21,7 @@ module.exports = {
     
     if (season.stats.length <= 0) return message.reply("there are no stats for that season.");
       
-    message.channel.send(getIncidentsEmbed(season));
+    message.channel.send(getIncidentsEmbed(season, league.drivers));
 
 	},
 };

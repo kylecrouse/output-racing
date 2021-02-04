@@ -124,9 +124,13 @@ module.exports = {
 
     return embed;
   },
-  getIncidentsEmbed: (season) => {
+  getIncidentsEmbed: (season, drivers) => {
     
     const stats = season.stats
+      .filter(({ driver }) => {
+        const match = drivers.find(({ name }) => name == driver);
+        return match && match.active;
+      })
       .sort((a, b) => (a.incidentsLap - b.incidentsLap) || (a.incidentsRace - b.incidentsRace));
     
     const scheduled = season.schedule.filter(race => race.counts);
@@ -150,9 +154,13 @@ module.exports = {
     return embed;
     
   },
-  getAttendanceEmbed: (season) => {
+  getAttendanceEmbed: (season, drivers) => {
     
     const stats = season.stats
+      .filter(({ driver }) => {
+        const match = drivers.find(({ name }) => name == driver);
+        return match && match.active;
+      })
       .map(({ starts, driver }) => {
         const streak = season.results
           .filter(({ raceId }) => {
