@@ -118,7 +118,7 @@ module.exports = async (member) => {
     
   } while (!approved)
 
-  channel.send('Your number choice has been approved!');
+  // channel.send('Your number choice has been approved!');
   
   // Update guild nickname to number + name.
   member.setNickname(`#${number} ${applicant.Name}`, 'League guidelines');
@@ -153,5 +153,5 @@ module.exports = async (member) => {
   
   // Overview other commands available through bot.
   channel.send(`That was the last thing I needed. Good luck out there!`);
-  channel.send(`Check out \`!help\` for more things to do, like get the current league standings with \`!standings\` or the latest race results with \`!results latest\`.`);
+  channel.send(`Check out \`!help\` for more things to do, like get the current league standings with \`!standings\`, the latest race results with \`!results\`, your own league stats with \`!stats\` or set a profile picture by uploading with \`!profile\`.`);
 }

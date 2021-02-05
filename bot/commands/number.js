@@ -83,12 +83,14 @@ module.exports = {
         ]);
         
         // Update guild nickname to number + name.
-        await message.member.setNickname(
-          message.member.displayName.replace(/^(#[0-9]*\s)?/i, `#${args[0]} `), 
-          'League guidelines'
-        );
+        if (message.member) {
+          await message.member.setNickname(
+            message.member.displayName.replace(/^(#[0-9]*\s)?/i, `#${args[0]} `), 
+            'League guidelines'
+          );
+        }
 
-        message.reply("you're approved. I updated your number and nickname. Send @kylecrouse your number art or paint settings to update your driver profile.");        
+        message.reply("you're approved. Send @kylecrouse your number art or paint settings to update your driver profile.");        
       } else {
         message.reply('your choice was denied. Try a different number.');
       }
