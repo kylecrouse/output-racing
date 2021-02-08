@@ -49,42 +49,36 @@ export default function Home(props) {
       </div>
         
       <div className="container">
-  
-        {/* 
-        <div className="columns">
-          <div className="column col-10 col-sm-12 col-mx-auto">
-          
-            <div className={`columns ${styles.promo}`}>
-              <div className={`column col-7 col-sm-12 col-ml-auto`}>
-                <h4>Output Racing 2021 season is coming!</h4>
-                <div className={styles.multicol}>
-                  <p>This year we will be running 3 seasons, each season being 13 races long. There will be an off-week mid-season and 2 off-weeks after each season. Season 1 will start February 9th racing fixed setups with the ARCA car. Cars and schedules for seasons 2 and 3 will be announced later in the year.</p>
-                  <p>Race sessions held on Tuesday nights with grid @ 9pm PT. Check the <a href="/schedule/12838">schedule</a> for more information and rule changes.</p>
-                  <p>Applications are now open! Minimum C class 2.0 / 1000 iRating required.</p>
-                  <p>
-                    <a href="/apply" className="btn btn-secondary"><span>Apply</span></a>
-                  </p>
+      
+        { props.lastRace &&
+          <div className="columns">
+            <div className="column col-8 col-mx-auto banner checkered">
+              <a href={`/results/${props.lastRace.raceId}`} className="header">
+                { props.lastRace.logo &&
+                  <img src={ props.lastRace.logo.fields.file.url }/>
+                }
+                <ul>
+                  <li><b>{props.lastRace.track.name}</b></li>
+                  <li>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</li>
+                </ul>
+              </a>
+              <div className="columns col-gapless">
+                <img src={ props.lastRace.media[0].fields.file.url } className="column col-10"/>
+                <div className="column col-2 sidebar">
+                  { props.lastRace.results.slice(0,5).map(props => (
+                      <div className="top5">
+                        <span className="position"><span>{props.finish}</span></span>
+                        <DriverChip {...props.driver}/>
+                      </div>
+                    ))
+                  }
+                  <p><a href="/apply" className="btn btn-primary"><span>Full Results</span></a></p>
                 </div>
               </div>
-              { props.nextSeason.cars && 
-                  <div className={`column col-3 hide-sm col-mr-auto ${styles.carcut}`}>
-                    { props.nextSeason.cars.map(name => {
-                        const car = cars.find(car => car.name === name);
-                        return (
-                          <figure key={car.id} className={`text-center`} style={{ overflow: "hidden", margin: "0 0 1rem" }}>
-                            <img src={car.image} alt={car.name} style={{ maxHeight: "150px", maxWidth: "102%", marginLeft: "-1%" }}/>
-                          </figure>
-                        );
-                      })
-                    }
-                  </div>
-              }
             </div>
-            
           </div>
-        </div>
-        */}  
-        
+        }      
+  
         <div className="columns" style={{ marginBottom: "2rem" }}>
           <div className="column col-5 col-md-12 col-ml-auto">
 
@@ -108,79 +102,13 @@ export default function Home(props) {
                 </div>
             }
 
-            { props.lastRace &&
-              <div>
-              
-                <h6 className={styles.title}>Latest Results</h6>
-                    
-                <div style={{ marginBottom: "1rem" }}>
-                  { props.lastRace.broadcast &&
-                    <Video src={props.lastRace.broadcast}/>
-                  }
-                  { props.lastRace.logo
-                    ? ( <div className={`columns col-gapless ${styles.resultsHeader}`}>
-                          <div className="column col-3 col-sm-12 text-center">
-                            <img src={ props.lastRace.logo.fields.file.url }/>
-                          </div>
-                          <div className="column col-6 col-sm-12 text-center" style={{ paddingLeft: "30px" }}>
-                            <ul>
-                              <li style={{ lineHeight: 1.2 }}><b>{props.lastRace.track.name}</b></li>
-                              <li>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</li>
-                            </ul>
-                          </div>
-                          <div className="column col-3 col-sm-12 text-center">
-                            <img src={props.lastRace.track.logo}/>
-                          </div>
-                        </div>
-                    )
-                    : ( <div className={`columns col-gapless ${styles.resultsHeader}`}>
-                          <div className="column col-6 col-sm-12">
-                            <ul>
-                              <li><h4>{props.lastRace.name}</h4></li>
-                              <li style={{ lineHeight: 1.2 }}><b>{props.lastRace.track.name}</b></li>
-                              <li>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</li>
-                              <li style={{ fontSize: "0.6rem" }}>{props.lastRace.laps} laps ({props.lastRace.duration})</li>
-                              <li style={{ fontSize: "0.6rem" }}>{props.lastRace.cautions} cautions for {props.lastRace.cautionLaps} laps</li>
-                              <li style={{ fontSize: "0.6rem" }}>{props.lastRace.leadChanges} lead changes between {props.lastRace.leaders} drivers</li>
-                            </ul>
-                          </div>
-                          <div className="column col-6 col-sm-12">
-                            <img src={props.lastRace.track.logo}/>
-                          </div>
-                        </div>  
-                    )
-                  }
+            { props.lastRace && props.lastRace.broadcast &&
+                <div className={styles.description}>
+                  <h4>Race Rewind</h4>
+                  <Video src={props.lastRace.broadcast}/>
                 </div>
-    
-                <table style={{ marginBottom: "1rem" }}>
-                  <thead>
-                    <tr>
-                      <th width="7%">F</th>
-                      <th className="hide-sm" width="7%">S</th>
-                      <th>Driver</th>
-                      <th width="10%">Interval</th>
-                      <th width="10%">Led</th>
-                      <th className="hide-sm" width="10%">Inc</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    { 
-                      props.lastRace.results.map((props, index) => (
-                        <tr key={`standings${props.id}`}>
-                          <td><b>{props.finish}</b></td>
-                          <td className="hide-sm">{props.start}</td>
-                          <td><DriverChip {...props.driver}/></td>
-                          <td>{props.interval}</td>
-                          <td>{props.led}</td>
-                          <td className="hide-sm">{props.incidents}</td>
-                        </tr>
-                      ))
-                    }
-                  </tbody>
-                </table>
-              </div>
             }
-
+            
           </div>
           <div className="column col-3 col-md-12 col-mr-auto">
 
