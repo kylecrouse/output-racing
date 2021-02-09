@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build && next export",
     "server": "next start",
-    "start": "node ./bot/index.js",
+    "start": "node ./index.js",
     "race": "babel-node ./bot/scrape-results.js",
     "season": "babel-node ./bot/scrape-season.js",
     "standings": "babel-node ./bot/scrape-standings.js",
