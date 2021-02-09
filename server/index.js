@@ -53,7 +53,7 @@ const server = http.createServer((req, res) => {
   // Create data cache for received messages (need to purge at some point)
   let cache = { 
     session: {}, 
-    streamers: Array.isArray(league.streamers)
+    streamers: []/*Array.isArray(league.streamers)
       ? await getStreams(
           league.streamers
             .filter(streamer => streamer.active && streamer.twitchUserLogin)
@@ -70,7 +70,7 @@ const server = http.createServer((req, res) => {
     
           }
         ) 
-      : null
+      : null*/
   };
   
   // Listen for new connections
