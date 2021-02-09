@@ -91,7 +91,7 @@ function RaceDay(props) {
   
   React.useEffect(() => {
     if (readyState === WebSocket.CLOSED) {
-      let ws = new WebSocket('ws://orldiscordbot-env.eba-zhcidp9s.us-west-2.elasticbeanstalk.com');
+      let ws = new WebSocket('wss://bot.outputracing.com');
       // let ws = new WebSocket('ws://localhost');
     
       ws.onopen = () => {
@@ -250,7 +250,7 @@ function RaceDay(props) {
 
 const domContainer = document.querySelector('#raceday');
 ReactDOM.render(
-  <Broadcast 
+  <RaceDay 
     {...JSON.parse(domContainer.dataset.race)} 
     drivers={JSON.parse(domContainer.dataset.drivers)}
   />, 
