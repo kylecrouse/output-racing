@@ -53,25 +53,24 @@ const server = http.createServer((req, res) => {
   // Create data cache for received messages (need to purge at some point)
   let cache = { 
     session: {}, 
-    streamers: null
-    // Array.isArray(league.streamers)
-    //   ? await getStreams(
-    //       league.streamers
-    //         .filter(streamer => streamer.active && streamer.twitchUserLogin)
-    //         .map(streamer => streamer.twitchUserLogin), 
-    //       (streamers) => { 
-    //         cache.streamers = streamers; 
-    // 
-    //         // Broadcast updated data to all clients
-    //         wss.clients.forEach(function each(client) {
-    //           if (client.readyState === WebSocket.OPEN) {
-    //             client.send(JSON.stringify(streamers, replacer));
-    //           }
-    //         });
-    // 
-    //       }
-    //     ) 
-    //   : null
+    streamers: Array.isArray(league.streamers)
+      ? await getStreams(
+          league.streamers
+            .filter(streamer => streamer.active && streamer.twitchUserLogin)
+            .map(streamer => streamer.twitchUserLogin), 
+          (streamers) => { 
+            cache.streamers = streamers; 
+    
+            // Broadcast updated data to all clients
+            wss.clients.forEach(function each(client) {
+              if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify(streamers, replacer));
+              }
+            });
+    
+          }
+        ) 
+      : null
   };
   
   // Listen for new connections
