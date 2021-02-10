@@ -63,7 +63,9 @@ export default function Home(props) {
                 </ul>
               </a>
               <div className="columns col-gapless">
-                <img src={ props.lastRace.media[0].fields.file.url } className="column col-10"/>
+                { props.lastRace.media && 
+                  <img src={ props.lastRace.media[0].fields.file.url } className="column col-10"/>
+                }
                 <div className="column col-2 sidebar">
                   { props.lastRace.results.slice(0,5).map(props => (
                       <div className="top5">
@@ -72,7 +74,7 @@ export default function Home(props) {
                       </div>
                     ))
                   }
-                  <p><a href="/apply" className="btn btn-primary"><span>Full Results</span></a></p>
+                  <p><a href="/results/latest" className="btn btn-primary"><span>Full Results</span></a></p>
                 </div>
               </div>
             </div>
@@ -192,7 +194,7 @@ export default function Home(props) {
 
 export async function getStaticProps() {
   // Get data from CMS
-  const { name, description, season, seasons, drivers } = await league.load();
+  const { name, description, season, drivers } = await league.load();
 
   return { props: { 
     leagueName: name,
@@ -203,7 +205,6 @@ export async function getStaticProps() {
     standings: season.standings.slice(0,10), 
     nextRace: season.nextRace, 
     lastRace: season.lastRace,
-    nextSeason: seasons.slice(0,1)[0],
     drivers
   }};
 }
