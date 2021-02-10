@@ -69,22 +69,22 @@ export default function Home(props) {
                         { props.lastRace.media.map((media, index) => {
                             let props = {
                               className: "carousel-locator",
-                              id: `slide-${index + 1}`,
+                              id: `slide-${index}`,
                               name: "carousel-radio",
-                              hidden: "hidden",
+                              // hidden: "hidden",
                               type: "radio"
                             }
-                            if (index === 0) props.checked = "checked";
+                            if (index === 0) props.defaultChecked = "checked";
                             return <input {...props}/>;
                           })
                         }
                         <div className="carousel-container">
                           { props.lastRace.media.map((media, index) => (
                               <figure className="carousel-item">
-                                <label className="item-prev btn btn-a}ction btn-lg" for={`slide-${index - 1 <= 1 ? props.lastRace.media.length : index - 1}`}>
+                                <label className="item-prev btn btn-action btn-lg" for={`slide-${index - 1 < 0 ? props.lastRace.media.length - 1 : index - 1}`}>
                                   <i className="icon icon-arrow-left"></i>
                                 </label>
-                                <label className="item-next btn btn-action btn-lg" for={`slide-${index + 1 >= props.lastRace.media.length ? 1 : index + 2}`}>
+                                <label className="item-next btn btn-action btn-lg" for={`slide-${index + 1 >= props.lastRace.media.length ? 0 : index + 1}`}>
                                   <i className="icon icon-arrow-right"></i>
                                 </label>
                                 <img className="img-responsive" src={ media.fields.file.url }/>
@@ -94,7 +94,7 @@ export default function Home(props) {
                         </div>
                         <div className="carousel-nav">
                           { props.lastRace.media.map((media, index) => (
-                              <label className="nav-item text-hide c-hand" for={`slide-${index + 1}`}>{index + 1}</label>
+                              <label className="nav-item text-hide c-hand" for={`slide-${index}`}>{index}</label>
                             ))
                           }
                         </div>
