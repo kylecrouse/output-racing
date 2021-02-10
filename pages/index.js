@@ -66,16 +66,21 @@ export default function Home(props) {
                 <div className="column col-10 col-xl-9 col-sm-12">
                   { props.lastRace.media && 
                       <div className="carousel">
-                        { props.lastRace.media.map((media, index) => (
-                            index === 0
-                              ? <input className="carousel-locator" id={`slide-${index + 1}`} type="radio" name="carousel-radio" />
-                              : <input className="carousel-locator" id={`slide-${index + 1}`} type="radio" name="carousel-radio" />
-                          ))
+                        { props.lastRace.media.map((media, index) => {
+                            let props = {
+                              className: "carousel-locator",
+                              id: `slide-${index + 1}`,
+                              name: "carousel-radio",
+                              hidden: ""
+                            }
+                            if (index === 0) props.checked = "checked";
+                            return <input {...props}/>;
+                          })
                         }
                         <div className="carousel-container">
                           { props.lastRace.media.map((media, index) => (
                               <figure className="carousel-item">
-                                <label className="item-prev btn btn-action btn-lg" for={`slide-${index - 1 <= 1 ? props.lastRace.media.length : index - 1}`}>
+                                <label className="item-prev btn btn-a}ction btn-lg" for={`slide-${index - 1 <= 1 ? props.lastRace.media.length : index - 1}`}>
                                   <i className="icon icon-arrow-left"></i>
                                 </label>
                                 <label className="item-next btn btn-action btn-lg" for={`slide-${index + 1 >= props.lastRace.media.length ? 1 : index + 2}`}>
