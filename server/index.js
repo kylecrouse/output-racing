@@ -43,7 +43,7 @@ const server = http.createServer((req, res) => {
   const wss = new WebSocket.Server({ 
     server,
     verifyClient: info => {
-      console.log(info);
+      // console.log(info);
       return true;
     }
   });
