@@ -71,7 +71,7 @@ export default function Home(props) {
                               className: "carousel-locator",
                               id: `slide-${index}`,
                               name: "carousel-radio",
-                              // hidden: "hidden",
+                              hidden: "hidden",
                               type: "radio"
                             }
                             if (index === 0) props.defaultChecked = "checked";
