@@ -116,7 +116,7 @@ div + div:not(.column) > h2 {
 
 .banner.checkered {
   background-color: white;
-  background-image: linear-gradient(45deg, #363636 25%, transparent 25%, transparent 75%, #363636 75%, #363636), linear-gradient(45deg, #363636 25%, transparent 25%, transparent 75%, #363636 75%, #363636);
+  background-image: linear-gradient(45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(45deg, black 25%, transparent 25%, transparent 75%, black 75%, black);
   background-size: 20px 20px, 20px 20px; 
   background-position: 0 0, 10px 10px;
   margin-bottom: 2rem;
@@ -126,7 +126,7 @@ div + div:not(.column) > h2 {
 }
 
 .banner .header {
-  background: #363636;
+  background: black;
   color: white;
   display: flex;
   justify-content: center;
@@ -200,7 +200,7 @@ div + div:not(.column) > h2 {
 }
 
 .top5:not(:first-child) {
-  border-top: 2px solid #363636;
+  border-top: 2px solid black;
 }
 
 .banner .sidebar p {
@@ -214,7 +214,7 @@ div + div:not(.column) > h2 {
 }
 
 .banner .position {
-  background: #363636;
+  background: black;
   color: white;
   font-size: 1.4rem;
   font-weight: bold;
@@ -237,7 +237,7 @@ div + div:not(.column) > h2 {
 
 .top5 [class^=DriverChip_container] {
   align-items: flex-end;
-  color: #363636;
+  color: black;
   display: flex;
   font-weight: bold;
   height: 100%;
