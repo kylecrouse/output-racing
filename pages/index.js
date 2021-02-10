@@ -170,9 +170,21 @@ export default function Home(props) {
                     { props.standings
                         .map((props, index) => (
                           <tr key={`standings${index}`} style={{opacity: props.driver.active ? 1 : 0.2}}>
-                            <td><b>{index + 1}</b></td>
+                            <td width="5%">
+                              <b>{index + 1}</b>                   
+                              { parseInt(props.change, 10) > 0
+                                  ? <span style={{color:"green"}}>
+                                      {`${index < 10 ? '\u00a0' : ''}\u00a0\u25b2\u00a0${props.change.substr(1)}`}
+                                    </span>
+                                  : parseInt(props.change, 10) < 0
+                                    ? <span style={{color:"red"}}>
+                                        {`${index < 10 ? '\u00a0' : ''}\u00a0\u25bc\u00a0${props.change.substr(1)}`}
+                                      </span>
+                                    : ''
+                              }
+                            </td>
                             <td><DriverChip {...props.driver}/></td>
-                            <td>{props.behindLeader}</td>
+                            <td width="5%">{`${props.points}\u00a0(${props.behindLeader})`}</td>
                           </tr>
                         ))
                     }
