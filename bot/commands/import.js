@@ -61,11 +61,9 @@ module.exports = {
           throw new Error(`I don\'t know how to do that. (${JSON.stringify(args)})`);
       }
       
-      await buildAndDeploy();
-      
       await league.load();
       
-      message.react(REACTION_SUCCESS);
+      await buildAndDeploy();
       
       // If is 'latest' import, update the results channel with the new data
       if (race && args[0] === 'latest') {
@@ -99,6 +97,8 @@ module.exports = {
       else if (reply) message.reply(reply);
       else if (embed) message.reply(embed);
           
+      message.react(REACTION_SUCCESS);
+      
     } catch(err) {
       console.log(err);
       message.reply(
@@ -131,7 +131,8 @@ async function handleLatest(args) {
   await getStats('league', league.id);
 
   // Update driver stats
-  await getDrivers(2732);
+  // NOTE: This takes too long and people want results.
+  // await getDrivers(2732);
 
   // Import the new results from danlisa
   return handleResults([
