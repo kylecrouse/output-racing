@@ -52,7 +52,7 @@ export default function Home(props) {
       
         { props.lastRace &&
           <div className="columns">
-            <div className="column col-8 col-mx-auto banner checkered">
+            <div className="column col-8 col-lg-12 col-mx-auto banner checkered">
               <a href={`/results/${props.lastRace.raceId}`} className="header">
                 { props.lastRace.logo &&
                   <img src={ props.lastRace.logo.fields.file.url }/>
@@ -63,18 +63,54 @@ export default function Home(props) {
                 </ul>
               </a>
               <div className="columns col-gapless">
-                { props.lastRace.media && 
-                  <img src={ props.lastRace.media[0].fields.file.url } className="column col-10"/>
-                }
-                <div className="column col-2 sidebar">
+                <div className="column col-10 col-xl-9 col-sm-12">
+                  { props.lastRace.media && 
+                      <div className="carousel">
+                        { props.lastRace.media.map((media, index) => (
+                            index === 0
+                              ? <input className="carousel-locator" id={`slide-${index + 1}`} type="radio" name="carousel-radio" />
+                              : <input className="carousel-locator" id={`slide-${index + 1}`} type="radio" name="carousel-radio" />
+                          ))
+                        }
+                        <div className="carousel-container">
+                          { props.lastRace.media.map((media, index) => (
+                              <figure className="carousel-item">
+                                <label className="item-prev btn btn-action btn-lg" for={`slide-${index - 1 <= 1 ? props.lastRace.media.length : index - 1}`}>
+                                  <i className="icon icon-arrow-left"></i>
+                                </label>
+                                <label className="item-next btn btn-action btn-lg" for={`slide-${index + 1 >= props.lastRace.media.length ? 1 : index + 2}`}>
+                                  <i className="icon icon-arrow-right"></i>
+                                </label>
+                                <img className="img-responsive" src={ media.fields.file.url }/>
+                              </figure>
+                            ))
+                          }
+                        </div>
+                        <div className="carousel-nav">
+                          { props.lastRace.media.map((media, index) => (
+                              <label className="nav-item text-hide c-hand" for={`slide-${index + 1}`}>{index + 1}</label>
+                            ))
+                          }
+                        </div>
+                      </div>
+                  }
+                </div>
+                <div className="column col-2 col-xl-3 col-sm-12">
+                  <div className="columns col-gapless sidebar">
                   { props.lastRace.results.slice(0,5).map(props => (
-                      <div className="top5">
+                      <div className="top5 column col-12 col-sm-4">
                         <span className="position"><span>{props.finish}</span></span>
                         <DriverChip {...props.driver}/>
                       </div>
                     ))
                   }
-                  <p><a href="/results/latest" className="btn btn-primary"><span>Full Results</span></a></p>
+                    <div className="top5 column hide show-sm col-sm-4"></div>
+                    <div className="cta">
+                      <a href="/results/latest" className="btn btn-primary">
+                        <span>Full Results</span>
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
