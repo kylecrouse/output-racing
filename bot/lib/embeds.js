@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const moment = require('moment');
+const cms = require(`${process.cwd()}/lib/contentful`);
 const { tracks } = require ('../../constants');
 
 module.exports = {
