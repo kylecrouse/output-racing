@@ -148,7 +148,7 @@ export default function Home(props) {
 
             { props.lastRace && props.lastRace.broadcast &&
                 <div className={styles.description}>
-                  <h4>Race Rewind</h4>
+                  <h4><img src="/img/asc.png"/> Race Rewind</h4>
                   <Video src={props.lastRace.broadcast}/>
                 </div>
             }
