@@ -25,11 +25,16 @@ const server = http.createServer((req, res) => {
     req.on('data', (chunk) => { body += chunk; });
 
     req.on('end', async function() {
-      if (req.url === '/apply')
-        await handleApplication(client, JSON.parse(body));
-        
-      res.writeHead(200, 'OK', {...headers, 'Content-Type': 'text/plain'});
-      res.end();
+      try {
+        if (req.url === '/apply')
+          await handleApplication(client, JSON.parse(body));
+        res.writeHead(200, 'OK', {...headers, 'Content-Type': 'text/plain'});
+        res.end();
+      } catch(error) {
+        console.log(error);
+        res.writeHead(500, 'ERROR', { 'Content-Type': 'text/plain' });
+        res.end();
+      }
     });
   } else {
     res.writeHead(200, 'OK', {...headers, 'Content-Type': 'text/plain'});
