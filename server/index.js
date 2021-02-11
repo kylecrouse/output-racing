@@ -5,9 +5,11 @@ const { getStreams } = require('../lib/twitch');
 const league = require('../lib/league');
 const { handleApplication } = require('../bot/lib/applications');
 
+const origins = ['http://localhost:3000', 'https://outputracing.com', 'https://script.google.com'];
+
 const server = http.createServer((req, res) => {
   const headers = {
-    "Access-Control-Allow-Origin": '*',
+    "Access-Control-Allow-Origin": origins.includes(req.headers.origin) ? req.headers.origin : null,
     "Access-Control-Allow-Methods": "OPTIONS, POST, GET",
     "Access-Control-Allow-Headers": 'Content-Type',
     "Access-Control-Max-Age": 2592000
