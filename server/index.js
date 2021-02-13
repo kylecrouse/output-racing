@@ -30,6 +30,9 @@ const server = http.createServer((req, res) => {
       try {
         if (req.url === '/apply')
           await handleApplication(JSON.parse(body));
+        else if (req.url === '/telemetry')
+          console.log({ telemetry: JSON.parse(body) });
+          
         res.writeHead(200, 'OK', {...headers, 'Content-Type': 'text/plain'});
         res.end();
       } catch(error) {
