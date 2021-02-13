@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const Promise = require('bluebird');
 const moment = require('moment');
 const { applicationsChannelId } = require('../config.json');
-const { getApplicants, resolveApplicant } = require('../lib/applications');
+const { getUnresolved, getApplicants, resolveApplicant } = require('../lib/applications');
 
 const client = new Discord.Client();
 
@@ -11,11 +11,12 @@ client.on('ready', async () => {
   
     try {
       await Promise.map(
-        await getApplicants(), 
+        // await getApplicants(), 
+        await getUnresolved(), 
         async (applicant) => {
           const { custId, license, stats, memberSince } = await resolveApplicant(applicant.Name, applicant.rowNumber);
           
-          if (!custId) return;
+          if (!custId) return console.log(`${applicant.Name} not found`);
 
           // Notify applications channel
           const embed = new Discord.MessageEmbed()
@@ -39,7 +40,7 @@ client.on('ready', async () => {
           	.setTimestamp()
             
           console.log(applicant.Name, { custId, license, stats, memberSince })
-          // await client.channels.cache.get(applicationsChannelId).send(embed);  
+          await client.channels.cache.get(applicationsChannelId).send(embed);  
         }, 
         { concurrency: 1 }
       );
