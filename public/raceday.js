@@ -101,7 +101,7 @@ function RaceDay(props) {
     
       ws.onmessage = (event) => {
         try {
-          const data = JSON.parse(event.data);
+          const data = JSON.parse(event.data, reviver);
           console.log(data);
 
           if (data.trackName) 
@@ -459,4 +459,13 @@ function TimeItem(props) {
     </tr>
     
   )
+}
+
+function reviver(key, value) {
+  if(typeof value === 'object' && value !== null) {
+    if (value.dataType === 'Map') {
+      return new Map(value.value);
+    }
+  }
+  return value;
 }

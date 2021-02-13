@@ -14,6 +14,14 @@ const server = http.createServer((req, res) => {
     "Access-Control-Allow-Headers": 'Content-Type',
     "Access-Control-Max-Age": 2592000
   };
+
+  // Basic HTTP Auth  
+  // const header = req.headers.authorization || '';       // get the auth header
+  // const token = header.split(/\s+/).pop() || '';        // and the encoded auth token
+  // const auth = Buffer.from(token, 'base64').toString(); // convert from base64
+  // const parts = auth.split(/:/);                        // split on colon
+  // const username = parts.shift();                       // username is first
+  // const password = parts.join(':');                     // everything else is the password
 	
   if (req.method === "OPTIONS") {
     res.writeHead(204, headers);
@@ -63,7 +71,7 @@ const server = http.createServer((req, res) => {
   // Create data cache for received messages (need to purge at some point)
   let cache = { 
     session: {}, 
-    streamers: []/*Array.isArray(league.streamers)
+    streamers: Array.isArray(league.streamers)
       ? await getStreams(
           league.streamers
             .filter(streamer => streamer.active && streamer.twitchUserLogin)
@@ -80,7 +88,7 @@ const server = http.createServer((req, res) => {
     
           }
         ) 
-      : null*/
+      : null
   };
   
   // Listen for new connections
