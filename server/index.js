@@ -42,22 +42,22 @@ const { handleApplication } = require('../bot/lib/applications');
   const authProvider = new ClientCredentialsAuthProvider(clientId, clientSecret);
   const apiClient = new ApiClient({ authProvider });
   
-  const listener = new EventSubListener(
-    apiClient, 
-    new MiddlewareAdapter({ 
-      hostName: 'bot.outputracing.com', 
-      pathPrefix: '/twitch',
-      port: process.env.PORT || 3001
-    }), 
-    secret
-  );
-  
-  listener.applyMiddleware(app);
-  
-  await listener.listen();
+  // const listener = new EventSubListener(
+  //   apiClient, 
+  //   new MiddlewareAdapter({ 
+  //     hostName: 'bot.outputracing.com', 
+  //     pathPrefix: '/twitch',
+  //     port: process.env.PORT || 3001
+  //   }), 
+  //   secret
+  // );
+  // 
+  // listener.applyMiddleware(app);
+  // 
+  // await listener.listen();
 
   // Create data cache for received messages (need to purge at some point)
-  let cache = { 
+  let cache = {
     session: {}, 
     streamers: new Map()
   }; 
@@ -75,27 +75,27 @@ const { handleApplication } = require('../bot/lib/applications');
     for (user of users) {
       cache.streamers.set(user.id, { name: user.name, online: !!(await user.getStream()) });
       
-      await listener.subscribeToStreamOnlineEvents(user.id, e => {
-      	console.log(`${e.broadcasterDisplayName} just went live!`);
-        cache.streamers.set(user.id, { online: true });
-
-        // Broadcast updated data to all clients
-        wss.clients.forEach(function each(client) {
-          if (client.readyState === WebSocket.OPEN)
-            client.send(JSON.stringify(cache.streamers, replacer));
-        });
-      });
-  
-      await listener.subscribeToStreamOfflineEvents(userId, e => {
-      	console.log(`${e.broadcasterDisplayName} just went offline`);
-        cache.streamers.set(user.id, { online: false });
-
-        // Broadcast updated data to all clients
-        wss.clients.forEach(function each(client) {
-          if (client.readyState === WebSocket.OPEN)
-            client.send(JSON.stringify(cache.streamers, replacer));
-        });
-      });
+//       await listener.subscribeToStreamOnlineEvents(user.id, e => {
+//       	console.log(`${e.broadcasterDisplayName} just went live!`);
+//         cache.streamers.set(user.id, { online: true });
+// 
+//         // Broadcast updated data to all clients
+//         wss.clients.forEach(function each(client) {
+//           if (client.readyState === WebSocket.OPEN)
+//             client.send(JSON.stringify(cache.streamers, replacer));
+//         });
+//       });
+//   
+//       await listener.subscribeToStreamOfflineEvents(userId, e => {
+//       	console.log(`${e.broadcasterDisplayName} just went offline`);
+//         cache.streamers.set(user.id, { online: false });
+// 
+//         // Broadcast updated data to all clients
+//         wss.clients.forEach(function each(client) {
+//           if (client.readyState === WebSocket.OPEN)
+//             client.send(JSON.stringify(cache.streamers, replacer));
+//         });
+//       });
     }
     
   }
