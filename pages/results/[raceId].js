@@ -38,7 +38,9 @@ export async function getStaticPaths() {
       .filter(season => season.results)
       .reduce(
         (ids, season) => ids.concat(
-          season.results.map(item => ({ params: { raceId: item.raceId.toString() }}))
+          season.results
+            .filter(item => item.results)
+            .map(item => ({ params: { raceId: item.raceId.toString() }}))
         ),
         []
       ),

@@ -35,7 +35,7 @@ export async function getStaticProps({ params }) {
   const { name, season, seasons } = await league.load();
   
   if (season.results) {
-    const [race] = season.results.slice(-1);
+    const [race] = season.results.filter(item => item.results).slice(-1);
     return { props: { 
       leagueName: name,
       ...race 
