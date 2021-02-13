@@ -209,35 +209,42 @@ module.exports = {
     try {
       const { custId, license, stats, memberSince } = await resolveApplicant(namedValues.Name[0], range.rowStart);
       
-      // Notify applications channel
-      const embed = new discord.MessageEmbed()
-      	.setTitle('League Application Received')
-        .setDescription(`[${namedValues.Name[0]}](https://members.iracing.com/membersite/member/CareerStats.do?custid=${custId}) applied to the league.`)
-        .addFields(
-          Object.entries(namedValues).reduce((fields, [name, value]) => { 
-            if (name !== "Name" && name !== "Email" && name !== "Timestamp" && name !== "Rules" && value[0])
-              fields.push({ name, value: `\`${value[0]}\`` });
-            return fields; 
-          }, [])
-        )
-        .addField('Member Since', `\`${moment(memberSince, "DD-MM-YYYY").format('MMMM Do, YYYY')}\``)
-      	.addFields(
-          { name: 'License', value: `\`${license.licGroupDisplayName}\``, inline: true },
-          { name: 'SR', value: `\`${license.srPrime}.${license.srSub}\``, inline: true },
-          { name: 'iRating', value: `\`${(parseInt(license.iRating)/1000).toFixed(1)}k\``, inline: true },
-          { name: 'Starts', value: `\`${stats.starts}\``, inline: true },
-          { name: 'Inc/Race', value: `\`${stats.avgIncPerRace.toFixed(2)}\``, inline: true },
-          { name: 'Laps', value: `\`${stats.totalLaps}\``, inline: true },
-          { name: 'Win %', value: `\`${stats.winPerc.toFixed(2)}%\``, inline: true },
-          { name: 'Top 5%', value: `\`${stats.top5Perc.toFixed(2)}%\``, inline: true },
-          { name: 'Led %', value: `\`${stats.lapsLedPerc.toFixed(2)}%\``, inline: true },
-      	)
-      	.setTimestamp()
-        
       const client = new discord.Client();
       const { accessToken } = await getSecretValue('ORLBot/Discord');
       await client.login(accessToken);  
-      await client.channels.cache.get(applicationsChannelId).send(embed);
+      const channel = await client.channels.cache.get(applicationsChannelId);
+      
+      if (!custId)
+        await channel.send(`**${namedValues.Name[0]}** applied but I couldn't get stats from iRacing.`);
+      else {
+        // Notify applications channel
+        const embed = new discord.MessageEmbed()
+        	.setTitle('League Application Received')
+          .setDescription(`[${namedValues.Name[0]}](https://members.iracing.com/membersite/member/CareerStats.do?custid=${custId}) applied to the league.`)
+          .addFields(
+            Object.entries(namedValues).reduce((fields, [name, value]) => { 
+              if (name !== "Name" && name !== "Email" && name !== "Timestamp" && name !== "Rules" && value[0])
+                fields.push({ name, value: `\`${value[0]}\`` });
+              return fields; 
+            }, [])
+          )
+          .addField('Member Since', `\`${moment(memberSince, "DD-MM-YYYY").format('MMMM Do, YYYY')}\``)
+        	.addFields(
+            { name: 'License', value: `\`${license.licGroupDisplayName}\``, inline: true },
+            { name: 'SR', value: `\`${license.srPrime}.${license.srSub}\``, inline: true },
+            { name: 'iRating', value: `\`${(parseInt(license.iRating)/1000).toFixed(1)}k\``, inline: true },
+            { name: 'Starts', value: `\`${stats.starts}\``, inline: true },
+            { name: 'Inc/Race', value: `\`${stats.avgIncPerRace.toFixed(2)}\``, inline: true },
+            { name: 'Laps', value: `\`${stats.totalLaps}\``, inline: true },
+            { name: 'Win %', value: `\`${stats.winPerc.toFixed(2)}%\``, inline: true },
+            { name: 'Top 5%', value: `\`${stats.top5Perc.toFixed(2)}%\``, inline: true },
+            { name: 'Led %', value: `\`${stats.lapsLedPerc.toFixed(2)}%\``, inline: true },
+        	)
+        	.setTimestamp()
+          
+        await channel.send(embed);        
+      }
+
       client.destroy();
       
     } catch(err) {
