@@ -205,7 +205,7 @@ module.exports = {
     return row.save();
 
   },
-  handleApplication: async (client, { namedValues, range }) => {
+  handleApplication: async ({ namedValues, range }) => {
     try {
       const { custId, license, stats, memberSince } = await resolveApplicant(namedValues.Name[0], range.rowStart);
       
@@ -234,7 +234,11 @@ module.exports = {
       	)
       	.setTimestamp()
         
-      client.channels.cache.get(applicationsChannelId).send(embed);
+      const client = new discord.Client();
+      const { accessToken } = await getSecretValue('ORLBot/Discord');
+      await client.login(accessToken);  
+      await client.channels.cache.get(applicationsChannelId).send(embed);
+      client.destroy();
       
     } catch(err) {
       console.log(err);
