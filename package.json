@@ -14,19 +14,22 @@
     "drivers": "babel-node ./lib/scraper/drivers.js"
   },
   "dependencies": {
-    "@babel/core": "^7.12.3",
-    "@babel/node": "^7.12.6",
-    "aws-sdk": "^2.799.0",
+    "@babel/core": "^7.12.16",
+    "@babel/node": "^7.12.16",
+    "aws-sdk": "^2.843.0",
     "bluebird": "^3.7.2",
+    "body-parser": "^1.19.0",
     "chalk": "^4.1.0",
-    "contentful": "^7.14.13",
+    "contentful": "^7.15.2",
     "contentful-management": "^6.3.2",
-    "csv-parse": "^4.14.1",
-    "discord.js": "^12.5.0",
-    "google-spreadsheet": "^3.0.14",
+    "cors": "^2.8.5",
+    "csv-parse": "^4.15.1",
+    "discord.js": "^12.5.1",
+    "express": "^4.17.1",
+    "google-spreadsheet": "^3.1.15",
     "lodash": "^4.17.20",
     "log-update": "^4.0.0",
-    "mime-types": "^2.1.27",
+    "mime-types": "^2.1.28",
     "moment": "^2.29.1",
     "next": "10.0.1",
     "node-fetch": "^2.6.1",
@@ -38,7 +41,7 @@
     "twitch": "^4.4.11",
     "twitch-auth": "^4.4.11",
     "twitch-eventsub": "^4.4.11",
-    "ws": "^7.4.2"
+    "ws": "^7.4.3"
   },
   "devDependencies": {}
 }

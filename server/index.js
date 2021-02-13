@@ -1,95 +1,109 @@
 const http = require('http');
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 const WebSocket = require('ws');
 const { getSecretValue } = require('../lib/secrets');
-const { getStreams } = require('../lib/twitch');
+const { ApiClient } = require('twitch');
+const { ClientCredentialsAuthProvider } = require('twitch-auth');
+const { EventSubListener, MiddlewareAdapter } = require('twitch-eventsub');
 const league = require('../lib/league');
 const { handleApplication } = require('../bot/lib/applications');
 
-const origins = ['http://localhost:3000', 'https://outputracing.com', 'https://script.google.com'];
-
-const server = http.createServer((req, res) => {
-  const headers = {
-    "Access-Control-Allow-Origin": origins.includes(req.headers.origin) ? req.headers.origin : null,
-    "Access-Control-Allow-Methods": "OPTIONS, POST, GET",
-    "Access-Control-Allow-Headers": 'Content-Type',
-    "Access-Control-Max-Age": 2592000
-  };
-
-  // Basic HTTP Auth  
-  // const header = req.headers.authorization || '';       // get the auth header
-  // const token = header.split(/\s+/).pop() || '';        // and the encoded auth token
-  // const auth = Buffer.from(token, 'base64').toString(); // convert from base64
-  // const parts = auth.split(/:/);                        // split on colon
-  // const username = parts.shift();                       // username is first
-  // const password = parts.join(':');                     // everything else is the password
-	
-  if (req.method === "OPTIONS") {
-    res.writeHead(204, headers);
-    res.end();
-    return;
-  }
-
-  if (req.method === 'POST') {
-    var body = '';
-
-    req.on('data', (chunk) => { body += chunk; });
-
-    req.on('end', async function() {
-      try {
-        if (req.url === '/apply')
-          await handleApplication(JSON.parse(body));
-        else if (req.url === '/telemetry')
-          console.log({ telemetry: JSON.parse(body) });
-          
-        res.writeHead(200, 'OK', {...headers, 'Content-Type': 'text/plain'});
-        res.end();
-      } catch(error) {
-        console.log(error);
-        res.writeHead(500, 'ERROR', { 'Content-Type': 'text/plain' });
-        res.end();
-      }
-    });
-  } else {
-    res.writeHead(200, 'OK', {...headers, 'Content-Type': 'text/plain'});
-    res.end();
-  }
-});
-
 (async () => {
   
-  // Create new socket server piggy-backing on http server
-  const wss = new WebSocket.Server({ 
-    server,
-    verifyClient: info => {
-      // console.log(info);
-      return true;
+  const app = express();
+  const options = {
+    origin: ['http://localhost:3000', 'https://outputracing.com']
+  };
+  
+  app.options('/', cors(options));
+  
+  app.get('/', (req, res) => {
+    res.send('OK');
+  });
+  
+  app.post('/apply', bodyParser.json(), async (req, res) => {
+    try {
+      await handleApplication(req.body);
+      res.send('OK');
+    } catch(err) {
+      next(err);
     }
   });
   
-  await league.init();
+  app.post('/telemetry', bodyParser.json(), (req, res) => {
+    console.log(req.body);
+    res.send('OK');
+  });
   
+  const { clientId, clientSecret, secret } = await getSecretValue('ORLBot/Twitch');
+  
+  const authProvider = new ClientCredentialsAuthProvider(clientId, clientSecret);
+  const apiClient = new ApiClient({ authProvider });
+  
+  const listener = new EventSubListener(
+    apiClient, 
+    new MiddlewareAdapter({ 
+      hostName: 'bot.outputracing.com', 
+      pathPrefix: '/twitch',
+      port: process.env.PORT || 3001
+    }), 
+    secret
+  );
+  
+  listener.applyMiddleware(app);
+  
+  await listener.listen();
+
   // Create data cache for received messages (need to purge at some point)
   let cache = { 
     session: {}, 
-    streamers: Array.isArray(league.streamers)
-      ? await getStreams(
-          league.streamers
-            .filter(streamer => streamer.active && streamer.twitchUserLogin)
-            .map(streamer => streamer.twitchUserLogin), 
-          (streamers) => { 
-            cache.streamers = streamers; 
+    streamers: new Map()
+  }; 
+  
+  await league.init();
+  
+  if (Array.isArray(league.streamers)) {
+    // Resolve Twitch users from league drivers' usernames
+    const users = await apiClient.helix.users.getUsersByNames(
+      league.streamers
+        .filter(streamer => streamer.active && streamer.twitchUserLogin)
+        .map(streamer => streamer.twitchUserLogin)
+    );
+
+    for (user of users) {
+      cache.streamers.set(user.id, { name: user.name, online: !!(await user.getStream()) });
+      
+      await listener.subscribeToStreamOnlineEvents(user.id, e => {
+      	console.log(`${e.broadcasterDisplayName} just went live!`);
+        cache.streamers.set(user.id, { online: true });
+
+        // Broadcast updated data to all clients
+        wss.clients.forEach(function each(client) {
+          if (client.readyState === WebSocket.OPEN)
+            client.send(JSON.stringify(cache.streamers, replacer));
+        });
+      });
+  
+      await listener.subscribeToStreamOfflineEvents(userId, e => {
+      	console.log(`${e.broadcasterDisplayName} just went offline`);
+        cache.streamers.set(user.id, { online: false });
+
+        // Broadcast updated data to all clients
+        wss.clients.forEach(function each(client) {
+          if (client.readyState === WebSocket.OPEN)
+            client.send(JSON.stringify(cache.streamers, replacer));
+        });
+      });
+    }
     
-            // Broadcast updated data to all clients
-            wss.clients.forEach(function each(client) {
-              if (client.readyState === WebSocket.OPEN) {
-                client.send(JSON.stringify(streamers, replacer));
-              }
-            });
+  }
     
-          }
-        ) 
-      : null
-  };
+  const server = http.createServer(app);
+  
+  // Create new socket server piggy-backing on http server
+  const wss = new WebSocket.Server({ server });
   
   // Listen for new connections
   wss.on('connection', function connection(ws) {
@@ -122,14 +136,11 @@ const server = http.createServer((req, res) => {
     
   });
 
+  server.listen(process.env.PORT || 3001, () => {
+    console.log(`Server running at http://127.0.0.1:${server.address().port}/`);
+  });
+
 })();
-
-const port = process.env.PORT || 3001;
-// Listen on port 3001, IP defaults to 127.0.0.1
-server.listen(port);
-// Put a friendly message on the terminal
-console.log('Health check server running at http://127.0.0.1:' + port + '/');
-
 
 function replacer(key, value) {
   if (value instanceof Map)
