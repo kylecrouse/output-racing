@@ -28,9 +28,9 @@ async function getSheet(title) {
   return doc.sheetsByTitle[title];
 }
 
-async function resolveApplicant(name, row) {
+async function resolveApplicant(name = '', row) {
     // Get iRacing customer ID that matches submitted name
-  const custId = await iracing.getDriverId(name);
+  const custId = await iracing.getDriverId(name.trim());
   
   if (!custId) return { custId: null };
   
@@ -92,7 +92,7 @@ module.exports = {
   getUnresolved: async () => {
     const sheet = await getSheet('Applications');
     const rows = await sheet.getRows();
-    return rows.filter(row => !row.custId);
+    return rows.filter(row => row.Approved == '' && !row.custId);
   },
   getApplicants: async () => {
   
