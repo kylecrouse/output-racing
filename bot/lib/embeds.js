@@ -105,11 +105,7 @@ module.exports = {
           }));
     
     const scheduled = season.schedule.filter(race => race.counts);
-    const completed = Array.isArray(season.results)
-      ? season.results.filter(
-          race => scheduled.find(({ raceId }) => raceId == race.raceId)
-        )
-      : [];
+    const completed = season.schedule.filter(race => race.counts && race.uploaded);
     
     const embed = new Discord.MessageEmbed()
     	.setTitle('Current Standings')

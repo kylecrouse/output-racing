@@ -82,7 +82,7 @@ export default function Standings(props) {
       `}</style>
     
   		<h2 className="text-center">{props.name} Standings</h2>
-      <h6 className="text-center" style={{ margin: "1rem 0 2rem" }}>After {props.results ? props.results.filter(({ counts }) => counts).length : 0} of {props.schedule.filter(({ counts }) => counts).length} Races</h6>
+      <h6 className="text-center" style={{ margin: "1rem 0 2rem" }}>After {props.results ? props.schedule.filter(({ counts, uploaded }) => counts && uploaded).length : 0} of {props.schedule.filter(({ counts }) => counts).length} Races</h6>
 
       <table className="standings">
         <thead>
