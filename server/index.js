@@ -79,27 +79,27 @@ const { handleApplication } = require('../bot/lib/applications');
     for (user of users) {
       cache.streamers.set(user.id, { id: user.id, name: user.name, online: !!(await user.getStream()) });
       
-//       await listener.subscribeToStreamOnlineEvents(user.id, e => {
-//       	console.log(`${e.broadcasterDisplayName} just went live!`);
-//         cache.streamers.set(user.id, { online: true });
-// 
-//         // Broadcast updated data to all clients
-//         wss.clients.forEach(function each(client) {
-//           if (client.readyState === WebSocket.OPEN)
-//             client.send(JSON.stringify(cache.streamers, replacer));
-//         });
-//       });
-//   
-//       await listener.subscribeToStreamOfflineEvents(userId, e => {
-//       	console.log(`${e.broadcasterDisplayName} just went offline`);
-//         cache.streamers.set(user.id, { online: false });
-// 
-//         // Broadcast updated data to all clients
-//         wss.clients.forEach(function each(client) {
-//           if (client.readyState === WebSocket.OPEN)
-//             client.send(JSON.stringify(cache.streamers, replacer));
-//         });
-//       });
+      await listener.subscribeToStreamOnlineEvents(user.id, e => {
+      	console.log(`${e.broadcasterDisplayName} just went live!`);
+        cache.streamers.set(user.id, { online: true });
+
+        // Broadcast updated data to all clients
+        wss.clients.forEach(function each(client) {
+          if (client.readyState === WebSocket.OPEN)
+            client.send(JSON.stringify(cache.streamers, replacer));
+        });
+      });
+  
+      await listener.subscribeToStreamOfflineEvents(userId, e => {
+      	console.log(`${e.broadcasterDisplayName} just went offline`);
+        cache.streamers.set(user.id, { online: false });
+
+        // Broadcast updated data to all clients
+        wss.clients.forEach(function each(client) {
+          if (client.readyState === WebSocket.OPEN)
+            client.send(JSON.stringify(cache.streamers, replacer));
+        });
+      });
     }
     
   }
