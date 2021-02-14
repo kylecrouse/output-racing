@@ -51,7 +51,7 @@ const { handleApplication } = require('../bot/lib/applications');
     apiClient, 
     new MiddlewareAdapter({ 
       hostName: 'bot.outputracing.com', 
-      pathPrefix: '/',
+      pathPrefix: '/twitch',
       port: process.env.PORT || 3001
     }), 
     secret
