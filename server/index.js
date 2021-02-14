@@ -37,24 +37,30 @@ const { handleApplication } = require('../bot/lib/applications');
     res.send('OK');
   });
   
+  app.post('/tpost_img.php', bodyParser.raw(), (req, res) => {
+    console.log(req.body);
+    res.send('OK');
+  });
+  
   const { clientId, clientSecret, secret } = await getSecretValue('ORLBot/Twitch');
   
   const authProvider = new ClientCredentialsAuthProvider(clientId, clientSecret);
   const apiClient = new ApiClient({ authProvider });
   
-  // const listener = new EventSubListener(
-  //   apiClient, 
-  //   new MiddlewareAdapter({ 
-  //     hostName: 'bot.outputracing.com', 
-  //     pathPrefix: '/twitch',
-  //     port: process.env.PORT || 3001
-  //   }), 
-  //   secret
-  // );
-  // 
-  // listener.applyMiddleware(app);
-  // 
-  // await listener.listen();
+  const listener = new EventSubListener(
+    apiClient, 
+    new MiddlewareAdapter({ 
+      hostName: 'bot.outputracing.com', 
+      pathPrefix: '/twitch',
+      port: process.env.PORT || 3001,
+      listenerPort: 8181,
+    }), 
+    secret
+  );
+  
+  listener.applyMiddleware(app);
+  
+  await listener.listen();
 
   // Create data cache for received messages (need to purge at some point)
   let cache = {
@@ -68,12 +74,13 @@ const { handleApplication } = require('../bot/lib/applications');
     // Resolve Twitch users from league drivers' usernames
     const users = await apiClient.helix.users.getUsersByNames(
       league.streamers
+        .map(streamer => league.drivers.find(driver => driver.id === streamer.sys.id))
         .filter(streamer => streamer.active && streamer.twitchUserLogin)
         .map(streamer => streamer.twitchUserLogin)
     );
 
     for (user of users) {
-      cache.streamers.set(user.id, { name: user.name, online: !!(await user.getStream()) });
+      cache.streamers.set(user.id, { id: user.id, name: user.name, online: !!(await user.getStream()) });
       
 //       await listener.subscribeToStreamOnlineEvents(user.id, e => {
 //       	console.log(`${e.broadcasterDisplayName} just went live!`);
@@ -99,7 +106,7 @@ const { handleApplication } = require('../bot/lib/applications');
     }
     
   }
-    
+   
   const server = http.createServer(app);
   
   // Create new socket server piggy-backing on http server
