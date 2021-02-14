@@ -26,6 +26,7 @@
     "csv-parse": "^4.15.1",
     "discord.js": "^12.5.1",
     "express": "^4.17.1",
+    "express-ws": "^4.0.0",
     "google-spreadsheet": "^3.1.15",
     "lodash": "^4.17.20",
     "log-update": "^4.0.0",

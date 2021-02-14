@@ -1,8 +1,9 @@
 const http = require('http');
 const express = require('express');
+const app = express();
+const WebSocket = require('express-ws')(app);
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const WebSocket = require('ws');
 const { getSecretValue } = require('../lib/secrets');
 const { ApiClient } = require('twitch');
 const { ClientCredentialsAuthProvider } = require('twitch-auth');
@@ -11,36 +12,6 @@ const league = require('../lib/league');
 const { handleApplication } = require('../bot/lib/applications');
 
 (async () => {
-  
-  const app = express();
-  const options = {
-    origin: ['http://localhost:3000', 'https://outputracing.com']
-  };
-  
-  app.options('/raceday', cors(options));
-  
-  app.get('/', (req, res) => {
-    res.send('OK');
-  });
-  
-  app.post('/apply', bodyParser.json(), async (req, res) => {
-    try {
-      await handleApplication(req.body);
-      res.send('OK');
-    } catch(err) {
-      next(err);
-    }
-  });
-  
-  app.post('/telemetry', bodyParser.json(), (req, res) => {
-    console.log(req.body);
-    res.send('OK');
-  });
-  
-  app.post('/tpost_img.php', bodyParser.raw(), (req, res) => {
-    console.log(req.body);
-    res.send('OK');
-  });
   
   const { clientId, clientSecret, secret } = await getSecretValue('ORLBot/Twitch');
   
@@ -56,8 +27,6 @@ const { handleApplication } = require('../bot/lib/applications');
     }), 
     secret
   );
-  
-  // listener.applyMiddleware(app);
   
   // Create data cache for received messages (need to purge at some point)
   let cache = {
@@ -90,7 +59,7 @@ const { handleApplication } = require('../bot/lib/applications');
         });
       });
   
-      await listener.subscribeToStreamOfflineEvents(userId, e => {
+      await listener.subscribeToStreamOfflineEvents(user.id, e => {
       	console.log(`${e.broadcasterDisplayName} just went offline`);
         cache.streamers.set(user.id, { online: false });
 
@@ -103,19 +72,42 @@ const { handleApplication } = require('../bot/lib/applications');
     }
     
   }
-   
-  const server = http.createServer(app);
   
-  // Create new socket server piggy-backing on http server
-  const wss = new WebSocket.Server({ server, path: '/raceday' });
+  const options = {
+    origin: ['http://localhost:3000', 'https://outputracing.com']
+  };
   
-  // Listen for new connections
-  wss.on('connection', function connection(ws) {
-    
+  app.options('/raceday', cors(options));
+  
+  app.get('/', (req, res) => {
+    res.send('OK');
+  });
+  
+  app.post('/apply', bodyParser.json(), async (req, res) => {
+    try {
+      await handleApplication(req.body);
+      res.send('OK');
+    } catch(err) {
+      next(err);
+    }
+  });
+  
+  app.post('/telemetry', bodyParser.json(), (req, res) => {
+    console.log(req.body);
+    res.send('OK');
+  });
+  
+  app.post('/tpost_img.php', bodyParser.raw(), (req, res) => {
+    console.log(req.body);
+    res.send('OK');
+  });
+  
+  app.ws('/raceday', (ws, req) => {
+
     // Send cached data to newly connected clients
     ws.send(JSON.stringify(cache.session));
     ws.send(JSON.stringify(cache.streamers, replacer));
-    
+
     // Handle messages received from iRacing
     ws.on('message', function incoming(data) {
       
@@ -139,9 +131,11 @@ const { handleApplication } = require('../bot/lib/applications');
     });
     
   });
-
-  server.listen(process.env.PORT || 3001, () => {
-    console.log(`Server running at http://127.0.0.1:${server.address().port}/`);
+  
+  listener.applyMiddleware(app);
+  
+  app.listen(process.env.PORT || 3001, () => {
+    console.log(`Server running at http://127.0.0.1:${process.env.PORT || 3001}/`);
   });
   
 })();
