@@ -47,21 +47,18 @@ const { handleApplication } = require('../bot/lib/applications');
   const authProvider = new ClientCredentialsAuthProvider(clientId, clientSecret);
   const apiClient = new ApiClient({ authProvider });
   
-  // const listener = new EventSubListener(
-  //   apiClient, 
-  //   new MiddlewareAdapter({ 
-  //     hostName: 'bot.outputracing.com', 
-  //     pathPrefix: '/twitch',
-  //     port: process.env.PORT || 3001,
-  //     listenerPort: 8181,
-  //   }), 
-  //   secret
-  // );
-  // 
-  // listener.applyMiddleware(app);
-  // 
-  // await listener.listen();
-
+  const listener = new EventSubListener(
+    apiClient, 
+    new MiddlewareAdapter({ 
+      hostName: 'bot.outputracing.com', 
+      pathPrefix: '/',
+      port: process.env.PORT || 3001
+    }), 
+    secret
+  );
+  
+  listener.applyMiddleware(app);
+  
   // Create data cache for received messages (need to purge at some point)
   let cache = {
     session: {}, 
