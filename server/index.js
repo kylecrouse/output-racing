@@ -57,7 +57,7 @@ const { handleApplication } = require('../bot/lib/applications');
     secret
   );
   
-  listener.applyMiddleware(app);
+  // listener.applyMiddleware(app);
   
   // Create data cache for received messages (need to purge at some point)
   let cache = {
@@ -144,12 +144,6 @@ const { handleApplication } = require('../bot/lib/applications');
     console.log(`Server running at http://127.0.0.1:${server.address().port}/`);
   });
   
-  server.on('upgrade', (req, socket, head) => {
-    wss.handleUpgrade(req, socket, head, socket => {
-      wss.emit('connection', socket, req);
-    });
-  });
-
 })();
 
 function replacer(key, value) {
