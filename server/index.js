@@ -17,7 +17,7 @@ const { handleApplication } = require('../bot/lib/applications');
     origin: ['http://localhost:3000', 'https://outputracing.com']
   };
   
-  app.options('/', cors(options));
+  app.options('/raceday', cors(options));
   
   app.get('/', (req, res) => {
     res.send('OK');
