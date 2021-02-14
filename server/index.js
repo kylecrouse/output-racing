@@ -143,6 +143,12 @@ const { handleApplication } = require('../bot/lib/applications');
   server.listen(process.env.PORT || 3001, () => {
     console.log(`Server running at http://127.0.0.1:${server.address().port}/`);
   });
+  
+  server.on('upgrade', (req, socket, head) => {
+    wss.handleUpgrade(req, socket, head, socket => {
+      wss.emit('connection', socket, req);
+    });
+  });
 
 })();
 
