@@ -107,7 +107,7 @@ const { handleApplication } = require('../bot/lib/applications');
   const server = http.createServer(app);
   
   // Create new socket server piggy-backing on http server
-  const wss = new WebSocket.Server({ server });
+  const wss = new WebSocket.Server({ server, path: '/raceday' });
   
   // Listen for new connections
   wss.on('connection', function connection(ws) {
