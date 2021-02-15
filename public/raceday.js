@@ -91,7 +91,7 @@ function RaceDay(props) {
   
   React.useEffect(() => {
     if (readyState === WebSocket.CLOSED) {
-      let ws = new WebSocket('wss://bot.outputracing.com');
+      let ws = new WebSocket('wss://bot.outputracing.com/raceday');
       // let ws = new WebSocket('ws://localhost');
     
       ws.onopen = () => {
