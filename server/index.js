@@ -110,16 +110,19 @@ const { handleApplication } = require('../bot/lib/applications');
         if (driver) {
           // Get testing data for matching driver
           const record = race.testing[driver.id];
-          // New record set?
-          if (!record || (record && d.b >= record.best)) {
+          // New best lap set?
+          if (!record || (record && d.b >= record.best.lap)) {
             // Put testing data with new record
             race.put({ testing: { 
               ...race.testing, 
-              [driver.id]: { 
-                date: req.body.date,
-                skies: req.body.skies,
-                tracktemp: req.body.tracktemp,
-                best: d.b,
+              [driver.id]: {
+                ...race.testing[driver.id],
+                best: {
+                  date: req.body.date,
+                  skies: req.body.skies,
+                  tracktemp: (req.body.tracktemp * (9/5) + 32).toFixed(0),
+                  lap: d.b,
+                }
               }
             }});
           }
