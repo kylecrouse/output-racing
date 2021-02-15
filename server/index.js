@@ -99,10 +99,9 @@ const { handleApplication } = require('../bot/lib/applications');
   app.post('/telemetry', bodyParser.json(), (req, res) => {
     try {
       // console.log(req.body);
-      console.log(req.body.type, req.body[req.body.type]);
       const data = req.body[req.body.type];
-      console.log('111', data.sname, data.sname == 'TESTING');
-      if (data.sname == 'TESTING') {
+      console.log('111', data, Object.entries(data), data.sname === 'TESTING');
+      if (data.sname === 'TESTING') {
         // Get next race matching track from cache
         const race = league.getNextRace({ track: data.trackname });
         console.log('222', data.trackname, race);
