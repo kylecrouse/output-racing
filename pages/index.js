@@ -15,20 +15,20 @@ export default function Home(props) {
       <Head>
         <title>{props.leagueName}</title>
         <link rel="icon" href="/favicon.ico" />
-        {/* <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>  
+        <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>  
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
         <script src="https://unpkg.com/babel-standalone@6/babel.min.js" crossorigin></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" crossorigin></script>
-        <script src="/raceday.js" type="text/babel"></script> */}
+        <script src="/raceday.js" type="text/babel"></script>
       </Head>
 
       <Navbar />
       
-      {/* <div 
+      <div 
         id="raceday" 
         data-race={ JSON.stringify(props.nextRace) } 
         data-drivers={ JSON.stringify(props.drivers) }
-      /> */}
+      />
 
       <div className={styles.tagline}>
         <div className="columns col-gapless hide-sm">

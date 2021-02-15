@@ -36,43 +36,49 @@ const { handleApplication } = require('../bot/lib/applications');
   
   await league.init();
   
-  if (Array.isArray(league.streamers)) {
-    // Resolve Twitch users from league drivers' usernames
-    const users = await apiClient.helix.users.getUsersByNames(
-      league.streamers
-        .map(streamer => league.drivers.find(driver => driver.id === streamer.sys.id))
-        .filter(streamer => streamer.active && streamer.twitchUserLogin)
-        .map(streamer => streamer.twitchUserLogin)
-    );
+  // Resolve Twitch users from league drivers' usernames
+  const users = await apiClient.helix.users.getUsersByNames(
+    ['aussie_sim_commentator'].concat(league.streamers)
+      .reduce((streamers, streamer) => {
+        if (streamer.sys) {
+          const driver = league.drivers.find(driver => driver.id === streamer.sys.id);
+          if (driver.active && driver.twitchUserLogin)
+            streamers.push(driver.twitchUserLogin);
+        }
+        else
+          streamers.push(streamer);
+        return streamers;
+      }, [])
+  );
 
-    for (user of users) {
-      cache.streamers.set(user.id, { id: user.id, name: user.name, online: !!(await user.getStream()) });
-      
-      await listener.subscribeToStreamOnlineEvents(user.id, e => {
-      	console.log(`${e.broadcasterDisplayName} just went live!`);
-        cache.streamers.set(user.id, { online: true });
-
-        // Broadcast updated data to all clients
-        wss.clients.forEach(function each(client) {
-          if (client.readyState === WebSocket.OPEN)
-            client.send(JSON.stringify(cache.streamers, replacer));
-        });
-      });
-  
-      await listener.subscribeToStreamOfflineEvents(user.id, e => {
-      	console.log(`${e.broadcasterDisplayName} just went offline`);
-        cache.streamers.set(user.id, { online: false });
-
-        // Broadcast updated data to all clients
-        wss.clients.forEach(function each(client) {
-          if (client.readyState === WebSocket.OPEN)
-            client.send(JSON.stringify(cache.streamers, replacer));
-        });
-      });
-    }
+  for (user of users) {
+    cache.streamers.set(user.name, { id: user.id, name: user.name, online: !!(await user.getStream()) });
     
+    await listener.subscribeToStreamOnlineEvents(user.id, e => {
+    	console.log(`${e.broadcasterDisplayName} just went live!`);
+      cache.streamers.set(user.name, { online: true });
+
+      // Broadcast updated data to all clients
+      wss.clients.forEach(function each(client) {
+        if (client.readyState === WebSocket.OPEN)
+          client.send(JSON.stringify(cache.streamers, replacer));
+      });
+    });
+
+    await listener.subscribeToStreamOfflineEvents(user.id, e => {
+    	console.log(`${e.broadcasterDisplayName} just went offline`);
+      cache.streamers.set(user.name, { online: false });
+
+      // Broadcast updated data to all clients
+      wss.clients.forEach(function each(client) {
+        if (client.readyState === WebSocket.OPEN)
+          client.send(JSON.stringify(cache.streamers, replacer));
+      });
+    });
   }
   
+  console.log(cache.streamers);
+    
   const options = {
     origin: ['http://localhost:3000', 'https://outputracing.com']
   };
@@ -105,8 +111,7 @@ const { handleApplication } = require('../bot/lib/applications');
   app.ws('/raceday', (ws, req) => {
 
     // Send cached data to newly connected clients
-    ws.send(JSON.stringify(cache.session));
-    ws.send(JSON.stringify(cache.streamers, replacer));
+    ws.send(JSON.stringify(cache, replacer));
 
     // Handle messages received from iRacing
     ws.on('message', function incoming(data) {

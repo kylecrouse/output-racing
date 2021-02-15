@@ -28,32 +28,50 @@ const initialDriverState = {
 };
 
 function Broadcast(props) {
+  const [readyState, setReadyState] = React.useState(WebSocket.CLOSED);
   const [online, setOnline] = React.useState(false);
-  
-  const check = () => {
-    let timeout;
-    let now = moment();
     
-    if (now.day() === 2) {
-      if (now.hour >= 20)
-        setOnline(true);
-      else
-        timeout = setTimeout(() => check(), 60000);
-    }
-    else 
-      setOnline(false);
+  React.useEffect(() => {
+    if (readyState === WebSocket.CLOSED) {
+      let ws = new WebSocket('wss://bot.outputracing.com/raceday');
+    
+      ws.onopen = () => {
+        console.log('Socket connected');  
+        setReadyState(ws.readyState);
+      }
+    
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data, reviver);
+          console.log(data);
+          if (data.streamers)
+            setOnline(data.streamers.get('aussie_sim_commentator').online || false);
+        } catch(error) {
+          console.log(error, event.data);
+        }
+      }
+    
+      ws.onclose = (event) => {
+        console.log(`Socket closed`, event.reason);
+        setReadyState(ws.readyState);
+      }
       
-    return () => clearTimeout(timeout);
-  };
+      ws.onerror = (err) => {
+        console.error("Socket encountered error: ", err.message, "Closing socket");
+        ws.close();
+      };   
 
-  React.useEffect(check, []);
+    }
+  }, [readyState]);
   
-  return online && (
+  return online && moment().isSameOrAfter(props.date) && (
     <div className="container">
     
       <hgroup className="columns">
         <div className="col-10 col-mx-auto">
-          <img src={ props.logo }/>
+          { props.logo &&
+            <img src={ props.logo.fields.file.url }/>            
+          }
           <div>
             <h1>{ props.name }</h1>
             <h2>{ props.track.name }</h2>
@@ -67,7 +85,7 @@ function Broadcast(props) {
           <div className="twitch">
             <div className="twitch-stream">
               <iframe 
-                src="https://player.twitch.tv/?channel=aussie_sim_commentator&parent=localhost" 
+                src="https://player.twitch.tv/?channel=aussie_sim_commentator&parent=bot.outputracing.com" 
                 frameBorder="0" 
                 allowFullScreen="true" 
                 scrolling="no"
@@ -250,7 +268,7 @@ function RaceDay(props) {
 
 const domContainer = document.querySelector('#raceday');
 ReactDOM.render(
-  <RaceDay 
+  <Broadcast 
     {...JSON.parse(domContainer.dataset.race)} 
     drivers={JSON.parse(domContainer.dataset.drivers)}
   />, 
