@@ -100,6 +100,32 @@ const { handleApplication } = require('../bot/lib/applications');
   
   app.post('/telemetry', bodyParser.json(), (req, res) => {
     console.log(req.body);
+    if (req.body.sname === 'TESTING') {
+      // Get next race matching track from cache
+      const race = league.getNextRace({ track: req.body.trackname });
+      if (race) {
+        const d = req.body.d['0'];
+        // Get matching driver
+        const driver = league.drivers.find(({ name }) => name === d.name);
+        if (driver) {
+          // Get testing data for matching driver
+          const record = race.testing[driver.id];
+          // New record set?
+          if (!record || (record && d.b >= record.best)) {
+            // Put testing data with new record
+            race.put({ testing: { 
+              ...race.testing, 
+              [driver.id]: { 
+                date: req.body.date,
+                skies: req.body.skies,
+                tracktemp: req.body.tracktemp,
+                best: d.b,
+              }
+            }});
+          }
+        }
+      }
+    }
     res.send('OK');
   });
   
