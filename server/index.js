@@ -99,12 +99,13 @@ const { handleApplication } = require('../bot/lib/applications');
   });
   
   app.post('/telemetry', bodyParser.json(), (req, res) => {
-    console.log(req.body);
-    if (req.body.sname === 'TESTING') {
+    // console.log(req.body);
+    const data = req.body[req.body.type];
+    if (data.sname === 'TESTING') {
       // Get next race matching track from cache
-      const race = league.getNextRace({ track: req.body.trackname });
+      const race = league.getNextRace({ track: data.trackname });
       if (race) {
-        const d = req.body.d['0'];
+        const d = data.d['0'];
         // Get matching driver
         const driver = league.drivers.find(({ name }) => name === d.name);
         if (driver) {
@@ -118,9 +119,9 @@ const { handleApplication } = require('../bot/lib/applications');
               [driver.id]: {
                 ...race.testing[driver.id],
                 best: {
-                  date: req.body.date,
-                  skies: req.body.skies,
-                  tracktemp: (req.body.tracktemp * (9/5) + 32).toFixed(0),
+                  date: data.date,
+                  skies: data.skies,
+                  tracktemp: (data.tracktemp * (9/5) + 32).toFixed(0),
                   lap: d.b,
                 }
               }
