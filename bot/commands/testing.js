@@ -21,7 +21,7 @@ module.exports = {
     const embed = new Discord.MessageEmbed()
       .setTitle(`Pre-Race Testing Data`)
       .setThumbnail(track.logo)
-      .addField(race.name, `${track.name}\n${moment(race.date).format('dddd, MMMM Do YYYY')}`)
+      .addField(track.name, `${race.name}\n${moment(race.date).format('dddd, MMMM Do YYYY')}`)
       .addFields(
         Object.entries(race.testing).map(([id, record]) => {
           const driver = league.drivers.find(driver => driver.id === id);

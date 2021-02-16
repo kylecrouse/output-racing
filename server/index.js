@@ -98,6 +98,7 @@ const { handleApplication } = require('../bot/lib/applications');
   
   app.post('/telemetry', bodyParser.json(), (req, res) => {
     try {
+      if (req.body.type !== 'data') return res.send('OK');
       // console.log(req.body);
       const data = JSON.parse(req.body[req.body.type]);
       if (data.sname === 'TESTING') {
@@ -114,10 +115,26 @@ const { handleApplication } = require('../bot/lib/applications');
               // New best lap set?
               if (!record || (record && d.b >= record.best.lap)) {
                 // Put testing data with new record
+                league.season.updateRace(
+                  race.put({ testing: { 
+                    ...race.testing, 
+                    [driver.id]: {
+                      ...race.testing[driver.id],
+                      best: {
+                        date: data.date,
+                        skies: data.skies,
+                        tracktemp: (data.tracktemp * (9/5) + 32).toFixed(0),
+                        lap: d.b,
+                      }
+                    }
+                  }})
+                );
+              }
+            } else {
+              // Put testing data with new record
+              league.season.updateRace(
                 race.put({ testing: { 
-                  ...race.testing, 
                   [driver.id]: {
-                    ...race.testing[driver.id],
                     best: {
                       date: data.date,
                       skies: data.skies,
@@ -125,20 +142,8 @@ const { handleApplication } = require('../bot/lib/applications');
                       lap: d.b,
                     }
                   }
-                }});
-              }
-            } else {
-              // Put testing data with new record
-              race.put({ testing: { 
-                [driver.id]: {
-                  best: {
-                    date: data.date,
-                    skies: data.skies,
-                    tracktemp: (data.tracktemp * (9/5) + 32).toFixed(0),
-                    lap: d.b,
-                  }
-                }
-              }});
+                }})
+              );
             }
           }
         }
