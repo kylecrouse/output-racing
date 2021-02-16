@@ -42,7 +42,7 @@ class Broadcast extends React.Component {
   
   componentDidUpdate(prevProps = {}, prevState = {}) {
     if (this.state.readyState === WebSocket.CLOSED 
-          && this.prevState.readyState !== this.state.readyState)
+          && prevState.readyState !== this.state.readyState)
       this.connect();
   }
   
