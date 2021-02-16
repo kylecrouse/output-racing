@@ -27,78 +27,165 @@ const initialDriverState = {
   status: ''
 };
 
-function Broadcast(props) {
-  const [readyState, setReadyState] = React.useState(WebSocket.CLOSED);
-  const [online, setOnline] = React.useState(false);
-    
-  React.useEffect(() => {
-    if (readyState === WebSocket.CLOSED) {
-      let ws = new WebSocket('wss://bot.outputracing.com/raceday');
-    
-      ws.onopen = () => {
-        console.log('Socket connected');  
-        setReadyState(ws.readyState);
-      }
-    
-      ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data, reviver);
-          console.log(data);
-          if (data.streamers)
-            setOnline(data.streamers.get('aussie_sim_commentator').online || false);
-        } catch(error) {
-          console.log(error, event.data);
-        }
-      }
-    
-      ws.onclose = (event) => {
-        console.log(`Socket closed`, event.reason);
-        setReadyState(ws.readyState);
-      }
-      
-      ws.onerror = (err) => {
-        console.error("Socket encountered error: ", err.message, "Closing socket");
-        ws.close();
-      };   
-
-    }
-  }, [readyState]);
+class Broadcast extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      readyState: WebSocket.CLOSED,
+      online: false
+    };
+  }
   
-  return online && moment().isSameOrAfter(props.date) && (
-    <div className="container">
+  componentDidMount() {
+    this.connect();
+  }
+  
+  componentDidUpdate(prevProps = {}, prevState = {}) {
+    if (this.state.readyState === WebSocket.CLOSED 
+          && this.prevState.readyState !== this.state.readyState)
+      this.connect();
+  }
+  
+  connect() {
+    let ws = new WebSocket('wss://bot.outputracing.com/raceday');
+  
+    ws.onopen = () => {
+      console.log('Socket connected');  
+      this.setState({ readyState: ws.readyState });
+    }
+  
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data, reviver);
+        // console.log(data);
+        if (data.streamers)
+          this.setState({ online: data.streamers.get('aussie_sim_commentator').online || false });
+      } catch(error) {
+        console.log(error, event.data);
+      }
+    }
+  
+    ws.onclose = (event) => {
+      console.log(`Socket closed`, event.reason);
+      this.setState({ readyState: ws.readyState });
+    }
     
-      <hgroup className="columns">
-        <div className="col-10 col-mx-auto">
-          { props.logo &&
-            <img src={ props.logo.fields.file.url }/>            
-          }
-          <div>
-            <h1>{ props.name }</h1>
-            <h2>{ props.track.name }</h2>
-          </div>
-        </div>
-      </hgroup>
+    ws.onerror = (err) => {
+      console.error("Socket encountered error: ", err.message, "Closing socket");
+      ws.close();
+    };   
+  }
+  
+  render() {
+    return this.state.online && moment().isSameOrAfter(this.props.date) && (
+      <div className="container">
       
-      <div className="columns">
-        <div className="column col-9 col-lg-12 col-mx-auto">
-        
-          <div className="twitch">
-            <div className="twitch-stream">
-              <iframe 
-                src="https://player.twitch.tv/?channel=aussie_sim_commentator&parent=bot.outputracing.com" 
-                frameBorder="0" 
-                allowFullScreen="true" 
-                scrolling="no"
-              />
+        <hgroup className="columns">
+          <div className="col-10 col-mx-auto">
+            { this.props.logo &&
+              <img src={ this.props.logo.fields.file.url }/>            
+            }
+            <div>
+              <h1>{ this.props.name }</h1>
+              <h2>{ this.props.track.name }</h2>
             </div>
           </div>
+        </hgroup>
+        
+        <div className="columns">
+          <div className="column col-9 col-lg-12 col-mx-auto">
           
+            <div className="twitch">
+              <div className="twitch-stream">
+                <iframe 
+                  src="https://player.twitch.tv/?channel=aussie_sim_commentator&parent=bot.outputracing.com" 
+                  frameBorder="0" 
+                  allowFullScreen="true" 
+                  scrolling="no"
+                />
+              </div>
+            </div>
+            
+          </div>
         </div>
+        
       </div>
-      
-    </div>
-  );
+    );
+  }
 }
+
+// function Broadcast(props) {
+//   const [readyState, setReadyState] = React.useState(WebSocket.CLOSED);
+//   const [online, setOnline] = React.useState(false);
+//     
+//   React.useEffect(() => {
+//     if (readyState === WebSocket.CLOSED) {
+//       let ws = new WebSocket('wss://bot.outputracing.com/raceday');
+//     
+//       ws.onopen = () => {
+//         console.log('Socket connected');  
+//         setReadyState(ws.readyState);
+//       }
+//     
+//       ws.onmessage = (event) => {
+//         try {
+//           const data = JSON.parse(event.data, reviver);
+//           console.log(data);
+//           if (data.streamers)
+//             setOnline(data.streamers.get('aussie_sim_commentator').online || false);
+//         } catch(error) {
+//           console.log(error, event.data);
+//         }
+//       }
+//     
+//       ws.onclose = (event) => {
+//         console.log(`Socket closed`, event.reason);
+//         setReadyState(ws.readyState);
+//       }
+//       
+//       ws.onerror = (err) => {
+//         console.error("Socket encountered error: ", err.message, "Closing socket");
+//         ws.close();
+//       };   
+// 
+//     }
+//   }, [readyState]);
+//   
+//   return online && moment().isSameOrAfter(props.date) && (
+//     <div className="container">
+//     
+//       <hgroup className="columns">
+//         <div className="col-10 col-mx-auto">
+//           { props.logo &&
+//             <img src={ props.logo.fields.file.url }/>            
+//           }
+//           <div>
+//             <h1>{ props.name }</h1>
+//             <h2>{ props.track.name }</h2>
+//           </div>
+//         </div>
+//       </hgroup>
+//       
+//       <div className="columns">
+//         <div className="column col-9 col-lg-12 col-mx-auto">
+//         
+//           <div className="twitch">
+//             <div className="twitch-stream">
+//               <iframe 
+//                 src="https://player.twitch.tv/?channel=aussie_sim_commentator&parent=bot.outputracing.com" 
+//                 frameBorder="0" 
+//                 allowFullScreen="true" 
+//                 scrolling="no"
+//               />
+//             </div>
+//           </div>
+//           
+//         </div>
+//       </div>
+//       
+//     </div>
+//   );
+// }
 
 function RaceDay(props) {
   const [raceday, setRaceday] = React.useState(true);
