@@ -27,8 +27,7 @@ module.exports = {
           const driver = league.drivers.find(driver => driver.id === id);
           return { 
             name: driver.nickname || driver.name, 
-            value: `\`Best time: ${record.best.lap} @ ${record.best.tracktemp}°F\``,
-            inline: true
+            value: `\`Best time: ${record.best.lap} @ ${record.best.tracktemp}°F\``
           };
         })
       )
