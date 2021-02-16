@@ -100,7 +100,8 @@ const { handleApplication } = require('../bot/lib/applications');
     try {
       // console.log(req.body);
       const data = req.body[req.body.type];
-      console.log('111', data, Object.entries(data), data.sname === 'TESTING');
+      const json = JSON.parse(req.body[req.body.type]);
+      console.log('111', typeof data, data.sname === 'TESTING', json.sname === 'TESTING');
       if (data.sname === 'TESTING') {
         // Get next race matching track from cache
         const race = league.getNextRace({ track: data.trackname });
