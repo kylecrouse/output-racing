@@ -101,11 +101,11 @@ const { handleApplication } = require('../bot/lib/applications');
       if (req.body.type !== 'data') return res.send('OK');
       // console.log(req.body);
       const data = JSON.parse(req.body[req.body.type]);
-      if (data.sname === 'TESTING') {
+      const d = data.d['0'];
+      if (data.sname === 'TESTING' && d.b) {
         // Get next race matching track from cache
         const race = league.getNextRace({ track: data.trackname });
         if (race) {
-          const d = data.d['0'];
           // Get matching driver
           const driver = league.drivers.find(({ name }) => name === d.name);
           if (driver) {
@@ -115,26 +115,10 @@ const { handleApplication } = require('../bot/lib/applications');
               // New best lap set?
               if (!record || (record && d.b > record.best.lap)) {
                 // Put testing data with new record
-                league.season.updateRace(
-                  race.put({ testing: { 
-                    ...race.testing, 
-                    [driver.id]: {
-                      ...race.testing[driver.id],
-                      best: {
-                        date: data.date,
-                        skies: data.skies,
-                        tracktemp: (data.tracktemp * (9/5) + 32).toFixed(0),
-                        lap: d.b,
-                      }
-                    }
-                  }})
-                );
-              }
-            } else {
-              // Put testing data with new record
-              league.season.updateRace(
-                race.put({ testing: { 
+                league.season.updateRace(race, { testing: { 
+                  ...race.testing, 
                   [driver.id]: {
+                    ...race.testing[driver.id],
                     best: {
                       date: data.date,
                       skies: data.skies,
@@ -142,8 +126,20 @@ const { handleApplication } = require('../bot/lib/applications');
                       lap: d.b,
                     }
                   }
-                }})
-              );
+                }});
+              }
+            } else {
+              // Put testing data with new record
+              league.season.updateRace(race, { testing: { 
+                [driver.id]: {
+                  best: {
+                    date: data.date,
+                    skies: data.skies,
+                    tracktemp: (data.tracktemp * (9/5) + 32).toFixed(0),
+                    lap: d.b,
+                  }
+                }
+              }});
             }
           }
         }
