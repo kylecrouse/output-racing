@@ -77,7 +77,7 @@ class Broadcast extends React.Component {
   }
   
   render() {
-    return this.state.online && moment().isSameOrAfter(this.props.date) && (
+    return this.state.online && moment().isSameOrAfter(moment(this.props.date).subtract(1, 'hour')) && (
       <div className="container">
       
         <hgroup className="columns">
