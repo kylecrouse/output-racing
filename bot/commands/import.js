@@ -144,7 +144,7 @@ async function handleLatest(args) {
 }
 
 function handleResults(args) {
-  return getResults(args[1], {
+  return getResults(args[1], null, {
     name: (args.length > 2) ? args[2] : undefined,
     broadcast: (args.length > 3) ? args[3] : undefined
   });
