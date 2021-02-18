@@ -153,38 +153,32 @@ module.exports = {
   },
   getAttendanceEmbed: (season, drivers) => {
     
-    const stats = season.stats
-      .filter(({ driver }) => {
-        const match = drivers.find(({ name }) => name == driver);
-        return match && match.active;
-      })
-      .map(({ starts, driver }) => {
+    const stats = drivers
+      .filter(driver => driver.active)
+      .map(driver => {
+        const { starts = 0 } = season.stats.find(props => props.driver === driver.name) || {};
+        
         const streak = season.results
-          .filter(({ raceId }) => {
-            const race = season.schedule.find(race => race.raceId == raceId);
-            return race.counts;
-          })
+          .filter(race => race.raceId && race.counts)
           .sort((a, b) => new Date(a.date) - new Date(b.date))
           .reduce((streak, race) => {
-            return !!race.results.find(({ name }) => name == driver)
+            return !!race.results.find(({ name }) => name == driver.name)
               ? 0 
               : ++streak;
           }, 0);
-        return { starts, driver, streak };
+        
+        return { driver: driver.nickname || driver.name, starts, streak };
       })
+      .filter(({ streak }) => streak > 0)
       .sort((a, b) => (b.starts - a.starts) || (a.streak - b.streak));
     
-    const scheduled = season.schedule.filter(race => race.counts);
-    const completed = Array.isArray(season.results)
-      ? season.results.filter(
-          race => scheduled.find(({ raceId }) => raceId == race.raceId)
-        )
-      : [];    
+    const scheduled = season.results.filter(race => race.counts);
+    const completed = scheduled.filter(race => race.raceId);
 
     const embed = new Discord.MessageEmbed()
     	.setTitle('Attendance Report')
       .addField(season.name, `After ${completed.length} of ${scheduled.length} races`)
-      .setThumbnail('http://output-racing.s3-website.us-west-2.amazonaws.com/logo-stacked.png')
+      .setThumbnail('https://outputracing.com/logo-stacked.png')
     	.addFields(
     		{ name: 'Driver', value: stats.map(item => `\`${item.driver}\``), inline: true },
     		{ name: 'Starts', value: stats.map(item => `\`${item.starts}\``), inline: true },
