@@ -36,22 +36,12 @@ module.exports = {
       
       const embed = new Discord.MessageEmbed()
       	.setTitle('Pending League Applications')
+        .setThumbnail('https://outputracing.com/logo-stacked.png')
         .addFields(
-          { 
-            name: 'Driver', 
-            value: applicants.map(applicant => `\`${applicant.Name}\``), 
-            inline: true 
-          },
-          { 
-            name: 'Ratings', 
-            value: applicants.map(applicant => `\`${applicant["Overall inc / Current IR, SR, Class"]}\``), 
-            inline: true 
-          },
-          { 
-            name: 'Applied', 
-            value: applicants.map(applicant => `\`${moment(applicant["Timestamp"]).format('MM-DD-YYYY')}\``), 
-            inline: true 
-          },
+          applicants.map(applicant => ({
+            name: applicant.Name,
+            value: `Applied: ${moment(applicant["Timestamp"]).format('MM-DD-YYYY')}\n${applicant["Overall inc / Current IR, SR, Class"]} / ${applicant['Starts']} starts`
+          }))
         )
         .setTimestamp();
         
@@ -70,6 +60,7 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
       	.setTitle(`${applicants.Name}'s League Application`)
         .setURL(`https://members.iracing.com/membersite/member/CareerStats.do?custid=${applicants.custId}`)
+        .setThumbnail('https://outputracing.com/logo-stacked.png')
         .addFields(
           { name: 'Application Date', value: `\`${moment(applicants.Timestamp).format('MMMM Do, YYYY')}\`` },
           { name: 'Status', value: `\`${applicants['Approved']}\`` },
