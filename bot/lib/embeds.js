@@ -130,12 +130,11 @@ module.exports = {
       })
       .sort((a, b) => (a.incidentsLap - b.incidentsLap) || (a.incidentsRace - b.incidentsRace));
     
-    const scheduled = season.schedule.filter(race => race.counts);
-    const completed = Array.isArray(season.results)
-      ? season.results.filter(
-          race => scheduled.find(({ raceId }) => raceId == race.raceId)
-        )
-      : [];    
+    const scheduled = season.results.filter(race => race.counts);
+    const completed = scheduled.filter(race => race.raceId);
+    
+    const maxLaps = stats.reduce((max, { laps }) => Math.max(max, laps.length), 0);
+    const maxStarts = stats.reduce((max, { starts }) => Math.max(max, starts.length), 0);
 
     const embed = new Discord.MessageEmbed()
     	.setTitle('Incident Report')
@@ -144,7 +143,7 @@ module.exports = {
     	.addFields(
     		{ name: 'Driver', value: stats.map(item => `\`${item.driver}\``), inline: true },
     		{ name: 'Incidents', value: stats.map(item => `\`${item.incidentsLap} / ${item.incidentsRace}\``), inline: true },
-    		{ name: 'Laps / Starts', value: stats.map(item => `\`${item.laps.length == 3 ? '\u00a0\u00a0' : ''}${item.laps} / ${item.starts.length == 1 ? '\u00a0' : ''}${item.starts}\``), inline: true },
+    		{ name: 'Laps / Starts', value: stats.map(item => `\`${item.laps.length < maxLaps ? '\u00a0'.repeat(maxLaps - item.laps.length) : ''}${item.laps} / ${item.starts.length < maxStarts ? '\u00a0'.repeat(maxStarts - item.starts.length) : ''}${item.starts}\``), inline: true },
     	)
     	.setTimestamp()
 
