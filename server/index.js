@@ -56,7 +56,7 @@ const { handleApplication } = require('../bot/lib/applications');
     cache.streamers.set(user.name, { id: user.id, name: user.name, online: !!(await user.getStream()) });
 
     try {    
-      await listener.subscribeToStreamOnlineEvents(user.id, e => {
+      listener.subscribeToStreamOnlineEvents(user.id, e => {
       	console.log(`${e.broadcasterDisplayName} just went live!`);
         cache.streamers.set(user.name, { online: true });
   
@@ -71,7 +71,7 @@ const { handleApplication } = require('../bot/lib/applications');
     }
 
     try {
-      await listener.subscribeToStreamOfflineEvents(user.id, e => {
+      listener.subscribeToStreamOfflineEvents(user.id, e => {
       	console.log(`${e.broadcasterDisplayName} just went offline`);
         cache.streamers.set(user.name, { online: false });
   
