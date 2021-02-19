@@ -157,6 +157,15 @@ const { handleApplication } = require('../bot/lib/applications');
     res.send('OK');
   });
   
+  app.get('/twitch', (req, res) => {
+    console.log(req.headers);
+  })
+  
+  app.post('/twitch', bodyParser.json(), (req, res) => {
+    console.log(req.headers);
+    console.log(req.body);
+  })
+  
   app.ws('/raceday', (ws, req) => {
 
     // Send cached data to newly connected clients
