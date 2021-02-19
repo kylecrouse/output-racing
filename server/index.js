@@ -54,28 +54,36 @@ const { handleApplication } = require('../bot/lib/applications');
 
   for (user of users) {
     cache.streamers.set(user.name, { id: user.id, name: user.name, online: !!(await user.getStream()) });
-    
-    await listener.subscribeToStreamOnlineEvents(user.id, e => {
-    	console.log(`${e.broadcasterDisplayName} just went live!`);
-      cache.streamers.set(user.name, { online: true });
 
-      // Broadcast updated data to all clients
-      wss.clients.forEach(function each(client) {
-        if (client.readyState === WebSocket.OPEN)
-          client.send(JSON.stringify(cache.streamers, replacer));
+    try {    
+      await listener.subscribeToStreamOnlineEvents(user.id, e => {
+      	console.log(`${e.broadcasterDisplayName} just went live!`);
+        cache.streamers.set(user.name, { online: true });
+  
+        // Broadcast updated data to all clients
+        wss.clients.forEach(function each(client) {
+          if (client.readyState === WebSocket.OPEN)
+            client.send(JSON.stringify(cache.streamers, replacer));
+        });
       });
-    });
+    } catch(err) {
+      console.log('subscribe stream online', err);
+    }
 
-    await listener.subscribeToStreamOfflineEvents(user.id, e => {
-    	console.log(`${e.broadcasterDisplayName} just went offline`);
-      cache.streamers.set(user.name, { online: false });
-
-      // Broadcast updated data to all clients
-      wss.clients.forEach(function each(client) {
-        if (client.readyState === WebSocket.OPEN)
-          client.send(JSON.stringify(cache.streamers, replacer));
+    try {
+      await listener.subscribeToStreamOfflineEvents(user.id, e => {
+      	console.log(`${e.broadcasterDisplayName} just went offline`);
+        cache.streamers.set(user.name, { online: false });
+  
+        // Broadcast updated data to all clients
+        wss.clients.forEach(function each(client) {
+          if (client.readyState === WebSocket.OPEN)
+            client.send(JSON.stringify(cache.streamers, replacer));
+        });
       });
-    });
+    } catch(err) {
+      console.log('subscribe stream offline', err);
+    }
   }
   
   const options = {
