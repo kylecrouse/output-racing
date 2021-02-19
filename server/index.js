@@ -188,6 +188,9 @@ const { handleApplication } = require('../bot/lib/applications');
   
   listener.applyMiddleware(app);
   
+  let subs = await apiClient.helix.eventSub.getSubscriptionsPaginated().getAll();
+  console.log(subs);
+  
   app.listen(process.env.PORT || 3001, () => {
     console.log(`Server running at http://127.0.0.1:${process.env.PORT || 3001}/`);
   });
