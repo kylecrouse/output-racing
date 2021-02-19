@@ -82,15 +82,33 @@ module.exports = {
           driver.put({ number: args[0] })
         ]);
         
-        // Update guild nickname to number + name.
-        if (message.member) {
-          await message.member.setNickname(
-            message.member.displayName.replace(/^(#[0-9]*\s)?/i, `#${args[0]} `), 
-            'League guidelines'
-          );
+        if (message.mentions.users.size > 0) {
+          const guild = message.client.guilds.cache.get('');
+          const member = guild.members.cache.get(message.mentions.firstKey());
+          // Update guild nickname to number + name.
+          if (!message.guild || !message.guild.me.hasPermission('MANAGE_NICKNAMES'))
+            return message.channel.send(`<@${message.mentions.firstKey()}>, please change your nickname to \`#number name\`, like **#26 Ricky Botty**, and send <@697817102534311996> your number art or paint settings to update your driver profile.`);
+          else {
+            await member.setNickname(
+              member.displayName.replace(/^(#[0-9]*\s)?/i, `#${args[0]} `), 
+              'League guidelines'
+            );
+            message.channel.send(`<@${message.mentions.firstKey()}>, send <@697817102534311996> your number art or paint settings to update your driver profile.`);        
+          }
+        }
+        else {
+          // Update guild nickname to number + name.
+          if (!message.guild || !message.guild.me.hasPermission('MANAGE_NICKNAMES'))
+            return message.reply(`you're approved. Please change your nickname to \`#number name\`, like **#26 Ricky Botty**, and send <@697817102534311996> your number art or paint settings to update your driver profile.`);
+          else {
+            await message.member.setNickname(
+              message.member.displayName.replace(/^(#[0-9]*\s)?/i, `#${args[0]} `), 
+              'League guidelines'
+            );
+            message.reply("you're approved. Send <@697817102534311996> your number art or paint settings to update your driver profile.");        
+          }
         }
 
-        message.reply("you're approved. Send @kylecrouse your number art or paint settings to update your driver profile.");        
       } else {
         message.reply('your choice was denied. Try a different number.');
       }
