@@ -57,7 +57,7 @@ class Broadcast extends React.Component {
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data, reviver);
-        // console.log(data);
+        console.log(data, { online: data.streamers.get('aussie_sim_commentator').online || false });
         if (data.streamers)
           this.setState({ online: data.streamers.get('aussie_sim_commentator').online || false });
       } catch(error) {
@@ -77,7 +77,7 @@ class Broadcast extends React.Component {
   }
   
   render() {
-    return this.state.online && moment().isSameOrAfter(moment(this.props.date).subtract(1, 'hour')) && (
+    return this.state.online && moment().isSameOrAfter(this.props.date) && (
       <div className="container">
       
         <hgroup className="columns">

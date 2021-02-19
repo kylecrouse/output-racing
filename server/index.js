@@ -25,7 +25,8 @@ const { handleApplication } = require('../bot/lib/applications');
       pathPrefix: '/twitch',
       port: process.env.PORT || 3001
     }), 
-    secret
+    secret,
+    { logger: { minLevel: 'debug' }}
   );
   
   // Create data cache for received messages (need to purge at some point)
