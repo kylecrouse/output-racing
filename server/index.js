@@ -22,8 +22,6 @@ const { handleApplication } = require('../bot/lib/applications');
     apiClient, 
     new MiddlewareAdapter({ 
       hostName: 'bot.outputracing.com', 
-      pathPrefix: '/twitch',
-      port: process.env.PORT || 3001
     }), 
     secret,
     { logger: { minLevel: 'debug' }}
@@ -164,11 +162,6 @@ const { handleApplication } = require('../bot/lib/applications');
     console.log(req.body);
     res.send('OK');
   });
-  
-  app.all('/twitch', (req, res) => {
-    console.log(req.headers);
-    res.send('OK');
-  })
   
   app.ws('/raceday', (ws, req) => {
 
