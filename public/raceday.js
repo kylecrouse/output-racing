@@ -57,9 +57,8 @@ class Broadcast extends React.Component {
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data, reviver);
-        console.log(data, { online: data.streamers.get('aussie_sim_commentator').online || false });
         if (data.streamers)
-          this.setState({ online: data.streamers.get('aussie_sim_commentator').online || false });
+          this.setState({ online: data.streamers.get('aussie_sim_commentator') || false });
       } catch(error) {
         console.log(error, event.data);
       }

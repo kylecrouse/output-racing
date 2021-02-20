@@ -52,12 +52,12 @@ const { handleApplication } = require('../bot/lib/applications');
   );
 
   for (user of users) {
-    cache.streamers.set(user.name, { id: user.id, name: user.name, online: !!(await user.getStream()) });
+    cache.streamers.set(user.name, !!(await user.getStream()));
 
     try {    
       await listener.subscribeToStreamOnlineEvents(user.id, e => {
       	console.log(`${e.broadcasterDisplayName} just went live!`);
-        cache.streamers.set(user.name, { online: true });
+        cache.streamers.set(user.name, true);
   
         // Broadcast updated data to all clients
         WebSocket.getWss().clients.forEach(function each(client) {
@@ -72,7 +72,7 @@ const { handleApplication } = require('../bot/lib/applications');
     try {
       await listener.subscribeToStreamOfflineEvents(user.id, e => {
       	console.log(`${e.broadcasterDisplayName} just went offline`);
-        cache.streamers.set(user.name, { online: false });
+        cache.streamers.set(user.name, false);
   
         // Broadcast updated data to all clients
         WebSocket.getWss().clients.forEach(function each(client) {
