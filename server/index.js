@@ -59,7 +59,7 @@ const { handleApplication } = require('../bot/lib/applications');
         cache.streamers.set(user.name, { online: true });
   
         // Broadcast updated data to all clients
-        wss.clients.forEach(function each(client) {
+        WebSocket.getWss().clients.forEach(function each(client) {
           if (client.readyState === WebSocket.OPEN)
             client.send(JSON.stringify(cache.streamers, replacer));
         });
@@ -74,7 +74,7 @@ const { handleApplication } = require('../bot/lib/applications');
         cache.streamers.set(user.name, { online: false });
   
         // Broadcast updated data to all clients
-        wss.clients.forEach(function each(client) {
+        WebSocket.getWss().clients.forEach(function each(client) {
           if (client.readyState === WebSocket.OPEN)
             client.send(JSON.stringify(cache.streamers, replacer));
         });
@@ -183,7 +183,7 @@ const { handleApplication } = require('../bot/lib/applications');
       }
       
       // Broadcast data to all clients (except self)
-      wss.clients.forEach(function each(client) {
+      WebSocket.getWss().clients.forEach(function each(client) {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
           client.send(data);
         }
@@ -193,9 +193,6 @@ const { handleApplication } = require('../bot/lib/applications');
   });
   
   listener.applyMiddleware(app);
-  
-  let subs = await apiClient.helix.eventSub.getSubscriptionsPaginated().getAll();
-  console.log(subs);
   
   app.listen(process.env.PORT || 3001, () => {
     console.log(`Server running at http://127.0.0.1:${process.env.PORT || 3001}/`);
