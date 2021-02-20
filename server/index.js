@@ -22,6 +22,7 @@ const { handleApplication } = require('../bot/lib/applications');
     apiClient, 
     new MiddlewareAdapter({ 
       hostName: 'bot.outputracing.com', 
+      pathPrefix: '/twitch'
     }), 
     secret,
     { logger: { minLevel: 'debug' }}
