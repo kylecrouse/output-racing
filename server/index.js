@@ -4,6 +4,8 @@ const app = express();
 const WebSocket = require('express-ws')(app);
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const Promise = require('bluebird');
+const cleanup = require('node-cleanup');
 const { getSecretValue } = require('../lib/secrets');
 const { ApiClient } = require('twitch');
 const { ClientCredentialsAuthProvider } = require('twitch-auth');
@@ -36,8 +38,10 @@ const { handleApplication } = require('../bot/lib/applications');
   
   await league.init();
   
-  // Resolve Twitch users from league drivers' usernames
-  const users = await apiClient.helix.users.getUsersByNames(
+  // Generate cache of Twitch streamers and subscribe for updates
+  const subscriptions = await Promise.map(
+    // Resolve Twitch users from league drivers' usernames
+    apiClient.helix.users.getUsersByNames(
     ['aussie_sim_commentator'].concat(league.streamers)
       .reduce((streamers, streamer) => {
         if (streamer.sys) {
@@ -49,41 +53,25 @@ const { handleApplication } = require('../bot/lib/applications');
           streamers.push(streamer);
         return streamers;
       }, [])
+    ),
+    async (user) => {
+      // Set cache with streamer's current status
+      cache.streamers.set(user.name, !!(await user.getStream()));
+      // Subscribe to stream online/offline events
+      return Promise.all([
+        listener.subscribeToStreamOnlineEvents(user.id, e => {
+          cache.streamers.set(user.name, true);
+          // Broadcast updated data to all clients
+          broadcast(JSON.stringify(cache.streamers, replacer));
+        }),
+        listener.subscribeToStreamOfflineEvents(user.id, e => {
+          cache.streamers.set(user.name, false);
+          // Broadcast updated data to all clients
+          broadcast(JSON.stringify(cache.streamers, replacer));
+        })
+      ]).catch(err => console.log(err));
+    }
   );
-
-  for (user of users) {
-    cache.streamers.set(user.name, !!(await user.getStream()));
-
-    try {    
-      await listener.subscribeToStreamOnlineEvents(user.id, e => {
-      	console.log(`${e.broadcasterDisplayName} just went live!`);
-        cache.streamers.set(user.name, true);
-  
-        // Broadcast updated data to all clients
-        WebSocket.getWss().clients.forEach(function each(client) {
-          if (client.readyState === WebSocket.OPEN)
-            client.send(JSON.stringify(cache.streamers, replacer));
-        });
-      });
-    } catch(err) {
-      console.log('subscribe stream online', err);
-    }
-
-    try {
-      await listener.subscribeToStreamOfflineEvents(user.id, e => {
-      	console.log(`${e.broadcasterDisplayName} just went offline`);
-        cache.streamers.set(user.name, false);
-  
-        // Broadcast updated data to all clients
-        WebSocket.getWss().clients.forEach(function each(client) {
-          if (client.readyState === WebSocket.OPEN)
-            client.send(JSON.stringify(cache.streamers, replacer));
-        });
-      });
-    } catch(err) {
-      console.log('subscribe stream offline', err);
-    }
-  }
   
   const options = {
     origin: ['http://localhost:3000', 'https://outputracing.com']
@@ -184,11 +172,7 @@ const { handleApplication } = require('../bot/lib/applications');
       }
       
       // Broadcast data to all clients (except self)
-      WebSocket.getWss().clients.forEach(function each(client) {
-        if (client !== ws && client.readyState === WebSocket.OPEN) {
-          client.send(data);
-        }
-      });
+      broadcast(data);
     });
     
   });
@@ -199,7 +183,36 @@ const { handleApplication } = require('../bot/lib/applications');
     console.log(`Server running at http://127.0.0.1:${process.env.PORT || 3001}/`);
   });
   
+  // Unsubscribe listeners on exit
+  cleanup(function unsubscribe(exitCode, signal) {
+    console.log('Cleaning up...', { exitCode, signal, subscriptions });
+    if (signal && Array.isArray(subscriptions)) {
+      // Kill process after unsubscribing
+      Promise.map(
+        subscriptions
+          .filter(sub => sub && typeof sub.stop == 'function')
+          .flat(), // subscriptions = [[online, offline], ...]
+        subscription => subscription.stop()
+      ).then(() => {
+        console.log('Exiting...');
+        // Safely exit
+        process.kill(process.pid, signal);
+      });
+      // Prevents cleanup handler from being called again
+      cleanup.uninstall();
+      // Prevent exit until cleanup
+      return false;
+    }
+  });
+  
 })();
+
+function broadcast(msg) {
+  WebSocket.getWss().clients.forEach(function each(client) {
+    if (client.readyState === WebSocket.OPEN)
+      client.send(msg);
+  });
+}
 
 function replacer(key, value) {
   if (value instanceof Map)

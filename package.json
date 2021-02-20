@@ -33,6 +33,7 @@
     "mime-types": "^2.1.28",
     "moment": "^2.29.1",
     "next": "10.0.1",
+    "node-cleanup": "^2.1.2",
     "node-fetch": "^2.6.1",
     "puppeteer": "^5.5.0",
     "react": "17.0.1",
