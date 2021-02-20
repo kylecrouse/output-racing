@@ -56,7 +56,7 @@ const { handleApplication } = require('../bot/lib/applications');
     cache.streamers.set(user.name, { id: user.id, name: user.name, online: !!(await user.getStream()) });
 
     try {    
-      listener.subscribeToStreamOnlineEvents(user.id, e => {
+      await listener.subscribeToStreamOnlineEvents(user.id, e => {
       	console.log(`${e.broadcasterDisplayName} just went live!`);
         cache.streamers.set(user.name, { online: true });
   
@@ -71,7 +71,7 @@ const { handleApplication } = require('../bot/lib/applications');
     }
 
     try {
-      listener.subscribeToStreamOfflineEvents(user.id, e => {
+      await listener.subscribeToStreamOfflineEvents(user.id, e => {
       	console.log(`${e.broadcasterDisplayName} just went offline`);
         cache.streamers.set(user.name, { online: false });
   
@@ -164,6 +164,11 @@ const { handleApplication } = require('../bot/lib/applications');
     console.log(req.body);
     res.send('OK');
   });
+  
+  app.all('/twitch', (req, res) => {
+    console.log(req.headers);
+    res.send('OK');
+  })
   
   app.ws('/raceday', (ws, req) => {
 
