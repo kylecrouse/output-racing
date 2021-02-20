@@ -26,8 +26,7 @@ const { handleApplication } = require('../bot/lib/applications');
       hostName: 'bot.outputracing.com', 
       pathPrefix: '/twitch'
     }), 
-    secret,
-    { logger: { minLevel: 'debug' }}
+    secret
   );
   
   // Create data cache for received messages (need to purge at some point)
