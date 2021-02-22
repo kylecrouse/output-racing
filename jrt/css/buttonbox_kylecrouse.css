@@ -1,0 +1,160 @@
+body {
+  background: black url(https://wallpapercave.com/wp/lyYo6yd.jpg) no-repeat center;
+  background-size: cover;
+  margin: 0;
+  width: 100%;
+  height: 100vh;
+  padding: 0 5%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+#page {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.row {
+  width: calc(1280px - 10%);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.column {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.button {
+  background: linear-gradient(#600, #c00);
+  background-clip: padding-box;
+  border: 1px solid #333;
+  border-radius: 50%;
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 3.8rem;
+  margin-bottom: 6rem;
+  padding: 2px;
+  position: relative;
+  width: 4rem;
+  height: 4rem;
+  text-shadow: -1 -1 2px black;
+}
+
+.button::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(#666, #333, #666);
+  z-index: -2;
+  margin: -4px;
+  border-radius: inherit;
+  box-shadow: 0 0 4px 2px rgba(0,0,0,0.5);
+} 
+
+.button::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, #666, #333, #666);
+  z-index: -1;
+  margin: -2px;
+  border-radius: inherit;
+}
+
+.button > div {
+  background: radial-gradient(circle at 50% 50%, red 5%, transparent 60%), radial-gradient(ellipse 100% 60% at 50% 18%, rgba(255,255,255,0.25) 30%, rgba(255,255,255,0) 40%);
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+  display: flex;
+  justify-content: center;
+}
+
+.button.black {
+  background: linear-gradient(#000, #333);
+  width: 3rem;
+  height: 3rem;
+  line-height: 3.1rem;
+  margin-top: 0.4rem;
+  padding: 0;
+}
+
+.button.black::before {
+  margin: -6px;
+  border-bottom: 2px solid #999;
+  box-shadow: inset 0 5px 6px black;
+} 
+
+.button.black::after {
+  display: none;
+}
+
+.button.black > div {
+  background: linear-gradient(#666, #333 80%);
+}
+
+.button span,
+#brakebias span {
+  display: block;
+  background: white;
+  color: black;
+  font: 1.2rem/1.5 Arial;
+  padding: 0 20px;
+  text-align: center;
+  position: absolute;
+  bottom: -3.5rem;
+  box-shadow: 0 0 2px 1px rgba(0,0,0,0.6);
+  text-shadow: none;
+  white-space: nowrap;
+}
+
+#brakebias span {
+  bottom: -4rem;
+  left: 1rem
+}
+
+#brakebias {
+  height: 4rem;
+  margin: 0 3rem;
+  position: relative;
+  width: 11rem;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* IE/Edge */
+  user-select: none;           /* non-prefixed version, currently
+                                  not supported by any browser */
+}
+
+#fullscreen {
+    position: absolute;
+    background-color: #004422;
+    opacity: 0.3;
+    width: 4em;
+    height: 3.5em;
+    padding-top: 0.5em;
+    line-height: 1.5em;
+    z-index: 99999;
+    right: 0px;
+    bottom: 0px;
+    color: #ff8800;
+    text-align: center;
+    font-size: 1em;
+    vertical-align: middle;
+}
+#fullscreen:hover {
+    opacity: 1;
+}
