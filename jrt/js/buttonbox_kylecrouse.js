@@ -29,9 +29,25 @@ function update_datas(text) {
         } else if (donnees.bb > 0) {
             bb.ColorScheme = bb.ColorSchemes.Green;
         } else {
-            bb.ColorScheme = bb.ColorSchemes.LCD;
+            bb.ColorScheme = bb.ColorSchemes.Orange;
         }
-        bb.Value = donnees.bb;
+        
+        switch(donnees.bb) {
+            case -0.8:
+                bb.Value = -0.75;
+                break;
+            case 0.8:
+                bb.Value = 0.75;
+                break;
+            case 0.2:
+                bb.Value = 0.25;
+                break;
+            case -0.2:
+                bb.Value = -0.25;
+                break;
+            default:
+                bb.Value = donnees.bb;
+        }
 
         //$("#brakebias").html(donnees.bb);
         $("#tractioncontrol").html(donnees.tc);

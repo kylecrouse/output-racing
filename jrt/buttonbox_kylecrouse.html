@@ -71,7 +71,7 @@
 <div class="row">
   <div class="column">
       <div id="button13" class="button black" onclick="button_down_click(13)" ontouchstart="javascript:button_down(13)" ontouchend="javascript:button_up(13)"><div>-</div></div>
-      <div id="brakebias"><svg id="bbSegmentDisplay"></svg><span>BRAKE BIAS</span></div>
+      <div id="brakebias"><svg id="bbSegmentDisplay" width="180"></svg><span>BRAKE BIAS</span></div>
       <div id="button14" class="button black" onclick="button_down_click(14)" ontouchstart="javascript:button_down(14)" ontouchend="javascript:button_up(14)"><div>+</div></div>
   </div>
 </div>
@@ -85,7 +85,7 @@ $(function() {
    bb.NumberOfDigits = 4;
    bb.NumberOfDecimalPlaces = 2;
    bb.DecimalPointType = bb.DecimalPointTypes.Fixed;
-   bb.ColorScheme = bb.ColorSchemes.LCD;
+   bb.ColorScheme = bb.ColorSchemes.Orange;
    bb.Value = 0;
 });
 </script>
