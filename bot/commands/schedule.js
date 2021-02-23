@@ -43,7 +43,7 @@ module.exports = {
         name: `${remaining.filter(props => !props.offWeek).length} of ${races.length} races remaining`,
         value: remaining.map(
           props => {
-            return `- **${moment(props.date).format('M/D')}** ${props.offWeek
+            return `- **${moment.parseZone(props.date).format('M/D')}** ${props.offWeek
               ? '*Off Week*'
               : `${props.track} *(${props.laps ? `${props.laps}\u00A0laps` : props.time})*` 
             }`;
@@ -57,7 +57,7 @@ module.exports = {
         name: `${completed.filter(props => !props.offWeek).length} of ${races.length} races completed`,
         value: completed.sort((a, b) => moment(a.date).diff(b.date)).map(
           props => {
-            return `- **${moment(props.date).format('M/D')}** ${props.offWeek
+            return `- **${moment.parseZone(props.date).format('M/D')}** ${props.offWeek
               ? '*Off Week*'
               : props.track
             }`;

@@ -66,7 +66,7 @@ module.exports = {
     const embed = new Discord.MessageEmbed()
     	.setTitle(race.name)
     	.setURL(`https://outputracing.com/results/${race.raceId}/`)
-      .addField(moment(race.date).format('dddd, MMMM Do YYYY'), `${race.track}\u000a${race.laps} laps (${race.cautions} cautions for ${race.cautionLaps} laps)`)
+      .addField(moment.parseZone(race.date).format('dddd, MMMM Do YYYY'), `${race.track}\u000a${race.laps} laps (${race.cautions} cautions for ${race.cautionLaps} laps)`)
     	.addFields(
     		{ name: 'P', value: results.map(item => `\`${item.finish}\``), inline: true },
     		{ name: 'Driver', value: results.map(item=> `\`${item.name}\``), inline: true },

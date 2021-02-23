@@ -100,7 +100,7 @@ export default function Race(props) {
         <div className="column col-4 col-sm-12 text-center">
           <ul className="text-center" style={{ marginBottom: "1rem" }}>
             <li><b>{props.track.name}</b></li>
-            <li>{moment(props.date).format('MMMM Do, YYYY')}</li>
+            <li>{moment.parseZone(props.date).format('MMMM Do, YYYY')}</li>
             <li style={{ marginTop: "0.5rem", fontSize: "0.6rem" }}>{props.laps} laps ({props.duration})</li>
             <li style={{ fontSize: "0.6rem" }}>{props.cautions} cautions for {props.cautionLaps} laps</li>
             <li style={{ fontSize: "0.6rem" }}>{props.leadChanges} lead changes between {props.leaders} drivers</li>

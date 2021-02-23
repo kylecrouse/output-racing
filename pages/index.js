@@ -59,7 +59,7 @@ export default function Home(props) {
                 }
                 <ul>
                   <li><b>{props.lastRace.track.name}</b></li>
-                  <li>{moment(props.lastRace.date).format('MMMM Do, YYYY')}</li>
+                  <li>{moment.parseZone(props.lastRace.date).format('MMMM Do, YYYY')}</li>
                 </ul>
               </a>
               <div className="columns col-gapless">
@@ -210,7 +210,7 @@ export default function Home(props) {
                     props.schedule
                       .map((props, index) => (
                         <tr key={`schedule${index}`} style={{opacity: props.raceId ? 0.4 : 1}}>
-                          <td>{moment(props.date).format('M/D')}</td>
+                          <td>{moment.parseZone(props.date).format('M/D')}</td>
                           { props.offWeek
                               ? <td><i>Off Week</i></td>
                               : <td>

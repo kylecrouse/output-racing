@@ -105,7 +105,7 @@ export default function Schedule(props) {
 		  <tbody>
   			{ props.schedule.filter(({ raceNo }) => raceNo !== "").map((race) => (
       		  <tr key={props.raceNo}>
-              <td style={{ whiteSpace: "nowrap" }}>{moment(race.date).format('MMM D, YYYY')}</td>
+              <td style={{ whiteSpace: "nowrap" }}>{moment.parseZone(race.date).format('MMM D, YYYY')}</td>
         			<td>
                 { race.raceId 
                     ? <a href={`/results/${race.raceId}/`}>{race.name}</a>
