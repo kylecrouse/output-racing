@@ -68,15 +68,13 @@ module.exports = {
       // If is 'latest' import, update the results channel with the new data
       if (race && args[0] === 'latest') {
         // Get the results channel
-        const channel = message.client.channels.cache.get(resultsChannelId);
+        const channel = await message.client.channels.fetch('466364638041210881');
         // Fetch and iterate messages in channel to remove previous bot messages
         await Promise.all(channel.messages.fetch({ limit: 5 }).then(
-          messages => Array.isArray(messages) && messages.map(
-            // Delete messages from the bot
-            (item) => item.author.id === message.client.user.id
-              ? channel.delete(item)
-              : item
-          )
+          // Delete messages from the bot
+          messages => messages.size > 0 && 
+            messages.filter(m => m.author.id === message.client.user.id)
+              .each(m => channel.delete(m))
         ));
         // Send latest results
         channel.send(await getResultsEmbed(race));
