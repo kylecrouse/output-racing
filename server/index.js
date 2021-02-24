@@ -112,7 +112,7 @@ const { handleApplication } = require('../bot/lib/applications');
               // Get testing data for matching driver
               const record = race.testing[driver.id];
               // New best lap set?
-              if (!record || (record && d.b > record.best.lap)) {
+              if (!record || (record && d.b < record.best.lap)) {
                 // Put testing data with new record
                 league.season.updateRace(race, { testing: { 
                   ...race.testing, 
