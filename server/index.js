@@ -26,7 +26,8 @@ const { handleApplication } = require('../bot/lib/applications');
       hostName: 'bot.outputracing.com', 
       pathPrefix: '/twitch'
     }), 
-    secret
+    secret,
+    { logger: { minLevel: 'debug' }}
   );
   
   // Create data cache for received messages (need to purge at some point)
@@ -68,9 +69,12 @@ const { handleApplication } = require('../bot/lib/applications');
           // Broadcast updated data to all clients
           broadcast(JSON.stringify(cache.streamers, replacer));
         })
-      ]).catch(err => console.log(err));
+      ]).catch(err => console.log('[ERROR]', 'subscriptions', err));
     }
   );
+  
+  let subs = await apiClient.helix.eventSub.getSubscriptionsPaginated().getAll(); 
+  console.log('subscriptions', subs);
   
   const options = {
     origin: ['http://localhost:3000', 'https://outputracing.com']
@@ -141,13 +145,13 @@ const { handleApplication } = require('../bot/lib/applications');
       }
       res.send('OK');
     } catch(err) {
-      console.log(err);
+      console.log('[ERROR]', '/telemetry', err);
       res.send('OK');
     }
   });
   
   app.post('/tpost_img.php', bodyParser.raw(), (req, res) => {
-    console.log(req.body);
+    console.log('/tpost_img.php', req.body);
     res.send('OK');
   });
   
@@ -167,7 +171,7 @@ const { handleApplication } = require('../bot/lib/applications');
         else 
           cache.session = { ...cache.session, ...json };
       } catch(err) {
-        console.log(err);
+        console.log('[ERROR]', '/raceday', err);
       }
       
       // Broadcast data to all clients (except self)
