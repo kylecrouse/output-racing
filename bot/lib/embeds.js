@@ -239,9 +239,10 @@ module.exports = {
       .setDescription(`${makeCommaSeparatedString(drivers.map(d => `<@${league.drivers.find(({ custId }) => custId == d.custid).discordId}>`))} raced in ${moment.utc(results[0].start_time).subtract(1, 'day').format('dddd')}'s NiS events at ${results[0].track_name}. Here\'s a look at how they did:`)
     	.setTimestamp()
       
-    results.forEach(race => {
+    results.sort((a, b) => a.sessionid - b.sessionid || a.subsessionid - b.subsessionid).forEach(race => {
       race.rows
         .filter(i => i.simsesname == 'RACE' && league.drivers.filter(d => d.active).find(d => d.custId === i.custid))
+        .sort((a, b) => a.carnum - b.carnum)
         .forEach(driver => {
           const [firstName] = driver.displayname.split(' ');
           const split = splits[race.sessionid].indexOf(race.subsessionid);
@@ -250,7 +251,7 @@ module.exports = {
           embed.addField(
             `**#${driver.carnum} ${driver.displayname}**`,
             `${firstName} ${driver.finishpos <= 4 
-                ? `scored a top five in the ${split === 0 ? 'top' : withOrdinal(split + 1)} split, ${driver.finishpos > driver.startpos 
+                ? `scored a top five in the ${split === 0 ? 'top' : withOrdinal(split + 1)} ${race.seasonid == 3118 ? 'open' : 'fixed'} split, ${driver.finishpos < driver.startpos 
                     ? `coming from ${withOrdinal(driver.startpos + 1)} to finish ${withOrdinal(driver.finishpos + 1)}` 
                     : `finishing ${withOrdinal(driver.finishpos + 1)} after a ${withOrdinal(driver.startpos + 1)} place start`
                   }` 
