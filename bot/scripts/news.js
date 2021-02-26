@@ -15,10 +15,10 @@ async function main() {
 
   await league.init();
   
-  // const user = (await client.users.cache.get('697817102534311996')) || (await client.users.fetch('697817102534311996'));
-  // const channel = await user.createDM();
+  const user = (await client.users.cache.get('697817102534311996')) || (await client.users.fetch('697817102534311996'));
+  const channel = await user.createDM();
   
-  const channel = (await client.channels.cache.get('428309139496763395')) || (await client.channels.fetch('428309139496763395'))
+  // const channel = (await client.channels.cache.get('428309139496763395')) || (await client.channels.fetch('428309139496763395'))
   
   const open = await iracing.getSeriesResults(3118);
   const fixed = await iracing.getSeriesResults(3119); 
@@ -47,4 +47,6 @@ async function main() {
       league
     )
   );
+  
+  process.kill(process.pid, 'SIGTERM');
 }
