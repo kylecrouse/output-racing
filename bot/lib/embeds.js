@@ -214,5 +214,80 @@ module.exports = {
     	.setTimestamp()
 
     return embed;
+  },
+  getNewsEmbed: (results, stats, league) => {
+    const drivers = results.reduce(
+      (drivers, r) => {
+        return drivers.concat(
+          r.rows.filter(i => i.simsesname == 'RACE' && league.drivers.filter(d => d.active).find(d => d.custId === i.custid))
+        )
+      }, 
+      []
+    );
+    
+    const splits = results.reduce(
+      (splits, r) => {
+        splits[r.sessionid] = Array.isArray(splits[r.sessionid]) ? splits[r.sessionid].concat([r.subsessionid]) : [r.subsessionid]
+        splits[r.sessionid] = splits[r.sessionid].sort((a,b) => a - b);
+        return splits;
+      }, {}
+    );
+
+    const embed = new Discord.MessageEmbed()
+      .setTitle('NASCAR iRacing Series Race Report')
+      .setThumbnail('https://outputracing.com/nis-logo.png')
+      .setDescription(`${makeCommaSeparatedString(drivers.map(d => `<@${league.drivers.find(({ custId }) => custId == d.custid).discordId}>`))} raced in ${moment.utc(results[0].start_time).subtract(1, 'day').format('dddd')}'s NiS events at ${results[0].track_name}. Here\'s a look at how they did:`)
+    	.setTimestamp()
+      
+    results.forEach(race => {
+      race.rows
+        .filter(i => i.simsesname == 'RACE' && league.drivers.filter(d => d.active).find(d => d.custId === i.custid))
+        .forEach(driver => {
+          const [firstName] = driver.displayname.split(' ');
+          const split = splits[race.sessionid].indexOf(race.subsessionid);
+          const stat = stats.find(s => s.custid == driver.custid);
+          const bestlaptimepos = race.rows.filter(i => i.simsesname == 'RACE').sort((a,b) => a.bestlaptime - b.bestlaptime).findIndex(d => d.custid == driver.custid);
+          embed.addField(
+            `**#${driver.carnum} ${driver.displayname}**`,
+            `${firstName} ${driver.finishpos <= 4 
+                ? `scored a top five in the ${split === 0 ? 'top' : withOrdinal(split + 1)} split, ${driver.finishpos > driver.startpos 
+                    ? `coming from ${withOrdinal(driver.startpos + 1)} to finish ${withOrdinal(driver.finishpos + 1)}` 
+                    : `finishing ${withOrdinal(driver.finishpos + 1)} after a ${withOrdinal(driver.startpos + 1)} place start`
+                  }` 
+                : `started ${withOrdinal(driver.startpos + 1)} in the ${split === 0 ? 'top' : withOrdinal(split + 1)} ${race.seasonid == 3118 ? 'open' : 'fixed'} split and finished ${withOrdinal(driver.finishpos + 1)}`
+              }, ${driver.interval > 0 ? `${(driver.interval / 10000).toFixed(driver.interval > 20000 ? 0 : 1)} seconds off the lead` : `${Math.abs(driver.interval)} ${driver.interval == -1 ? 'lap' : 'laps'} down`}. He ${makeCommaSeparatedString([
+                ... bestlaptimepos === 0 ? [`logged the fastest lap of the race at ${(driver.bestlaptime / 10000).toFixed(3)}`] : [], 
+                ... driver.lapslead > 0 ? [`led ${driver.lapslead} laps`] : [], 
+                `had ${driver.incidents == 0 ? 'no incidents' : `${(driver.incidents / driver.lapscomplete).toFixed(2)} incidents per lap, ${driver.incidents}x for the race`}`
+              ])}. ${race.rows.filter(i => i.simsesname == 'RACE').length} cars started this split with ${race.rows.filter(i => i.simsesname == 'RACE' && i.interval > 0).length} finishing on the lead lap. The race had ${race.nleadchanges} lead changes among ${race.rows.filter(i => i.simsesname == 'RACE' && i.lapslead > 0).length} drivers and ${race.ncautions > 0 ? `${race.ncautions} ${race.ncautions == 1 ? 'caution' : 'cautions'} for ${race.ncautionlaps}` : `went green for all ${race.eventlapscomplete}`} laps. ${firstName} ${driver.newsublevel >= driver.oldsublevel ? 'gained' : 'lost'} ${(Math.abs(driver.newsublevel - driver.oldsublevel) / 100).toFixed(2)} SR and his iRating ${driver.newirating >= driver.oldirating ? 'increased' : 'decreased'} ${Math.abs(driver.newirating - driver.oldirating)} to ${driver.newirating}. Through ${race.race_week_num + 1} weeks in the season, ${firstName} has ${makeCommaSeparatedString([
+                ... stat.wins > 0 ? [`${stat.wins} ${stat.wins == 1 ? 'win' : 'wins'}`] : [],
+                ... stat.topfive > 0 ? [`${stat.topfive} top ${stat.topfive == 1 ? '5' : '5s'}`] : [],
+                `an average finish of ${withOrdinal(stat.avgfinish)} in ${stat.starts} ${stat.starts == 1 ? 'start' : 'starts'}`
+              ])}.`
+          )
+        })
+    });
+      
+    return embed;
   }
+}
+
+function makeCommaSeparatedString(arr, useOxfordComma) {
+  const listStart = arr.slice(0, -1).join(', ');
+  const listEnd = arr.slice(-1);
+  const conjunction = arr.length <= 1 ? '' :
+    useOxfordComma && arr.length > 2 ? ', and ' : ' and ';
+
+  return [listStart, listEnd].join(conjunction);
+}
+
+function withOrdinal(i) {
+  const j = i % 10, k = i % 100;
+  if (j == 1 && k != 11)
+    return i + "st";
+  if (j == 2 && k != 12)
+    return i + "nd";
+  if (j == 3 && k != 13)
+    return i + "rd";
+  return i + "th";
 }
