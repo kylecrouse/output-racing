@@ -48,5 +48,5 @@ async function main() {
     )
   );
   
-  process.kill(process.pid, 'SIGTERM');
+  process.exit(0);
 }
