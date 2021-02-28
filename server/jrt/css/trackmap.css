@@ -1,0 +1,122 @@
+
+body {
+    /*background-color: #222222;*/
+    margin:0;
+    padding:0;
+	overflow:hidden;  /* mettre hidden pour cacher la barre de défilement*/
+    font-family: Arial;
+    -webkit-user-select: none;
+    /*-webkit-app-region: drag;*/
+}
+#page {
+    /*background-color: #222222;*/
+    left:0;
+    top:0;
+}
+
+#expired {
+    position: absolute;
+    background-color:rgba(200,0,0,0.9);
+    color: #ffffff;
+    height: 100%;
+    width: 100%;
+    z-index: 9999999;
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+    display: None;
+}
+
+#drag {
+    position: absolute;
+    background-color:rgba(255,255,0,0);
+    z-index:10;
+    width:80%;
+    height:80%;
+    top: 10%;
+    left: 10%;
+    /*-webkit-user-select: none;*/
+    -webkit-app-region: drag;
+}
+#drag:hover {
+    cursor: move;
+}
+
+#container {
+    color: #ffffff;
+	left:0px;
+	top:0px;
+	bottom:0px;
+	right:0px;
+}
+canvas {
+    margin:0px;
+    padding:0px;
+    position:absolute;
+    z-index:4;
+    transition-property: background-color, top;
+    transition-duration: 0.5s;
+    /*-webkit-app-region: drag;*/
+}
+
+#display_options { display:block; opacity:0; z-index:12; position:absolute; right:0px; top: 0px; background-color:#00ff00; width:10%; height:100%}
+#close_options { z-index:12; padding-right:1em; padding-top: 0.5em; font-size:0.7em; position:absolute;right:0; top:0; height:58em; }
+#close_options:hover {cursor:pointer; font-weight:bold}
+#options { display:none; z-index:12; margin: 0em;padding:1em; color:#ffffff; font-size:1em;
+    position:absolute;right:0px; top:0px; bottom: 0px;
+    background-color:rgba(255,0,0,0.7); width:90%; height:auto;
+    line-height:2em;
+    overflow-y:scroll;
+}
+
+#trackmap { display:block; z-index:11; margin: 0em;padding:0em; color:#ffffff; font-size:1em;
+    position:absolute;left:0px; top:0px;
+    /*background-color:rgba(0,128,255,0.7);*/
+    /*background-color:rgba(90,90,90,1);*/
+    background:url("../img - default/trackmap_logo.png") right bottom no-repeat;
+    background-size: 25%;
+    width:100%; height:100%;
+    line-height:2em;
+}
+#trackmap_bg { display:block; z-index:10; margin: 0em;padding:0em; color:#ffffff; font-size:1em;
+    position:absolute;left:0px; top:0px; bottom: 0px;
+    /*background-color:transparent;*/
+    background:url("../img - default/trackmap_bg.png") center no-repeat;
+    /*opacity: 0.5;*/
+    background-size: 100% auto;
+    width:100%; height:auto;
+    line-height:2em;
+}
+
+#trackmap_canvas { z-index:-1; margin:0px; padding:0px; top:0px; /*background-color:rgba(255,255,0,0.8);*/ }
+#trackmap_fond_canvas { z-index:-3; margin:0px; padding:0px; top:0px; left: 0px;
+    /*background-color:rgba(255,255,0,0.8);*/
+}
+#trackmap_fond_turns_canvas { z-index:-2; margin:0px; padding:0px; top:0px; left: 0px; }
+
+#fullscreen {
+    position: absolute;
+    background-color: #004422;
+    opacity: 0.3;
+    width: 4em;
+    height: 3.5em;
+    padding-top: 0.5em;
+    line-height: 1.5em;
+    z-index: 99999;
+    right: 0px;
+    bottom: 0px;
+    color: #ff8800;
+    text-align: center;
+    font-size: 1em;
+    vertical-align: middle;
+}
+#fullscreen:hover {
+    opacity: 1;
+}
+
+#weather {
+	position: absolute;
+	bottom: 0px;
+	color:#0088ff;
+	font-weight: bold;
+}

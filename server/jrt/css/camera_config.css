@@ -1,0 +1,43 @@
+body {
+    background-color: #cccccc;
+    margin: 0;
+}
+#page {
+    background-color: #cccccc;
+}
+
+#button1 { display:inline-block; position: absolute; background-color: #ee0000; color:#ffffff; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:10px; top:10px;width:100px; line-height:20px; cursor:pointer; border: 2px solid #000000; border-radius:10px;}
+
+#button2 { display:inline-block; position: absolute; background-color: #00cc00; color:#ffffff; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:10px; top:40px;width:100px; line-height:20px; cursor:pointer; border: 2px solid #000000; border-radius:10px;}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* IE/Edge */
+  user-select: none;           /* non-prefixed version, currently
+                                  not supported by any browser */
+}
+
+#fullscreen {
+    position: absolute;
+    background-color: #004422;
+    opacity: 0.3;
+    width: 4em;
+    height: 3.5em;
+    padding-top: 0.5em;
+    line-height: 1.5em;
+    z-index: 99999;
+    right: 0px;
+    bottom: 0px;
+    color: #ff8800;
+    text-align: center;
+    font-size: 1em;
+    vertical-align: middle;
+}
+#fullscreen:hover {
+    opacity: 1;
+}

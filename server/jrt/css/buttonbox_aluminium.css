@@ -1,0 +1,232 @@
+
+
+/* globals */
+
+@import url(https://fonts.googleapis.com/css?family=Droid+Sans:regular,bold);
+@import url(prefixes.css);
+
+html {
+  font:62.5%/1 "Droid Sans", "Lucida Sans Unicode", "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #000000;
+    margin: 0;
+}
+#page {
+    background: ../carbon2.jpg;
+}
+
+button { border: none; display: block; }
+a { text-decoration: none; display: block; }
+
+/* Metal ------------------------- */
+
+.metal {
+  position: relative;
+  outline: none;
+
+  font: bold 6em/2em "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+  text-align: center;
+  color: hsla(0,0%,20%,1);
+  text-shadow: hsla(0,0%,40%,.5) 0 -1px 0, hsla(0,0%,100%,.6) 0 2px 1px;
+
+  background-color: hsl(0,0%,90%);
+  box-shadow: inset hsla(0,0%,15%,  1) 0  0px 0px 4px, /* border */
+    inset hsla(0,0%,15%, .8) 0 -1px 5px 4px, /* soft SD */
+    inset hsla(0,0%,0%, .25) 0 -1px 0px 7px, /* bottom SD */
+    inset hsla(0,0%,100%,.7) 0  2px 1px 7px, /* top HL */
+
+    hsla(0,0%, 0%,.15) 0 -5px 6px 4px, /* outer SD */
+    hsla(0,0%,100%,.5) 0  5px 6px 4px; /* outer HL */
+
+  transition: color .2s;
+}
+
+/* active ------------------------- */
+
+.metal:active {
+  color: hsl(210, 100%, 40%);
+  text-shadow: hsla(210,100%,20%,.3) 0 -1px 0, hsl(210,100%,85%) 0 2px 1px, hsla(200,100%,80%,1) 0 0 5px, hsla(210,100%,50%,.6) 0 0 20px;
+  box-shadow:
+    inset hsla(210,100%,30%,  1) 0  0px 0px 4px, /* border */
+    inset hsla(210,100%,15%, .4) 0 -1px 5px 4px, /* soft SD */
+    inset hsla(210,100%,20%,.25) 0 -1px 0px 7px, /* bottom SD */
+    inset hsla(210,100%,100%,.7) 0  2px 1px 7px, /* top HL */
+
+    hsla(210,100%,75%, .8) 0  0px 3px 2px, /* outer SD */
+    hsla(210,50%,40%, .25) 0 -5px 6px 4px, /* outer SD */
+    hsla(210,80%,95%,   1) 0  5px 6px 4px; /* outer HL */
+}
+
+#button1 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 25px;
+    left:160px; top:10px; width:200px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button2 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 25px;
+    left:160px; top:130px; width:200px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button3 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 25px;
+    left:310px; top:500px; width:400px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button4 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 25px;
+    left:655px; top:130px; width:200px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button5 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 25px;
+    left:655px; top:10px; width:200px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button6 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 45px;
+    left:160px; top:250px; width:100px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button7 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 45px;
+    left:755px; top:250px; width:100px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button8 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 25px;
+    left:160px; top:500px; width:100px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button9 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 25px;
+    left:755px; top:500px; width:100px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button10 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 25px;
+    left:460px; top:130px; width:100px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button11 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 25px;
+    left:160px; top:375px; width:100px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button12 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 25px;
+    left:340px; top:250px; width:100px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button13 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 25px;
+    left:460px; top:250px; width:100px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button14 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 25px;
+    left:580px; top:250px; width:100px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button15 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 25px;
+    left:755px; top:375px; width:100px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+
+#button17 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 25px;
+    left:405px; top:10px; width:200px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button18 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 25px;
+    left:460px; top:370px; width:100px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button19 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 25px;
+    left:895px; top:400px; width:110px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button20 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 25px;
+    left:10px; top:400px; width:110px; line-height:100px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button21 { display:inline-block; position: absolute; background-color: #37c916; color:#000000; text-align: center; font-weight: bold; font-size: 25px;
+    left:10px; top:10px; width:110px; line-height:180px;  cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+#button22 { display:inline-block; position: absolute; background-color: #37c916; color:#000000; text-align: center; font-weight: bold; font-size: 25px;
+    left:895px; top:10px; width:110px; line-height:180px;  cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+
+#button23 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 40px;
+    left:10px; top:630px; width:465px; line-height:120px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+
+#button24 { display:inline-block; position: absolute; text-align: center; font-weight: bold; font-size: 40px;
+    left:540px; top:630px; width:465px; line-height:120px; cursor:pointer; border: 1px solid #000000; border-radius: .5em;
+   background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, hsl(0,0%,90%) 47%, hsl(0,0%,78%) 53%, hsl(0,0%,70%)100%);}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* IE/Edge */
+  user-select: none;           /* non-prefixed version, currently
+                                  not supported by any browser */
+}
+
+#fullscreen {
+    position: absolute;
+    background-color: #004422;
+    opacity: 0.3;
+    width: 4em;
+    height: 3.5em;
+    padding-top: 0.5em;
+    line-height: 1.5em;
+    z-index: 99999;
+    right: 0px;
+    bottom: 0px;
+    color: #ff8800;
+    text-align: center;
+    font-size: 1em;
+    vertical-align: middle;
+}
+#fullscreen:hover {
+    opacity: 1;
+}

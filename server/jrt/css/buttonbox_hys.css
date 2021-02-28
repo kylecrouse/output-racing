@@ -1,0 +1,96 @@
+body {
+    background-color: #cccccc;
+    margin: 0;
+}
+#page {
+    background-color: #cccccc;
+}
+
+#button1 { display:inline-block; position: absolute; background-color: #000000; color:#ffffff; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:110px; top:10px;width:100px; line-height:100px; cursor:pointer; border: 5px solid #5c5c5c; border-radius:100px;}
+#button2 { display:inline-block; position: absolute; background-color: #000000; color:#ffffff; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:250px; top:10px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:100px}
+#button3 { display:inline-block; position: absolute; background-color: #073ee3; color:#ffffff; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:410px; top:10px;width:200px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:100px;}
+#button4 { display:inline-block; position: absolute; background-color: #000000; color:#ffffff; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:665px; top:10px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:100px}
+#button5 { display:inline-block; position: absolute; background-color: #000000; color:#ffffff; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:805px; top:10px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:100px}
+#button6 { display:inline-block; position: absolute; background-color: #f00808; color:#000000; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:110px; top:130px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:100px}
+#button7 { display:inline-block; position: absolute; background-color: #37c916; color:#000000; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:250px; top:130px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:100px}
+#button8 { display:inline-block; position: absolute; background-color: #37c916; color:#000000; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:665px; top:130px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:100px}
+#button9 { display:inline-block; position: absolute; background-color: #f00808; color:#000000; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:805px; top:130px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:100px}
+#button10 { display:inline-block; position: absolute; background-color: #073ee3; color:#ffffff; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:460px; top:150px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:25px;}
+
+
+#button11 { display:inline-block; position: absolute; background-color: #f00808; color:#000000; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:160px; top:270px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:100px}
+#button12 { display:inline-block; position: absolute; background-color: #073ee3; color:#ffffff; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:340px; top:270px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:25px;}
+#button13 { display:inline-block; position: absolute; background-color: #37c916; color:#000000; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:460px; top:270px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:100px}
+#button14 { display:inline-block; position: absolute; background-color: #073ee3; color:#ffffff; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:580px; top:270px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:25px;}
+#button15 { display:inline-block; position: absolute; background-color: #f00808; color:#000000; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:755px; top:270px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:100px}
+#button16 { display:inline-block; position: absolute; background-color: #37c916; color:#000000; text-align: center; font-weight: bold; font-size: 14px;font-family: OCR A extended, sans-serif;
+    left:142px; top:410px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:100px}
+#button17 { display:inline-block; position: absolute; background-color: #000000; color:#ffffff; text-align: center; font-weight: bold; font-size: 14px;font-family: OCR A extended, sans-serif;
+    left:275px; top:410px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:100px}
+#button18 { display:inline-block; position: absolute; background-color: #073ee3; color:#ffffff; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:460px; top:390px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:25px;}
+#button19 { display:none; position: absolute; background-color: #f00808; color:#000000; text-align: center; font-weight: bold; font-size: 14px;font-family: OCR A extended, sans-serif;
+    left:642px; top:410px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:100px}
+#button20 { display:inline-block; position: absolute; background-color: #f00808; color:#000000; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:10px; top:410px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:100px}
+#button21 { display:inline-block; position: absolute; background-color: #37c916; color:#000000; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:10px; top:10px;width:75px; line-height:380px; cursor:pointer;border: 5px solid #5c5c5c; ; border-radius:25px}
+#button22 { display:inline-block; position: absolute; background-color: #37c916; color:#000000; text-align: center; font-weight: bold; font-size: 15px;font-family: OCR A extended, sans-serif;
+    left:930px; top:10px;width:75px; line-height:380px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:25px}
+#button23 { display:inline-block; position: absolute; background-color: #073ee3; color:#ffffff; text-align: center; font-weight: bold; font-size: 25px;font-family: OCR A extended, sans-serif;
+    left:905px; top:410px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:100px;}
+#button24 { display:inline-block; position: absolute; background-color: #073ee3; color:#ffffff; text-align: center; font-weight: bold; font-size: 25px;font-family: OCR A extended, sans-serif;
+    left:642px; top:410px;width:100px; line-height:100px; cursor:pointer;border: 5px solid #5c5c5c; border-radius:100px;}
+
+#brakebias { display:inline-block; position: absolute; background-color: #ffffff; color:#ff0000; text-align: center;
+    font-weight: bold; font-size: 24px;font-family: OCR A extended, sans-serif;
+    left:775px; top:440px;width:100px; line-height:50px; cursor:pointer;border: 0px solid #5c5c5c; border-radius:0px;}
+#hys { display:inline-block; position: absolute; background-color: #ffffff; color:#ff0000; text-align: center;
+    font-weight: bold; font-size: 24px;font-family: OCR A extended, sans-serif;
+    left:775px; top:440px;width:100px; line-height:50px; cursor:pointer;border: 0px solid #5c5c5c; border-radius:0px;}
+
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* IE/Edge */
+  user-select: none;           /* non-prefixed version, currently
+                                  not supported by any browser */
+}
+
+#fullscreen {
+    position: absolute;
+    background-color: #004422;
+    opacity: 0.3;
+    width: 4em;
+    height: 3.5em;
+    padding-top: 0.5em;
+    line-height: 1.5em;
+    z-index: 99999;
+    right: 0px;
+    bottom: 0px;
+    color: #ff8800;
+    text-align: center;
+    font-size: 1em;
+    vertical-align: middle;
+}
+#fullscreen:hover {
+    opacity: 1;
+}

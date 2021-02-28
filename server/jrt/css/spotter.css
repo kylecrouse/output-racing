@@ -1,0 +1,47 @@
+body {
+    /*background-color: #888888;*/
+    background-color: rgba(0,0,0,0);
+    margin:0;
+    padding:0;
+	overflow:hidden;
+    font-family: Arial;
+    -webkit-user-select: none;
+    font-size: 1em;
+}
+
+#page {
+    position: absolute;
+    background-color: rgba(0,0,0,0);
+    border: 0; padding: 0;
+    /*background-color: #222222;*/
+    z-index:-1;
+}
+
+#drag {
+    position: absolute;
+    background-color:rgba(255,255,0,0);
+    z-index:10;
+    width:20%;
+    height:20%;
+    top: 40%;
+    left: 40%;
+    /*-webkit-user-select: none;*/
+    -webkit-app-region: drag;
+}
+#drag:hover {
+    cursor: move; /*background-color:rgba(255,255,0,0.5);*/
+}
+
+#spotter {
+    position: absolute;
+}
+
+#rule_horizontal {
+    position: absolute;
+    z-index: 99;
+}
+
+#rule_vertical {
+    position: absolute;
+    z-index: 98;
+}
