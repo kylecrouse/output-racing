@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JRT Dashboard</title>
+    <meta charset="UTF-8">
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache, must-revalidate">
+	<meta http-equiv="expires" content="0">
+    <meta name = "viewport" content = "width = device-width, shrink-to-fit=no, initial-scale = 1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <!--<meta name="viewport" content="width=device-width, minimal-ui">-->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="theme-color" content="black">
+
+    <link rel="icon" type="image/png" href="timing.ico" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="manifest" href="manifest/manifest.webmanifest">
+
+    <!--<script type="text/javascript">
+	document.body.addEventListener('touchmove', function(event) {
+	    event.preventDefault();
+	}, false);
+    </script>-->
+    <script type="text/javascript">document.write('<link href="css/dashboard.css?'+Math.random()+'" rel="stylesheet" type="text/css">');</script>
+
+	<script>
+		if( !/Android|webOS|iPhone|iPad/i.test(navigator.userAgent) ) {
+			document.writeln('<style type="text/css"> .ligneH:hover {	background-color:rgba(136,136,136,0.5);	z-index:5;} </style>')
+		}
+	</script>
+
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/couleurs.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/local%20ip.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/internet%20ip.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/ws_ports.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+    <!--<script src="js/couleurs.js"></script>
+    <script src="js/local%20ip.js"></script>
+    <script src="js/internet%20ip.js"></script>
+    <script src="js/ws_ports.js"></script>-->
+    <script src="js/jquery-2.1.4.js"></script>
+
+    <!-- Pour rendre compatible le code avec electron -->
+    <script>
+        try {
+            $ = jQuery = module.exports;
+            // If you want module.exports to be empty, uncomment:
+            // module.exports = {};
+        } catch(e) {}
+    </script>
+
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/version.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+	<!--<script src="js/version.js"></script>-->
+
+	<script>w = [];   // Ne pas toucher ! - Don't touch !</script>
+
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/var_default_options.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/_colors_by_num.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/config.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/var_init_dashboard.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+    <!--<script type="text/javascript">document.write('<scr' + 'ipt src="config/dashboard_config.txt?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>-->
+    <script type="text/javascript">document.write('<scr' + 'ipt src="config/dashboard_config.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+
+    <script type="text/javascript">if (use_css_perso) { document.write('<link href="css/dashboard_perso.css?'+Math.random()+'" rel="stylesheet" type="text/css">'); }</script>
+
+    <!--<script type="text/javascript">document.write('<scr' + 'ipt src="config/dashboard_advanced.txt?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>-->
+	<!--<script src="js/var_default_options.js"></script>
+	<script src="js/config.js"></script>
+	<script src="js/var_init_dashboard.js"></script>
+	<script src="config/dashboard_config.txt"></script>
+	<script src="config/dashboard_advanced.txt"></script>-->
+
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/switch_disp.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/init_websocket_dashboard.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/clubid.js?'+Math.random()+'" charset="UTF-8" type="text/javascript"></scr' + 'ipt>');</script>
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/Reformat.js?'+Math.random()+'" charset="UTF-8" type="text/javascript"></scr' + 'ipt>');</script>
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/lic_class_color.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/func_options.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/animations.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/deltas_and_gapcolor_dashboard.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/responsive_dashboard.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/update_dashboard.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+    <script type="text/javascript">document.write('<scr' + 'ipt src="js/dashboard.js?'+Math.random()+'" type="text/javascript"></scr' + 'ipt>');</script>
+	<!--<script src="js/switch_disp.js"></script>
+	<script src="js/init_websocket_dashboard.js"></script>
+	<script src="js/clubid.js" charset="UTF-8"></script>
+	<script src="js/Reformat.js"></script>
+	<script src="js/lic_class_color.js"></script>
+	<script src="js/func_options.js"></script>
+	<script src="js/animations.js"></script>
+	<script src="js/deltas_and_gapcolor_dashboard.js"></script>
+	<script src="js/responsive_dashboard.js"></script>
+	<script src="js/update_dashboard.js"></script>
+	<script src="js/dashboard.js"></script>-->
+
+    <!--<script src="js/ShowHideData.js"></script>-->
+
+</head>
+<body>
+<div id="page">
+
+    <div id="expired" style="font-size: 1em !important;">Your JRT license is not active !<br>You have to enter an iRacing session<br><br>If you already had a JRT key,<br> contact Joel Guez so he can activate your license</div>
+
+    <div id="drag">&nbsp;</div>
+
+    <div id="shift">&nbsp;</div>
+    <div id="shift_bg">&nbsp;</div>
+
+	<div id="weather">&nbsp;Weather</div>
+
+	<div id="rpm" onclick="display_rpm()">8888</div>
+
+    <div id="display_rpmshift" onclick="display_rpm()"></div>
+
+	<div id="gear" onclick="display_rpm()">8</div>
+	<div id="speed">888</div>
+
+	<div id="timeremain">88:88:88</div>
+	<div id="tank_h">Tank</div>
+	<div id="estlaps_h">Est. Laps</div>
+	<div id="lapsremain_h">Laps Remaining</div>
+	<div id="fuelneed_h">Fuel to add</div>
+	<div id="tank">88.8</div>
+	<div id="estlaps">88.8</div>
+    <div id ="estlaps_bg0">&nbsp;</div>
+    <div id ="estlaps_bg1">&nbsp;</div>
+	<div id="lapsremain">88.8</div>
+    <div id = "lapsremain_bg0">&nbsp;</div>
+    <div id = "lapsremain_bg1">&nbsp;</div>
+    <div id = "lapsremain_bg2">&nbsp;</div>
+	<div onclick = "if(broadcast==0) ws.send('refuel')" id="fuelneed">88.8</div>
+    <div id = "fuelneed_bg0">&nbsp;</div>
+    <div id = "fuelneed_bg1">&nbsp;</div>
+	<div id="conso">8.888</div>
+	<!--<div id="conso5"></div>-->
+	<div id="nbpits">8.88</div>
+
+	<div id="oil">88.8°C</div>
+	<div id="water">88.8°C</div>
+
+	<div id="pre_pos">8.</div>
+	<div id="pre_cpos">8.</div>
+	<div id="me_pos">8.</div>
+	<div id="me_cpos">8.</div>
+	<div id="post_pos">8.</div>
+	<div id="post_cpos">8.</div>
+
+	<div id="pre_pos_cont">&nbsp;</div>
+	<div id="pre_cpos_cont">&nbsp;</div>
+	<div id="me_pos_cont">&nbsp;</div>
+	<div id="me_cpos_cont">&nbsp;</div>
+	<div id="post_pos_cont">&nbsp;</div>
+	<div id="post_cpos_cont">&nbsp;</div>
+
+	<div id="pre_gain">+8</div>
+	<div id="me_gain">+8</div>
+	<div id="post_gain">+8</div>
+	<div id="pre_cgain">+8</div>
+	<div id="me_cgain">+8</div>
+	<div id="post_cgain">+8</div>
+
+	<div id="pre_best">8'88.888</div>
+	<div id="me_best">8'88.888</div>
+	<div id="post_best">8'88.888</div>
+	<div id="pre_last">8'88.888</div>
+	<div id="me_last">8'88.888</div>
+	<div id="post_last">8'88.888</div>
+
+	<div id="pre_rel">+8.88</div>
+	<div id="post_rel">-8.88</div>
+
+	<div id="pre_stint">8.8</div>
+	<div id="me_stint">8.8</div>
+	<div id="post_stint">8.8</div>
+
+	<div id="me_lc">88</div>
+
+	<div id="pre_name">&nbsp;Name Ahead</div>
+	<div id="post_name">&nbsp;Name Behind</div>
+
+    <div id="delta_best_h">BEST</div>
+    <div id="delta_best">+0.00</div>
+    <div id="delta_last_h">LAST</div>
+    <div id="delta_last">+0.00</div>
+    <div id="delta_avg_h">AVG</div>
+	<div id="delta_avg">+0.00</div>
+	<div id="delta_tot">+0.00</div>
+	<div id="delta_tot2">+0.00</div>
+
+    <div id="bb">88</div>
+    <div id="tc">8</div>
+    <div id="tc2">8</div>
+    <div id="ffb">88</div>
+
+    <div id="b_cont">&nbsp;<div id="b">&nbsp;</div></div>
+    <div id="t_cont">&nbsp;<div id="t">&nbsp;</div></div>
+    <div id="ffbpct_cont">&nbsp;<div id="ffbpct">&nbsp;</div></div>
+    <div id="c_cont">&nbsp;<div id="c">&nbsp;</div></div>
+
+    <!--<div id="delta_pre"><canvas id="canvas_pre">pre</canvas></div>
+    <div id="delta_post"><canvas id="canvas_post">post</canvas></div>-->
+    <div id="delta_pre"><canvas id="canvas_pre">pre</canvas></div>
+    <div id="delta_post"><canvas id="canvas_post">post</canvas></div>
+    <div id="deltaB_pre"><canvas id="canvasB_pre">pre</canvas></div>
+    <div id="deltaB_post"><canvas id="canvasB_post">post</canvas></div>
+
+    <div id="compass" onclick="location.reload();"><canvas id="canvas_compass">compass</canvas></div>
+
+    <div id="mgua">A</div>
+    <div id="mguf">F</div>
+    <div id="ers">ers</div>
+    <div id="ersco">ersco</div>
+    <div id="ers_margin">ers_margin</div>
+    <div id="ers_margin_min_bar">&nbsp;<div id="ers_margin_min_bar_"></div></div>
+    <div id="mgu_margin_max_bar">&nbsp;<div id="mgu_margin_max_bar_"></div></div>
+    <div id="ers_margin_free_bar">&nbsp;<div id="ers_margin_free_bar_"></div></div>
+    <div id="mgul">mgul</div>
+    <div id="mgu">mgu</div>
+    <div id="regen_lap">regen_lap</div>
+    <div id="regen_turn">regen_turn</div>
+    <div id="drs">DRS</div>
+
+    <div id="fullscreen">&nbsp;Full<br>Screen</div>
+
+	<div id="pitbar8">&nbsp;</div>
+	<div id="pitbar16">&nbsp;</div>
+	<div id="pitbar32">&nbsp;</div>
+	<div id="pitbar64">&nbsp;</div>
+	<!--<div id="pitbar0">&nbsp;</div>-->
+
+    <div id="target_conso">8.88</div>
+    <div id="est_conso">8.88</div>
+    <div id="fuel_end">8.88</div>
+    <div id="nblaps_per_tank">88.8</div>
+    <div id="nblaps_before_pit_window">88.8</div>
+    <div id="nblaps_to_equalize_stints">88.8</div>
+
+    <div id="time">clock</div>
+    <div id="perfs">
+		<span style='font-size:60%;line-height: 50%;'>&nbsp;Distance :</span> <span id="perfs_dist">--</span><br>
+		<span style='font-size:60%;line-height: 50%;'>&nbsp;0-100km/h :</span> <span id="perfs_100kmh"></span> <span id="perfs_100kmh_dist" style='font-size:60%;line-height: 50%;'>--</span><br>
+		<span style='font-size:60%;line-height: 50%;'>&nbsp;0-400m :</span> <span id="perfs_400m"></span> <span id="perfs_400m_speed" style='font-size:60%;line-height: 50%;'>--</span><br>
+		<span style='font-size:60%;line-height: 50%;'>&nbsp;0-1000m :</span> <span id="perfs_1000m"></span> <span id="perfs_1000m_speed" style='font-size:60%;line-height: 50%;'>--</span>
+	</div>
+
+    <div id="rpm_leds">&nbsp;
+		<div id="led1">&nbsp;</div>
+		<div id="led2">&nbsp;</div>
+		<div id="led3">&nbsp;</div>
+		<div id="led4">&nbsp;</div>
+		<div id="led5">&nbsp;</div>
+		<div id="led6">&nbsp;</div>
+		<div id="led7">&nbsp;</div>
+		<div id="led8">&nbsp;</div>
+		<div id="led9">&nbsp;</div>
+		<div id="led10">&nbsp;</div>
+		<div id="led11">&nbsp;</div>
+		<div id="led12">&nbsp;</div>
+	</div>
+
+    <div id="brake2">&nbsp;<div id="brake2_"></div></div>
+    <div id="brake3">&nbsp;<div id="brake3_"></div></div>
+    <div id="throttle2">&nbsp;<div id="throttle2_"></div></div>
+    <div id="throttle3">&nbsp;<div id="throttle3_"></div></div>
+    <div id="clutch2">&nbsp;<div id="clutch2_"></div></div>
+    <div id="ffb2">&nbsp;<div id="ffb2_"></div></div>
+    <div id="brake2_text">BRAKE</div>
+    <div id="brake3_text">BRAKE</div>
+    <div id="throttle2_text">THROTTLE</div>
+    <div id="throttle3_text">THROTTLE</div>
+    <div id="clutch2_text">CLUTCH</div>
+    <div id="ffb2_text">FFB</div>
+
+    <div id="sof">8888</div>
+
+	<div id="inc">88/88</div>
+	<div id="nextpittimelost">88.8 s</div>
+    <div id="ers_bar">&nbsp;<div id="ers_bar_"></div></div>
+
+	<div id="powersteering">8</div>
+	<div id="regen_gain">8</div>
+	<div id="fuel_mixture">8</div>
+	<div id="eng_pw">8</div>
+	<div id="peak_bb">88.8</div>
+	<div id="diff_preload">8</div>
+	<div id="diff_entry">8</div>
+	<div id="fuelneed1">88.8</div>
+    <div id = "fuelneed1_bg0">&nbsp;</div>
+    <div id = "fuelneed1_bg1">&nbsp;</div>
+	<div id="fuelneed5">88.8</div>
+    <div id = "fuelneed5_bg0">&nbsp;</div>
+    <div id = "fuelneed5_bg1">&nbsp;</div>
+	<div id="conso1">8.888</div>
+	<div id="conso5">8.888</div>
+	<div id="points">888</div>
+	<div id="wj">8</div>
+	<div id="abs">8</div>
+	<div id="arb_f">8</div>
+	<div id="arb_r">8</div>
+	<div id="boo">8</div>
+	<div id="t_sh">8</div>
+	<div id="refuel_min">88.8</div>
+	<div id="refuel_avg">88.8</div>
+	<div id="refuel_avg_now">88.8</div>
+	<div id="time_of_day">88:88:88</div>
+	<div id="traffic">--</div>
+	<div id="traffic_pit">--</div>
+
+	<div id="RRpressure">888.8</div>
+	<div id="RFpressure">888.8</div>
+	<div id="LFpressure">888.8</div>
+	<div id="LRpressure">888.8</div>
+
+	<div id="RRtempL">88.8</div>
+	<div id="RRtempM">88.8</div>
+	<div id="RRtempR">88.8</div>
+	<div id="RFtempL">88.8</div>
+	<div id="RFtempM">88.8</div>
+	<div id="RFtempR">88.8</div>
+	<div id="LFtempL">88.8</div>
+	<div id="LFtempM">88.8</div>
+	<div id="LFtempR">88.8</div>
+	<div id="LRtempL">88.8</div>
+	<div id="LRtempM">88.8</div>
+	<div id="LRtempR">88.8</div>
+
+	<div id="RRwearL">88.8%</div>
+	<div id="RRwearM">88.8%</div>
+	<div id="RRwearR">88.8%</div>
+	<div id="RFwearL">88.8%</div>
+	<div id="RFwearM">88.8%</div>
+	<div id="RFwearR">88.8%</div>
+	<div id="LFwearL">88.8%</div>
+	<div id="LFwearM">88.8%</div>
+	<div id="LFwearR">88.8%</div>
+	<div id="LRwearL">88.8%</div>
+	<div id="LRwearM">88.8%</div>
+	<div id="LRwearR">88.8%</div>
+
+	<div id="iR_gain">+88</div>
+	<div id="iR_proj">8888</div>
+	<div id="apex_speed">888</div>
+
+	<div id="pre_p2p">8</div>
+	<div id="me_p2p">8</div>
+	<div id="post_p2p">8</div>
+
+	<div id="iframe1_cont"><iframe id="iframe1"></iframe></div>
+	<div id="iframe2_cont"><iframe id="iframe2"></iframe></div>
+	<div id="iframe3_cont"><iframe id="iframe3"></iframe></div>
+	<div id="iframe4_cont"><iframe id="iframe4"></iframe></div>
+
+	<div id="setting_changed_name">--</div>
+	<div id="setting_changed_value">--</div>
+
+	<div id="pre_lic">R 8.88</div>
+	<div id="post_lic">A 8.88</div>
+	<div id="pre_ir">8888</div>
+	<div id="post_ir">8888</div>
+
+</div>
+</body>
+</html>

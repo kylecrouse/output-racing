@@ -1,0 +1,5 @@
+Certains fichiers ne doivent pas être copiés dans le exe sinon à chaque nouvelles mise à jour, cela effacera les modifications des utilisateurs.
+Voici ces fichiers :
+
+_colorize.js
+_liste_sessions.js

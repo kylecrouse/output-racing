@@ -1,0 +1,252 @@
+﻿    - Line:100
+      Cmnd:IF
+      Condition:[SIM|CLUB#P1] = ("Australia/NZ")
+    - Line:200
+      Cmnd:SETVALUE
+      Value:[BMP|034.png]
+    - Line:300
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("UK and I")
+    - Line:400
+      Cmnd:SETVALUE
+      Value:[BMP|036.png]
+    - Line:500
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("DE-AT-CH")
+    - Line:600
+      Cmnd:SETVALUE
+      Value:[BMP|042.png]
+    - Line:700
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("France")
+    - Line:800
+      Cmnd:SETVALUE
+      Value:[BMP|039.png]
+    - Line:900
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Central-Eastern Europe")
+    - Line:1000
+      Cmnd:SETVALUE
+      Value:[BMP|046.png]
+    - Line:1100
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Brazil")
+    - Line:1200
+      Cmnd:SETVALUE
+      Value:[BMP|045.png]
+    - Line:1300
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Finland")
+    - Line:1400
+      Cmnd:SETVALUE
+      Value:[BMP|044.png]
+    - Line:1500
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Italy")
+    - Line:1600
+      Cmnd:SETVALUE
+      Value:[BMP|041.png]
+    - Line:1700
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Mid-South")
+    - Line:1800
+      Cmnd:SETVALUE
+      Value:[BMP|023.png]
+    - Line:1900
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("California")
+    - Line:2000
+      Cmnd:SETVALUE
+      Value:[BMP|006.png]
+    - Line:2100
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Iberia")
+    - Line:2200
+      Cmnd:SETVALUE
+      Value:[BMP|038.png]
+    - Line:2300
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Scandinavia")
+    - Line:2400
+      Cmnd:SETVALUE
+      Value:[BMP|043.png]
+    - Line:2500
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Benelux")
+    - Line:2600
+      Cmnd:SETVALUE
+      Value:[BMP|040.png]
+    - Line:2700
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Carolina")
+    - Line:2800
+      Cmnd:SETVALUE
+      Value:[BMP|025.png]
+    - Line:2900
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Canada")
+    - Line:3000
+      Cmnd:SETVALUE
+      Value:[BMP|015.png]
+    - Line:3100
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("New York")
+    - Line:3200
+      Cmnd:SETVALUE
+      Value:[BMP|014.png]
+    - Line:3300
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Florida")
+    - Line:3400
+      Cmnd:SETVALUE
+      Value:[BMP|022.png]
+    - Line:3500
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("New England")
+    - Line:3600
+      Cmnd:SETVALUE
+      Remark:[BMP|012.png]
+      Value:[BMP|012.png]
+    - Line:3700
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Midwest")
+    - Line:3800
+      Cmnd:SETVALUE
+      Value:[BMP|029.png]
+    - Line:3900
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Texas")
+    - Line:4000
+      Cmnd:SETVALUE
+      Value:[BMP|030.png]
+    - Line:4100
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Indiana")
+    - Line:4200
+      Cmnd:SETVALUE
+      Value:[BMP|027.png]
+    - Line:4300
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("West")
+    - Line:4400
+      Cmnd:SETVALUE
+      Value:[BMP|032.png]
+    - Line:4500
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Virginias")
+    - Line:4600
+      Cmnd:SETVALUE
+      Value:[BMP|017.png]
+    - Line:4700
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("New England")
+    - Line:4800
+      Cmnd:SETVALUE
+      Value:[BMP|012.png]
+    - Line:4900
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Plains")
+    - Line:5000
+      Cmnd:SETVALUE
+      Value:[BMP|031.png]
+    - Line:5100
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Georgia")
+    - Line:5200
+      Cmnd:SETVALUE
+      Value:[BMP|021.png]
+    - Line:5300
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Northwest")
+    - Line:5400
+      Cmnd:SETVALUE
+      Value:[BMP|033.png]
+    - Line:5500
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Ohio")
+    - Line:5600
+      Cmnd:SETVALUE
+      Value:[BMP|020.png]
+    - Line:5700
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Pennsylvania")
+    - Line:5800
+      Cmnd:SETVALUE
+      Value:[BMP|016.png]
+    - Line:5900
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Michigan")
+    - Line:6000
+      Cmnd:SETVALUE
+      Value:[BMP|028.png]
+    - Line:6100
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Illinois")
+    - Line:6200
+      Cmnd:SETVALUE
+      Value:[BMP|026.png]
+    - Line:6300
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Massachusetts")
+    - Line:6400
+      Cmnd:SETVALUE
+      Value:[BMP|011.png]
+    - Line:6500
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Western Canada")
+    - Line:6600
+      Cmnd:SETVALUE
+      Value:[BMP|035.png]
+    - Line:6700
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Atlantic")
+    - Line:6800
+      Cmnd:SETVALUE
+      Value:[BMP|018.png]
+    - Line:6900
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Connecticut")
+    - Line:7000
+      Cmnd:SETVALUE
+      Value:[BMP|013.png]
+    - Line:7100
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("New Jersey")
+    - Line:7200
+      Cmnd:SETVALUE
+      Value:[BMP|019.png]
+    - Line:7300
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Celtic")
+    - Line:7400
+      Cmnd:SETVALUE
+      Value:[BMP|037.png]
+    - Line:7500
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("South America")
+    - Line:7600
+      Cmnd:SETVALUE
+      Value:[BMP|024.png]
+    - Line:7700
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("International")
+    - Line:7800
+      Cmnd:SETVALUE
+      Value:[BMP|001.png]
+    - Line:7900
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Asia")
+    - Line:8000
+      Cmnd:SETVALUE
+      Value:[BMP|047.png]
+    - Line:8100
+      Cmnd:ELSEIF
+      Condition:[SIM|CLUB#P1] = ("Hispanoamérica")
+    - Line:8200
+      Cmnd:SETVALUE
+      Value:[BMP|002.png]
+    - Line:8300
+      Cmnd:ELSE
+    - Line:8400
+      Cmnd:SETVALUE
+      Value:[BMP|Blank]

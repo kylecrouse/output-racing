@@ -1,0 +1,29 @@
+body {
+    /*background-color: #cccccc;*/
+	background-color: rgba(0,0,0,0);  /* background transparent */
+    margin: 0;
+}
+#page {
+    /*background-color: #cccccc;*/
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* IE/Edge */
+  user-select: none;           /* non-prefixed version, currently
+                                  not supported by any browser */
+}
+
+canvas {
+    margin:0px;
+    padding:0px;
+    position:absolute;
+}
+
+#g_circle_fond_canvas { z-index: -1; margin:0px; padding:0px; top:0px; background-color:rgba(255,255,0,0.0); }
+#g_circle_canvas0 { z-index: 0; margin:0px; padding:0px; top:0px; /*background-color:rgba(255,0,0,0.4);*/ }
+#g_circle_canvas { z-index: 0; margin:0px; padding:0px; top:0px; /*background-color:rgba(255,0,0,0.4);*/ }
+#g_circle_canvas2 { z-index: 0; margin:0px; padding:0px; top:0px; /*background-color:rgba(255,0,0,0.4);*/ }
