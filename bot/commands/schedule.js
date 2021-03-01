@@ -25,7 +25,7 @@ module.exports = {
     if (!season) return;
     
     const remaining = season.schedule.filter(props => !props.raceId);
-    const completed = season.results || [];
+    const completed = season.results.filter(props => props.raceId) || [];
     const races = season.schedule.filter(props => !props.offWeek);
     
     const embed = new Discord.MessageEmbed()
