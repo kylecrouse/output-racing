@@ -248,23 +248,26 @@ module.exports = {
       race.rows
         .filter(i => i.simsesname == 'RACE' && league.drivers.filter(d => d.active).find(d => d.custId === i.custid))
         .sort((a, b) => a.carnum - b.carnum)
-        .forEach(driver => {
-          const [firstName] = driver.displayname.split(' ');
+        .forEach((driver, index) => {
+          const entry = league.drivers.find(({ custId }) => custId == driver.custid);
+          const [firstName] = (entry.nickname || entry.name).split(' ');
           const stat = stats.find(s => s.custid == driver.custid);
           const bestlaptimepos = race.rows.filter(i => i.simsesname == 'RACE').sort((a,b) => a.bestlaptime - b.bestlaptime).findIndex(d => d.custid == driver.custid);
           embed.addField(
-            `**#${driver.carnum} ${driver.displayname}**`,
+            `**#${driver.carnum} ${entry.nickname || entry.name}**`,
             `${firstName} ${driver.finishpos <= 4 
                 ? `scored a top five in the ${split === 0 ? 'top' : withOrdinal(split + 1)} ${race.seasonid == 3118 ? 'open' : 'fixed'} split, ${driver.finishpos < driver.startpos 
                     ? `coming from ${withOrdinal(driver.startpos + 1)} to finish ${withOrdinal(driver.finishpos + 1)}` 
                     : `finishing ${withOrdinal(driver.finishpos + 1)} after a ${withOrdinal(driver.startpos + 1)} place start`
                   }` 
-                : `started ${withOrdinal(driver.startpos + 1)} in the ${split === 0 ? 'top' : withOrdinal(split + 1)} ${race.seasonid == 3118 ? 'open' : 'fixed'} split and finished ${withOrdinal(driver.finishpos + 1)}`
+                : index > 0
+                    ? `was also in the ${split === 0 ? 'top' : withOrdinal(split + 1)} ${race.seasonid == 3118 ? 'open' : 'fixed'} split and finished ${withOrdinal(driver.finishpos + 1)} after starting ${withOrdinal(driver.startpos + 1)}`
+                    : `started ${withOrdinal(driver.startpos + 1)} in the ${split === 0 ? 'top' : withOrdinal(split + 1)} ${race.seasonid == 3118 ? 'open' : 'fixed'} split and finished ${withOrdinal(driver.finishpos + 1)}`
               }, ${driver.interval > 0 ? `${(driver.interval / 10000).toFixed(driver.interval > 20000 ? 0 : 1)} seconds off the lead` : `${Math.abs(driver.interval)} ${driver.interval == -1 ? 'lap' : 'laps'} down`}. He ${makeCommaSeparatedString([
-                getFastestLapFragment(driver.bestlaptime, bestlaptimepos), 
-                getLapsLedFragment(driver.lapslead), 
-                `had ${driver.incidents == 0 ? 'no incidents' : `${(driver.incidents / driver.lapscomplete).toFixed(2)} incidents per lap, ${driver.incidents}x for the race`}`
-              ])}. ${race.rows.filter(i => i.simsesname == 'RACE').length} cars started this split with ${race.rows.filter(i => i.simsesname == 'RACE' && i.interval > 0).length} finishing on the lead lap. The race had ${race.nleadchanges} lead changes among ${race.rows.filter(i => i.simsesname == 'RACE' && i.lapslead > 0).length} drivers and ${race.ncautions > 0 ? `${race.ncautions} ${race.ncautions == 1 ? 'caution' : 'cautions'} for ${race.ncautionlaps}` : `went green for all ${race.eventlapscomplete}`} laps. ${firstName} ${driver.newsublevel >= driver.oldsublevel ? 'gained' : 'lost'} ${(Math.abs(driver.newsublevel - driver.oldsublevel) / 100).toFixed(2)} SR and his iRating ${driver.newirating >= driver.oldirating ? 'increased' : 'decreased'} ${Math.abs(driver.newirating - driver.oldirating)} to ${driver.newirating}. Through ${race.race_week_num + 1} weeks in the season, ${firstName} has ${makeCommaSeparatedString([
+                ...makeArray(getFastestLapFragment(driver.bestlaptime, bestlaptimepos)), 
+                ...makeArray(getLapsLedFragment(driver.lapslead)), 
+                `had ${driver.incidents == 0 ? 'no' : driver.incidents} incidents`
+              ])}. The race had ${race.nleadchanges} lead changes among ${race.rows.filter(i => i.simsesname == 'RACE' && i.lapslead > 0).length} drivers and ${race.ncautions > 0 ? `${race.ncautions} ${race.ncautions == 1 ? 'caution' : 'cautions'} for ${race.ncautionlaps}` : `went green for all ${race.eventlapscomplete}`} laps with ${race.rows.filter(i => i.simsesname == 'RACE' && i.interval > 0).length} cars on the lead lap. ${firstName} ${driver.newsublevel >= driver.oldsublevel ? 'gained' : 'lost'} ${(Math.abs(driver.newsublevel - driver.oldsublevel) / 100).toFixed(2)} SR and his iRating ${driver.newirating >= driver.oldirating ? 'increased' : 'decreased'} ${Math.abs(driver.newirating - driver.oldirating)} to ${driver.newirating}. Through ${race.race_week_num + 1} weeks in the season, ${firstName} has ${makeCommaSeparatedString([
                 ... stat.wins > 0 ? [`${stat.wins} ${stat.wins == 1 ? 'win' : 'wins'}`] : [],
                 ... stat.topfive > 0 ? [`${stat.topfive} top ${stat.topfive == 1 ? '5' : '5s'}`] : [],
                 `an average finish of ${withOrdinal(stat.avgfinish)} in ${stat.starts} ${stat.starts == 1 ? 'start' : 'starts'}`
@@ -283,6 +286,10 @@ function getFastestLapFragment(bestlaptime, bestlaptimepos) {
 
 function getLapsLedFragment(lapsled) {
   return lapsled > 0 && `led ${lapsled} laps`;
+}
+
+function makeArray(str) {
+  return str ? [str] : [];
 }
 
 function makeCommaSeparatedString(arr, useOxfordComma) {
