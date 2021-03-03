@@ -16,12 +16,14 @@ async function main() {
   await league.init();
   
   const user = (await client.users.cache.get('697817102534311996')) || (await client.users.fetch('697817102534311996'));
-  const channel = await user.createDM();
-  
+
+  const channel = await user.createDM();  
   // const channel = (await client.channels.cache.get('428309139496763395')) || (await client.channels.fetch('428309139496763395'))
   
   const open = await iracing.getSeriesResults(3118);
   const fixed = await iracing.getSeriesResults(3119); 
+  // const rtp = await iracing.getSeriesResults(3122); 
+  
   const results = open.concat(fixed);
   const filtered = results.filter(
     r => moment.utc(r.start_time).isSame(moment.utc(), 'day')
@@ -40,13 +42,15 @@ async function main() {
     )
   );
   
-  await channel.send(
-    getNewsEmbed(
-      filtered, 
-      stats.map(s => s.r[0]), 
-      league
-    )
-  );
+  filtered.length > 0
+    ? await channel.send(
+        getNewsEmbed(
+          filtered, 
+          stats.map(s => s.r[0]), 
+          league
+        )
+      )
+    : await channel.send('No results found.');
   
   process.exit(0);
 }
