@@ -65,7 +65,8 @@ module.exports = async (member) => {
   
   channel.send('Great! Give me a minute to gather up all your stats from iRacing.');
   
-  // Ensure data is loaded
+  // Ensure data is loaded and refreshed
+  await league.init();
   await league.load();
   
   // Create or update driver entry with discordId
