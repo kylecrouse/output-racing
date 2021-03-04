@@ -1,62 +1,44 @@
 const Discord = require('discord.js');
 const moment = require('moment');
 const cms = require(`${process.cwd()}/lib/contentful`);
-const { tracks } = require ('../../constants');
+const { tracks, timeOfDay } = require ('../../constants');
 
 module.exports = {
-  getUpcomingEmbed: (league) => {
-    const race = league.getNextRace();
-    
-    //Slice content around the desired heading
-    let startIndex = league.raceInfo.content.findIndex(
-      item => item.nodeType === 'heading-3' && item.content[0].value.match(/^start times/i)
-    );
-    let endIndex = league.raceInfo.content.findIndex(
-      (item, index) => index > startIndex && item.nodeType === 'heading-3'
-    );
-
-    const times = league.raceInfo.content.slice(startIndex + 1, endIndex);
-
-    //Slice content around the desired heading
-    startIndex = league.raceInfo.content.findIndex(
-      item => item.nodeType === 'heading-3' && item.content[0].value.match(/^conditions/i)
-    );
-    endIndex = league.raceInfo.content.findIndex(
-      (item, index) => index > startIndex && item.nodeType === 'heading-3'
-    );
-
-    const conditions = league.raceInfo.content.slice(startIndex + 1, endIndex);
+  getSessionEmbed: async (session, race) => {
+    const track = tracks.find(({ name }) => race.track.indexOf(name) >= 0);
     
     const embed = new Discord.MessageEmbed()
-    	.setTitle('Next Race')
-      .setThumbnail('http://output-racing.s3-website.us-west-2.amazonaws.com/logo-stacked.png')
-      .addField(race.name, race.track)
-      .addField('\u200b', times.reduce(
-        (fields, { nodeType, content }) => {
-          content = content
-            .map(({ data, nodeType, value, content }) => {
-              fields.push(`**${content[0].content[0].value}**${content[0].content[1].value}`)
-            })
-            .join('');
-          return fields;
-        }, 
-        []
-      ))
-      .addField('\u200b', conditions.reduce(
-        (fields, { nodeType, content }) => {
-          content = content
-            .map(({ data, nodeType, value, content }) => {
-              fields.push(`**${content[0].content[0].value}**${content[0].content[1].value}`)
-            })
-            .join('');
-          return fields;
-        }, 
-        []
-      ))
-      .setImage(
-        tracks.find(({ name }) => race.track.indexOf(name) >= 0).logo
-      )    	
+    	.setTitle(`**${session.league_season_id == 51244 ? 'Practice Session' : race.name}**`)
+      .addField(
+        `**${moment(session.launchat).format('dddd, MMMM Do')}**`,
+        `Practice: ${moment(session.launchat).format('h:mma')}  PST (${session.practicedur} min)\u000AQual: ${moment(session.launchat).add(session.practicedur, 'm').format('h:mma')}  PST (${session.qualifylaps} laps/${session.qualifylength} min)\u000AGrid: ${moment(session.launchat).add(session.practicedur + session.qualifylength, 'm').format('h:mma')}  PST`
+      )
+      .addField(
+        `\u200B\u000A**${track.name}**`, 
+        `Time of Day: ${timeOfDay[session.timeOfDay]}\u000A` +
+        `${session.config_name ? `Configuration: ${session.config_name}\u000A` : ''}` +
+        `Distance: ${session.racelaps} laps\u000A` +
+        `Weather: ${session.weather_type == 1 ? 'dynamic weather/sky' : ''}\u000A` +
+        `Conditions: practice ${session.rubberlevel_practice}%, qual ${session.rubberlevel_qualify == -1 ? 'carries over' : `${session.rubberlevel_qualify}%`}, race ${session.rubberlevel_race == -1 ? 'carries over' : `${session.rubberlevel_race}%`}\u000A` +
+        `G/W/C: ${session.gwclimit} attempts`
+      )
+      .addField(
+        '\u200B\u000A',
+        `**${session.cars.length > 1 ? 'Cars' : 'Car'}:** ${makeCommaSeparatedString(session.cars.map(car => car.car_name))}\u000A` +
+        `**Setup:** ${session.fixedSetup ? `fixed (${session.cars[0].racesetupfilename})` : 'open'}\u000A` +
+        `**Fuel:** ${session.cars[0].max_pct_fuel_fill}%\u000A` +
+        `**Tires:** ${session.cars[0].max_dry_tire_sets != 0 ? `${session.cars[0].max_dry_tire_sets} sets (starting + ${session.cars[0].max_dry_tire_sets - 1})` : 'unlimited'}\u000A` +
+        `**Fast Repairs:** ${session.numfasttows}\u000A` +
+        `**Incident Limit:** ${session.incident_warn_mode ? `${session.incident_warn_param1}x (penalty)\u000a${session.incident_limit}x (disqualify)` : `${session.incident_limit}x`}`
+      )
       .setTimestamp();
+      
+    if (race.logo) {
+      const logo = await cms.getAsset(race.logo.sys.id);
+      embed.setThumbnail(`https:${logo.fields.file['en-US'].url}`);
+    } else {
+      embed.setThumbnail(track.logo);
+    }
       
     return embed;
   },
@@ -311,3 +293,4 @@ function withOrdinal(i) {
     return i + "rd";
   return i + "th";
 }
+

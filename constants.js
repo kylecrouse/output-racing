@@ -1,5 +1,14 @@
 module.exports = {
   leagueId: 1710,
+  timeOfDay: {
+    5: "Sunrise",
+    1: "Morning",
+    9: "Noon",
+    0: "Afternoon",
+    2: "Late Afternoon",
+    8: "Sunset",
+    3: "Night"
+  },
   cars: [
     { id: 24,
       name: 'ARCA Menards Chevrolet Impala',
