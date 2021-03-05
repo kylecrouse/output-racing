@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const cms = require(`${process.cwd()}/lib/contentful`);
 const { tracks, timeOfDay } = require ('../../constants');
 
@@ -216,12 +216,12 @@ module.exports = {
     );
 
     const embed = new Discord.MessageEmbed()
-      .setTitle('NASCAR iRacing Series Race Report')
-      .setThumbnail('https://outputracing.com/nis-logo.png')
+      .setTitle(results[0].seasonid == 3122 ? 'Road to Pro Series Race Report' : 'NASCAR iRacing Series Race Report')
+      .setThumbnail(results[0].seasonid == 3122 ? 'https://outputracing.com/rtp-logo.png' : 'https://outputracing.com/nis-logo.png')
       .setDescription(
         drivers.length > 0 
-          ? `${makeCommaSeparatedString(drivers.map(d => `<@${league.drivers.find(({ custId }) => custId == d.custid).discordId}>`))} raced in ${moment.utc(results[0].start_time).subtract(1, 'day').format('dddd')}'s NiS events at ${results[0].track_name}. Here\'s a look at how they did:`
-          : `No one from Output Racing League participated in ${moment.utc(results[0].start_time).subtract(1, 'day').format('dddd')}'s NiS events at ${results[0].track_name}.`
+          ? `${makeCommaSeparatedString(drivers.map(d => `<@${league.drivers.find(({ custId }) => custId == d.custid).discordId}>`))} raced in ${moment.utc(results[0].start_time).tz("America/Los_Angeles").format('dddd')}'s ${results[0].seasonid == 3122 ?  'RtP' : 'NiS'} events at ${results[0].track_name}. Here\'s a look at how they did:`
+          : `No one from Output Racing League participated in ${moment.utc(results[0].start_time).subtract(1, 'day').format('dddd')}'s ${results[0].seasonid == 3122 ?  'RtP' : 'NiS'} events at ${results[0].track_name}.`
       )
     	.setTimestamp()
       
@@ -249,7 +249,7 @@ module.exports = {
                 ...makeArray(getFastestLapFragment(driver.bestlaptime, bestlaptimepos)), 
                 ...makeArray(getLapsLedFragment(driver.lapslead)), 
                 `had ${driver.incidents == 0 ? 'no' : driver.incidents} incidents`
-              ])}. The race had ${race.nleadchanges} lead changes among ${race.rows.filter(i => i.simsesname == 'RACE' && i.lapslead > 0).length} drivers and ${race.ncautions > 0 ? `${race.ncautions} ${race.ncautions == 1 ? 'caution' : 'cautions'} for ${race.ncautionlaps}` : `went green for all ${race.eventlapscomplete}`} laps with ${race.rows.filter(i => i.simsesname == 'RACE' && i.interval > 0).length} cars on the lead lap. ${firstName} ${driver.newsublevel >= driver.oldsublevel ? 'gained' : 'lost'} ${(Math.abs(driver.newsublevel - driver.oldsublevel) / 100).toFixed(2)} SR and his iRating ${driver.newirating >= driver.oldirating ? 'increased' : 'decreased'} ${Math.abs(driver.newirating - driver.oldirating)} to ${driver.newirating}. Through ${race.race_week_num + 1} weeks in the season, ${firstName} has ${makeCommaSeparatedString([
+              ])}. This split had ${race.nleadchanges} lead changes among ${race.rows.filter(i => i.simsesname == 'RACE' && i.lapslead > 0).length} drivers and ${race.ncautions > 0 ? `${race.ncautions} ${race.ncautions == 1 ? 'caution' : 'cautions'} for ${race.ncautionlaps}` : `went green for all ${race.eventlapscomplete}`} laps with ${race.rows.filter(i => i.simsesname == 'RACE' && i.interval > 0).length} cars on the lead lap. ${firstName} ${driver.newsublevel >= driver.oldsublevel ? 'gained' : 'lost'} ${(Math.abs(driver.newsublevel - driver.oldsublevel) / 100).toFixed(2)} SR and his iRating ${driver.newirating >= driver.oldirating ? 'increased' : 'decreased'} ${Math.abs(driver.newirating - driver.oldirating)} to ${driver.newirating}. Through ${race.race_week_num + 1} weeks in the season, ${firstName} has ${makeCommaSeparatedString([
                 ... stat.wins > 0 ? [`${stat.wins} ${stat.wins == 1 ? 'win' : 'wins'}`] : [],
                 ... stat.topfive > 0 ? [`${stat.topfive} top ${stat.topfive == 1 ? '5' : '5s'}`] : [],
                 `an average finish of ${withOrdinal(stat.avgfinish)} in ${stat.starts} ${stat.starts == 1 ? 'start' : 'starts'}`
