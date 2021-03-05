@@ -6,6 +6,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const Promise = require('bluebird');
 const cleanup = require('node-cleanup');
+const fs = require('fs').promises;
+const path = require('path');
 const { getSecretValue } = require('../lib/secrets');
 const { ApiClient } = require('twitch');
 const { ClientCredentialsAuthProvider } = require('twitch-auth');
@@ -95,54 +97,117 @@ const { handleApplication } = require('../bot/lib/applications');
     }
   });
   
-  app.post('/telemetry', bodyParser.json(), (req, res) => {
+  app.post('/telemetry', bodyParser.json(), async (req, res) => {
     try {
-      if (req.body.type !== 'data') return res.send('OK');
-      // console.log(req.body);
-      const data = JSON.parse(req.body[req.body.type]);
-      const d = data.d['0'];
-      if (data.sname === 'TESTING' && d.b) {
-        // Get next race matching track from cache
-        const race = league.getNextRace({ track: data.trackname });
-        if (race) {
-          // Get matching driver
-          const driver = league.drivers.find(({ name }) => name === d.name);
-          if (driver) {
-            if (race.testing) {
-              // Get testing data for matching driver
-              const record = race.testing[driver.id];
-              // New best lap set?
-              if (!record || (record && d.b < record.best.lap)) {
-                // Put testing data with new record
-                league.season.updateRace(race, { testing: { 
-                  ...race.testing, 
-                  [driver.id]: {
-                    ...race.testing[driver.id],
-                    best: {
-                      date: data.date,
-                      skies: data.skies,
-                      tracktemp: (data.tracktemp * (9/5) + 32).toFixed(0),
-                      lap: d.b,
-                    }
-                  }
-                }});
-              }
-            } else {
-              // Put testing data with new record
-              league.season.updateRace(race, { testing: { 
-                [driver.id]: {
-                  best: {
-                    date: data.date,
-                    skies: data.skies,
-                    tracktemp: (data.tracktemp * (9/5) + 32).toFixed(0),
-                    lap: d.b,
-                  }
-                }
-              }});
-            }
+      const { type, password } = req.body;
+      const team = (req.body.team + '').replace('#', 'n');
+      const data = urlDecode(stripSlashes(req.body[type]));
+      
+      const save = async (events, id) => {
+        const k = Math.floor(id / 100);
+        const empty = JSON.stringify([]);
+        
+        await fs.writeFile(path.join(__dirname, `/jrt/events_data${team}_${k}.json`), JSON.stringify(events));
+        await fs.writeFile(path.join(__dirname, `/jrt/events_data${team}_${1 + k}.json`), empty);
+        
+        if (k > 0) {
+          for (let i = 0; i < k; i++) {
+            await fs.writeFile(path.join(__dirname, `/jrt/events_data${team}_${i}.json`), empty, { flag: 'wx' });
           }
         }
       }
+      
+      if (password !== '1234')
+        throw new Error('Unauthorized');
+        
+      if (type === 'data' || type === 'track_data')
+        await fs.writeFile(path.join(__dirname, `/jrt/${type}${team}.json`), data);
+        
+      else if (type === 'event_data') {
+        const changes = JSON.parse(data);
+        const firstId = changes[0].event.id;
+        let lastIdSaved = firstId - 1;
+        
+        let events = await fs.readFile(path.join(__dirname, `/jrt/events_data${team}_${Math.floor(firstId / 100)}.json`));
+        if (events) JSON.parse(events);
+        else events = [];
+        
+        if (firstId % 100 == 0)
+          events = [];
+          
+        let id = firstId;
+        
+        await changes.reduce((promise, change) => promise.then(
+          async () => {
+            const { type, event } = change;
+            
+            if (type === 0) {
+              events.unshift(event);
+              lastIdSaved = event.id;
+            }
+            else if (type === 1)
+              return;
+            else if (type === 2)
+              return;
+              
+            if (lastIdSaved % 100 == 99) {
+              await save(events, id);
+              events = [];
+              id = lastIdSaved + 1;
+            }
+          }
+        ), Promise.resolve());
+        
+        await save(events, id);
+      }
+            
+      // if (req.body.type !== 'data') return res.send('OK');
+      // // console.log(req.body);
+      // const data = JSON.parse(req.body[req.body.type]);
+      // const d = data.d['0'];
+      // if (data.sname === 'TESTING' && d.b) {
+      //   // Get next race matching track from cache
+      //   const race = league.getNextRace({ track: data.trackname });
+      //   if (race) {
+      //     // Get matching driver
+      //     const driver = league.drivers.find(({ name }) => name === d.name);
+      //     if (driver) {
+      //       if (race.testing) {
+      //         // Get testing data for matching driver
+      //         const record = race.testing[driver.id];
+      //         // New best lap set?
+      //         if (!record || (record && d.b < record.best.lap)) {
+      //           // Put testing data with new record
+      //           league.season.updateRace(race, { testing: { 
+      //             ...race.testing, 
+      //             [driver.id]: {
+      //               ...race.testing[driver.id],
+      //               best: {
+      //                 date: data.date,
+      //                 skies: data.skies,
+      //                 tracktemp: (data.tracktemp * (9/5) + 32).toFixed(0),
+      //                 lap: d.b,
+      //               }
+      //             }
+      //           }});
+      //         }
+      //       } else {
+      //         // Put testing data with new record
+      //         league.season.updateRace(race, { testing: { 
+      //           [driver.id]: {
+      //             best: {
+      //               date: data.date,
+      //               skies: data.skies,
+      //               tracktemp: (data.tracktemp * (9/5) + 32).toFixed(0),
+      //               lap: d.b,
+      //             }
+      //           }
+      //         }});
+      //       }
+      //     }
+      //   }
+      // }
+      
       res.send('OK');
     } catch(err) {
       console.log('[ERROR]', '/telemetry', err);
@@ -150,33 +215,35 @@ const { handleApplication } = require('../bot/lib/applications');
     }
   });
   
-  app.post('/tpost_img.php', bodyParser.raw(), (req, res) => {
-    console.log('/tpost_img.php', req.body);
+  app.post('/post_img.php', (req, res) => {
+    console.log('/post_img.php', req.headers);
     res.send('OK');
+  });
+  
+  app.get('/datajson/:name', (req, res) => {
+    res.sendFile(path.join(__dirname, `/jrt/${req.params.name}`));
   });
   
   app.ws('/raceday', (ws, req) => {
 
     // Send cached data to newly connected clients
-    ws.send(JSON.stringify(cache, replacer));
+    ws.send(JSON.stringify(cache.streamers, replacer));
 
-    // Handle messages received from iRacing
-    ws.on('message', function incoming(data) {
-      
-      // Update data cache
-      try {
-        const json = JSON.parse(data);
-        if (json.SubSessionID !== undefined && json.SubSessionID !== cache.session.SubSessionID)
-          cache.session = json;
-        else 
-          cache.session = { ...cache.session, ...json };
-      } catch(err) {
-        console.log('[ERROR]', '/raceday', err);
-      }
-      
-      // Broadcast data to all clients (except self)
-      broadcast(data);
-    });
+    // // Handle messages received from iRacing
+    // ws.on('message', function incoming(data) {
+    //   // Update data cache
+    //   try {
+    //     const json = JSON.parse(data);
+    //     if (json.SubSessionID !== undefined && json.SubSessionID !== cache.session.SubSessionID)
+    //       cache.session = json;
+    //     else 
+    //       cache.session = { ...cache.session, ...json };
+    //   } catch(err) {
+    //     console.log('[ERROR]', '/raceday', err);
+    //   }
+    //   // Broadcast data to all clients (except self)
+    //   broadcast(data);
+    // });
     
   });
   
@@ -188,7 +255,7 @@ const { handleApplication } = require('../bot/lib/applications');
   
   // Unsubscribe listeners on exit
   cleanup(function unsubscribe(exitCode, signal) {
-    console.log('Cleaning up...', { exitCode, signal, subscriptions });
+    console.log('Cleaning up...', { exitCode, signal });
     if (signal && Array.isArray(subscriptions)) {
       // Kill process after unsubscribing
       Promise.map(
@@ -222,4 +289,24 @@ function replacer(key, value) {
     return { dataType: 'Map', value: [...value] };
   else
     return value;
+}
+
+function urlDecode(str) {
+  return decodeURIComponent((str + '').replace(/\+/g, ' '));
+}
+
+function stripSlashes(str) {
+  return (str + '')
+    .replace(/\\(.?)/g, function (s, n1) {
+      switch (n1) {
+        case '\\':
+          return '\\'
+        case '0':
+          return '\u0000'
+        case '':
+          return ''
+        default:
+          return n1
+      }
+    });
 }
