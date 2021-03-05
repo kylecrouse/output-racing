@@ -17,8 +17,8 @@ async function main() {
   
   const user = (await client.users.cache.get('697817102534311996')) || (await client.users.fetch('697817102534311996'));
 
-  const channel = await user.createDM();  
-  // const channel = (await client.channels.cache.get('428309139496763395')) || (await client.channels.fetch('428309139496763395'))
+  // const channel = await user.createDM();  
+  const channel = (await client.channels.cache.get('428309139496763395')) || (await client.channels.fetch('428309139496763395'))
   
   // const open = await iracing.getSeriesResults(3118, 3);
   // const fixed = await iracing.getSeriesResults(3119, 3); 
@@ -29,8 +29,6 @@ async function main() {
   const filtered = results.filter(
     r => moment.utc(r.start_time).tz("America/Los_Angeles").isSame(moment.utc().tz("America/Los_Angeles").subtract(1, 'day'), 'day')
   );
-  
-  // console.log(results.map(r => moment.utc(r.start_time).tz("America/Los_Angeles").format('dddd')  ));
   
   const stats = await Promise.all(
     filtered.reduce(
@@ -44,8 +42,6 @@ async function main() {
       []
     )
   );
-  
-  console.log(stats);
   
   filtered.length > 0
     ? await channel.send(
