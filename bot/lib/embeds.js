@@ -237,15 +237,17 @@ module.exports = {
           const bestlaptimepos = race.rows.filter(i => i.simsesname == 'RACE').sort((a,b) => a.bestlaptime - b.bestlaptime).findIndex(d => d.custid == driver.custid);
           embed.addField(
             `**#${driver.carnum} ${entry.nickname || entry.name}**`,
-            `${firstName} ${driver.finishpos <= 4 
-                ? `scored a top five in the ${split === 0 ? 'top' : withOrdinal(split + 1)} ${race.seasonid == 3118 ? 'open' : 'fixed'} split, ${driver.finishpos < driver.startpos 
-                    ? `coming from ${withOrdinal(driver.startpos + 1)} to finish ${withOrdinal(driver.finishpos + 1)}` 
-                    : `finishing ${withOrdinal(driver.finishpos + 1)} after a ${withOrdinal(driver.startpos + 1)} place start`
-                  }` 
-                : index > 0
-                    ? `was also in the ${split === 0 ? 'top' : withOrdinal(split + 1)} ${race.seasonid == 3118 ? 'open' : 'fixed'} split and finished ${withOrdinal(driver.finishpos + 1)} after starting ${withOrdinal(driver.startpos + 1)}`
-                    : `started ${withOrdinal(driver.startpos + 1)} in the ${split === 0 ? 'top' : withOrdinal(split + 1)} ${race.seasonid == 3118 ? 'open' : 'fixed'} split and finished ${withOrdinal(driver.finishpos + 1)}`
-              }, ${driver.interval > 0 ? `${(driver.interval / 10000).toFixed(driver.interval > 20000 ? 0 : 1)} seconds off the lead` : `${Math.abs(driver.interval)} ${driver.interval == -1 ? 'lap' : 'laps'} down`}. He ${makeCommaSeparatedString([
+            `${firstName} ${driver.finishpos == 0
+                ? `won the ${split === 0 ? 'top' : withOrdinal(split + 1)} ${race.seasonid == 3118 ? 'open' : 'fixed'} split after starting ${withOrdinal(driver.startpos + 1)}!`
+                : driver.finishpos <= 4 
+                  ? `scored a top five in the ${split === 0 ? 'top' : withOrdinal(split + 1)} ${race.seasonid == 3118 ? 'open' : 'fixed'} split, ${driver.finishpos < driver.startpos 
+                      ? `coming from ${withOrdinal(driver.startpos + 1)} to finish ${withOrdinal(driver.finishpos + 1)}` 
+                      : `finishing ${withOrdinal(driver.finishpos + 1)} after a ${withOrdinal(driver.startpos + 1)} place start`
+                    }` 
+                  : index > 0
+                      ? `was also in the ${split === 0 ? 'top' : withOrdinal(split + 1)} ${race.seasonid == 3118 ? 'open' : 'fixed'} split and finished ${withOrdinal(driver.finishpos + 1)} after starting ${withOrdinal(driver.startpos + 1)}`
+                      : `started ${withOrdinal(driver.startpos + 1)} in the ${split === 0 ? 'top' : withOrdinal(split + 1)} ${race.seasonid == 3118 ? 'open' : 'fixed'} split and finished ${withOrdinal(driver.finishpos + 1)}`
+              }${driver.finishpos != 0 ? `, ${driver.interval > 0 ? `${(driver.interval / 10000).toFixed(driver.interval > 20000 ? 0 : 1)} seconds off the lead` : `${Math.abs(driver.interval)} ${driver.interval == -1 ? 'lap' : 'laps'} down`}.` : ''} He ${makeCommaSeparatedString([
                 ...makeArray(getFastestLapFragment(driver.bestlaptime, bestlaptimepos)), 
                 ...makeArray(getLapsLedFragment(driver.lapslead)), 
                 `had ${driver.incidents == 0 ? 'no' : driver.incidents} incidents`
@@ -253,7 +255,7 @@ module.exports = {
                 ... stat.wins > 0 ? [`${stat.wins} ${stat.wins == 1 ? 'win' : 'wins'}`] : [],
                 ... stat.topfive > 0 ? [`${stat.topfive} top ${stat.topfive == 1 ? '5' : '5s'}`] : [],
                 `an average finish of ${withOrdinal(stat.avgfinish)} in ${stat.starts} ${stat.starts == 1 ? 'start' : 'starts'}`
-              ])}.`
+              ])}.${driver.finishpos == 0 ? ` **Congrats, ${firstName}!**` : ''}`
           )
         })
     });
