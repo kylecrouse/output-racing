@@ -8,6 +8,8 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
-getSecretValue('ORLBot/Discord').then(({ accessToken }) => client.login(accessToken));
+getSecretValue('ORLBot/Discord')
+  .then(({ accessToken }) => client.login(accessToken))
+  .catch((err) => { throw new Error(err); });
 
 module.exports = client;
