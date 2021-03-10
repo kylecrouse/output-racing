@@ -87,7 +87,7 @@ export default function Home(props) {
                                 <label className="item-next btn btn-action btn-lg" for={`slide-${index + 1 >= props.lastRace.media.length ? 0 : index + 1}`}>
                                   <i className="icon icon-arrow-right"></i>
                                 </label>
-                                <img className="img-responsive" src={ media.fields.file.url }/>
+                                <img className="img-responsive" src={ media.fields.file.url } style={{ width: "100%" }}/>
                               </figure>
                             ))
                           }
