@@ -31,7 +31,7 @@ async function main() {
       .map(async (session) => {
         const race = league.getNextRace({ track: decodeURIComponent(session.track_name) });
         console.log(session);
-        return channel.send('<@everyone>', await getSessionEmbed(session, race));
+        return channel.send('@everyone', await getSessionEmbed(session, race));
       })
     );
     
