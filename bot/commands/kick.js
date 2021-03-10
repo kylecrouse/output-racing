@@ -43,7 +43,7 @@ module.exports = {
         .catch(collected => approval.react(REACTION_FAILURE));
 
       // If kicking wasn't confirmed, exit.
-      if (!confirmation) return;
+      if (!confirmation) return message.reply(`Ok, we'll let **${args[0]}** hang around a little longer.`);
       
       // Get GuildMember based on linked discordId
       const member = message.guild.members.cache.get(driver.discordId);
