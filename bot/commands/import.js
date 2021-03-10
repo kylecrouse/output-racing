@@ -70,12 +70,12 @@ module.exports = {
         // Get the results channel
         const channel = await message.client.channels.fetch(resultsChannelId);
         // Fetch and iterate messages in channel to remove previous bot messages
-        await Promise.all(channel.messages.fetch({ limit: 5 }).then(
+        await channel.messages.fetch({ limit: 5 }).then(
           // Delete messages from the bot
           messages => messages.size > 0 && 
             messages.filter(m => m.author.id === message.client.user.id)
               .map(m => m.delete())
-        ));
+        );
         // Send latest results
         channel.send(await getResultsEmbed(race));
         // Send season standings
