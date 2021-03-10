@@ -98,7 +98,7 @@ class Broadcast extends React.Component {
             <div className="twitch">
               <div className="twitch-stream">
                 <iframe 
-                  src="https://player.twitch.tv/?channel=aussie_sim_commentator&parent=bot.outputracing.com" 
+                  src="https://player.twitch.tv/?channel=aussie_sim_commentator&parent=outputracing.com" 
                   frameBorder="0" 
                   allowFullScreen="true" 
                   scrolling="no"
