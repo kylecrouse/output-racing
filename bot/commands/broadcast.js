@@ -8,10 +8,14 @@ module.exports = {
   args: false,
 	execute: async (message, args) => {
     
-    if (message.embeds.size <= 0) return message.react('🤷‍♀️');
+    const source = message.reference
+      ? await message.channel.messages.fetch(message.reference.messageID)
+      : message;
+
+    if (source.embeds.size <= 0) return message.react('🤷‍♀️');
     
     // Handle embeds on message
-    const [broadcast] = message.embeds
+    const [broadcast] = source.embeds
       .filter(({ video, url }) => video && url.match(/^https:\/\/www.youtube.com\//))
       .map(({ url }) => `https://www.youtube.com/embed/${url.match(/v=(\w+)&/)[1]}`);
 
