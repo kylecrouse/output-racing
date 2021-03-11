@@ -221,7 +221,7 @@ module.exports = {
       .setDescription(
         drivers.length > 0 
           ? `${makeCommaSeparatedString(drivers.map(d => `<@${league.drivers.find(({ custId }) => custId == d.custid).discordId}>`))} raced in ${moment.utc(results[0].start_time).tz("America/Los_Angeles").format('dddd')}'s ${results[0].seasonid == 3122 ?  'RtP' : 'NiS'} events at ${results[0].track_name}. Here\'s a look at how they did:`
-          : `No one from Output Racing League participated in ${moment.utc(results[0].start_time).subtract(1, 'day').format('dddd')}'s ${results[0].seasonid == 3122 ?  'RtP' : 'NiS'} events at ${results[0].track_name}.`
+          : `No one from Output Racing League participated in ${moment.utc(results[0].start_time).tz("America/Los_Angeles").format('dddd')}'s ${results[0].seasonid == 3122 ?  'RtP' : 'NiS'} events at ${results[0].track_name}.`
       )
     	.setTimestamp()
       
