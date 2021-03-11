@@ -17,7 +17,7 @@ module.exports = {
     // Handle embeds on message
     const [broadcast] = source.embeds
       .filter(({ video, url }) => video && url.match(/^https:\/\/www.youtube.com\//))
-      .map(({ url }) => `https://www.youtube.com/embed/${url.match(/v=(\w+)&/)[1]}`);
+      .map(({ url }) => `https://www.youtube.com/embed/${url.match(/v=(\w+)&?/)[1]}`);
 
     // Is nothing to save, exit
     if (!broadcast) return message.react('🤷‍♀️');
