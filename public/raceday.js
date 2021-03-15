@@ -32,7 +32,8 @@ class Broadcast extends React.Component {
     super();
     this.state = {
       readyState: WebSocket.CLOSED,
-      online: false
+      online: false,
+      streamers: null
     };
   }
   
@@ -59,7 +60,10 @@ class Broadcast extends React.Component {
         const data = JSON.parse(event.data, reviver);
         console.log(data);
         if (data.streamers)
-          this.setState({ online: data.streamers.get('aussie_sim_commentator') || false });
+          this.setState({
+            streamers: data.streamers,
+            online: data.streamers.get('aussie_sim_commentator') || false 
+          });
       } catch(error) {
         console.log(error, event.data);
       }
@@ -105,6 +109,27 @@ class Broadcast extends React.Component {
                 />
               </div>
             </div>
+            
+            { this.state.streamers && 
+              <div className="grid columns">
+                { this.state.streamers.entries()
+                    .filter(([channel, online]) => !!online)
+                    .map(
+                      ([channel, online]) => (
+                        <Stream 
+                          key={channel} 
+                          channel={channel} 
+                          driver={
+                            this.props.drivers.find(
+                              ({ twitchUserLogin }) => twitchUserLogin == channel
+                            )
+                          }
+                        />
+                      )
+                    ) 
+                }
+              </div> 
+            }
             
           </div>
         </div>
@@ -409,7 +434,7 @@ function Stream(props) {
       </div>
       <div className="twitch-stream">
         <iframe 
-          src="https://player.twitch.tv/?video=871735574&parent=localhost" 
+          src={`https://player.twitch.tv/?channel=${props.channel}&parent=outputracing.com`}
           frameBorder="0" 
           allowFullScreen="true" 
           scrolling="no"
