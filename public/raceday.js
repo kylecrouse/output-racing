@@ -102,7 +102,7 @@ class Broadcast extends React.Component {
             <div className="twitch">
               <div className="twitch-stream">
                 <iframe 
-                  src="https://player.twitch.tv/?channel=aussie_sim_commentator&parent=outputracing.com" 
+                  src="https://player.twitch.tv/?channel=aussie_sim_commentator&parent=outputracing.com&autoplay=true&muted=false" 
                   frameBorder="0" 
                   allowFullScreen="true" 
                   scrolling="no"
@@ -113,7 +113,7 @@ class Broadcast extends React.Component {
             { this.state.streamers && 
               <div className="grid columns">
                 { this.state.streamers.entries()
-                    .filter(([channel, online]) => !!online)
+                    .filter(([channel, online]) => !!online && channel != 'aussie_sim_commentator')
                     .map(
                       ([channel, online]) => (
                         <Stream 
@@ -434,7 +434,7 @@ function Stream(props) {
       </div>
       <div className="twitch-stream">
         <iframe 
-          src={`https://player.twitch.tv/?channel=${props.channel}&parent=outputracing.com`}
+          src={`https://player.twitch.tv/?channel=${props.channel}&parent=outputracing.com&autoplay=true&muted=true`}
           frameBorder="0" 
           allowFullScreen="true" 
           scrolling="no"
