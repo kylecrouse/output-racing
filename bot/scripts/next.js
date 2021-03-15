@@ -3,7 +3,7 @@ const league = require('../../lib/league');
 const iracing = require('../../lib/iracing');
 const { announcementChannelId } = require('../config.json');
 const { getSessionEmbed } = require('../lib/embeds');
-const moment = require('moment');
+const moment = require('moment-timezone');
 
 if (client.uptime > 0) {
   main();
@@ -27,7 +27,7 @@ async function main() {
     const channel = (await client.channels.cache.get(announcementChannelId)) || (await client.channels.fetch(announcementChannelId))
     
     await Promise.all(sessions
-      .filter(session => moment().isSame(session.launchat, 'day'))
+      .filter(session => moment().tz("America/Los_Angeles").isSame(session.launchat, 'day'))
       .map(async (session) => {
         const race = league.getNextRace({ track: decodeURIComponent(session.track_name) });
         console.log(session);
