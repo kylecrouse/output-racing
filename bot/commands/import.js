@@ -81,7 +81,9 @@ module.exports = {
         // Send season standings
         channel.send(getStandingsEmbed(league));
         // Send next race
-        channel.send(getUpcomingEmbed(league.season));
+        // NOTE: This was removed in favor of upcoming session, which won't be scheduled
+        //       by this point. Consider reinstating, or using schedule command's embed.
+        // channel.send(getUpcomingEmbed(league.season));
         
         // Get Drivers' Council channel
         const council = message.client.channels.cache.get(councilChannelId);
