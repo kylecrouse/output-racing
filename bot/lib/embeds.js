@@ -10,7 +10,7 @@ module.exports = {
     const embed = new Discord.MessageEmbed()
     	.setTitle(`**${session.league_season_id == 51244 ? 'Practice Session' : race.name}**`)
       .addField(
-        `**${moment(session.launchat).format('dddd, MMMM Do')}**`,
+        `**${moment(session.launchat).tz("America/Los_Angeles").format('dddd, MMMM Do')}**`,
         `Practice: ${moment(session.launchat).tz("America/Los_Angeles").format('h:mma z')} (${session.practicedur} min)\u000AQual: ${moment(session.launchat).add(session.practicedur, 'm').tz("America/Los_Angeles").format('h:mma z')} (${session.qualifylaps} laps/${session.qualifylength} min)\u000AGrid: ${moment(session.launchat).add(session.practicedur + session.qualifylength, 'm').tz("America/Los_Angeles").format('h:mma z')}`
       )
       .addField(
