@@ -63,61 +63,54 @@ export default function Home(props) {
                 </ul>
               </a>
               <div className="columns col-gapless">
-                <div className="column col-10 col-xl-9 col-sm-12">
-                  { props.lastRace.media && 
-                      <div className="carousel">
-                        { props.lastRace.media.map((media, index) => {
-                            let props = {
-                              className: "carousel-locator",
-                              id: `slide-${index}`,
-                              name: "carousel-radio",
-                              hidden: "hidden",
-                              type: "radio"
-                            }
-                            if (index === 0) props.defaultChecked = "checked";
-                            return <input {...props}/>;
-                          })
-                        }
-                        <div className="carousel-container">
-                          { props.lastRace.media.map((media, index) => (
-                              <figure className="carousel-item">
-                                <label className="item-prev btn btn-action btn-lg" for={`slide-${index - 1 < 0 ? props.lastRace.media.length - 1 : index - 1}`}>
-                                  <i className="icon icon-arrow-left"></i>
-                                </label>
-                                <label className="item-next btn btn-action btn-lg" for={`slide-${index + 1 >= props.lastRace.media.length ? 0 : index + 1}`}>
-                                  <i className="icon icon-arrow-right"></i>
-                                </label>
-                                <img className="img-responsive" src={ media.fields.file.url } style={{ width: "100%" }}/>
-                              </figure>
-                            ))
-                          }
-                        </div>
-                        <div className="carousel-nav">
-                          { props.lastRace.media.map((media, index) => (
-                              <label className="nav-item text-hide c-hand" for={`slide-${index}`}>{index}</label>
-                            ))
-                          }
-                        </div>
-                      </div>
-                  }
-                </div>
-                <div className="column col-2 col-xl-3 col-sm-12">
-                  <div className="columns col-gapless sidebar">
-                  { props.lastRace.results.slice(0,5).map(props => (
-                      <div className="top5 column col-12 col-sm-4">
-                        <span className="position"><span>{props.finish}</span></span>
-                        <DriverChip {...props.driver}/>
-                      </div>
-                    ))
-                  }
-                    <div className="top5 column hide show-sm col-sm-4"></div>
-                    <div className="cta">
-                      <a href="/results/latest" className="btn btn-primary">
-                        <span>Full Results</span>
-                      </a>
+                { props.lastRace.results.slice(0,5).map(props => (
+                    <div className="top5 column col-2 col-sm-12">
+                      <span className="position"><span>{props.finish}</span></span>
+                      <DriverChip {...props.driver}/>
                     </div>
+                  ))
+                }
+              </div>
+              { props.lastRace.media && 
+                <div className="carousel">
+                  { props.lastRace.media.map((media, index) => {
+                      let props = {
+                        className: "carousel-locator",
+                        id: `slide-${index}`,
+                        name: "carousel-radio",
+                        hidden: "hidden",
+                        type: "radio"
+                      }
+                      if (index === 0) props.defaultChecked = "checked";
+                      return <input {...props}/>;
+                    })
+                  }
+                  <div className="carousel-container">
+                    { props.lastRace.media.map((media, index) => (
+                        <figure className="carousel-item">
+                          <label className="item-prev btn btn-action btn-lg" for={`slide-${index - 1 < 0 ? props.lastRace.media.length - 1 : index - 1}`}>
+                            <i className="icon icon-arrow-left"></i>
+                          </label>
+                          <label className="item-next btn btn-action btn-lg" for={`slide-${index + 1 >= props.lastRace.media.length ? 0 : index + 1}`}>
+                            <i className="icon icon-arrow-right"></i>
+                          </label>
+                          <img className="img-responsive" src={ media.fields.file.url } style={{ width: "100%" }}/>
+                        </figure>
+                      ))
+                    }
+                  </div>
+                  <div className="carousel-nav">
+                    { props.lastRace.media.map((media, index) => (
+                        <label className="nav-item text-hide c-hand" for={`slide-${index}`}>{index}</label>
+                      ))
+                    }
                   </div>
                 </div>
+              }
+              <div className="cta">
+                <a href="/results/latest" className="btn btn-primary">
+                  <span>Full Results</span>
+                </a>
               </div>
             </div>
           </div>

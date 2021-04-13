@@ -120,7 +120,7 @@ div + div:not(.column) > h2 {
   background-size: 20px 20px, 20px 20px; 
   background-position: 0 0, 10px 10px;
   margin-bottom: 2rem;
-  overflow: hidden;
+  /* overflow: hidden; */
   padding: 0;
   position: relative;
 }
@@ -199,6 +199,7 @@ div + div:not(.column) > h2 {
   z-index: 1;
   overflow: hidden;
   flex-grow: 1 !important;
+  min-height: 4rem;
 }
 
 @media (max-width: 600px) {
