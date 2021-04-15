@@ -88,6 +88,11 @@
   font-size: 0.6rem;
 }
 
+.carousel .img-responsive {
+  height: 100%;
+  max-width: auto;
+}
+
 .resultsHeader {
   margin: 1rem 0;
 }
