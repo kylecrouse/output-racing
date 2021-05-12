@@ -22,7 +22,7 @@ module.exports = {
       
     if (!season) return;
     
-    const remaining = season.schedule.filter(props => !props.raceId);
+    const remaining = season.schedule.filter(props => !props.raceId || (!props.offWeek && moment().isSameOrBefore(props.date)));
     const completed = season.results.filter(props => props.raceId) || [];
     const races = season.schedule.filter(props => !props.offWeek);
     
