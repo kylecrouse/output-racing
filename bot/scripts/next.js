@@ -30,7 +30,7 @@ async function main() {
       .filter(session => moment().tz("America/Los_Angeles").isSame(session.launchat, 'day'))
       .map(async (session) => {
         const race = league.getNextRace({ track: decodeURIComponent(session.track_name) });
-        console.log(session);
+        // console.log(session);
         return channel.send('@everyone', await getSessionEmbed(session, race));
       })
     );
