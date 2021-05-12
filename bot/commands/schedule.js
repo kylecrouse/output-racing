@@ -16,9 +16,7 @@ module.exports = {
 
     const season = args.length > 0
       ? args[0] === 'next'
-        ? league.seasons[0].id !== league.season.id 
-          ? league.seasons[0] 
-          : null
+        ? league.seasons.find(season => season.id != league.season.id)
         : league.seasons.find(season => season.id == args[0])
       : league.season;
       
