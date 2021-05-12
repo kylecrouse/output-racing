@@ -22,10 +22,8 @@ module.exports = {
       
     if (!season) return;
     
-    console.log(league.seasons.map(season => ({ id: season.id, name: season.name })));
-    
     const remaining = season.schedule.filter(props => (!props.raceId && !props.offWeek) || (props.offWeek && moment().isSameOrBefore(props.date)));
-    const completed = season.results.filter(props => props.raceId) || [];
+    const completed = season.results ? season.results.filter(props => props.raceId) : [];
     const races = season.schedule.filter(props => !props.offWeek);
     
     const embed = new Discord.MessageEmbed()
