@@ -7,7 +7,10 @@ module.exports = {
 	description: 'Add attached image to your driver profile page.',
   args: false,
 	execute: async (message) => handleAttachment(
-    message,
+    // Send cross-post if present, otherwise original message
+    message.reference
+      ? await message.channel.messages.fetch(message.reference.messageID)
+      : message,
     // Save resolved asset to requested race results
     async (asset) => {
       // Ensure dependencies are initialized
