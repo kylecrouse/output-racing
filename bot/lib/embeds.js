@@ -4,6 +4,62 @@ const cms = require(`${process.cwd()}/lib/contentful`);
 const { tracks, timeOfDay } = require ('../../constants');
 
 module.exports = {
+  getUpcomingEmbed: (league) => {
+    const race = league.getNextRace();
+  
+    //Slice content around the desired heading
+    let startIndex = league.raceInfo.content.findIndex(
+      item => item.nodeType === 'heading-3' && item.content[0].value.match(/^start times/i)
+    );
+    let endIndex = league.raceInfo.content.findIndex(
+      (item, index) => index > startIndex && item.nodeType === 'heading-3'
+    );
+  
+    const times = league.raceInfo.content.slice(startIndex + 1, endIndex);
+  
+    //Slice content around the desired heading
+    startIndex = league.raceInfo.content.findIndex(
+      item => item.nodeType === 'heading-3' && item.content[0].value.match(/^conditions/i)
+    );
+    endIndex = league.raceInfo.content.findIndex(
+      (item, index) => index > startIndex && item.nodeType === 'heading-3'
+    );
+  
+    const conditions = league.raceInfo.content.slice(startIndex + 1, endIndex);
+  
+    const embed = new Discord.MessageEmbed()
+      .setTitle('Next Race')
+      .setThumbnail('http://output-racing.s3-website.us-west-2.amazonaws.com/logo-stacked.png')
+      .addField(race.name, race.track)
+      .addField('\u200b', times.reduce(
+        (fields, { nodeType, content }) => {
+          content = content
+            .map(({ data, nodeType, value, content }) => {
+              fields.push(`**${content[0].content[0].value}**${content[0].content[1].value}`)
+            })
+            .join('');
+          return fields;
+        }, 
+        []
+      ))
+      .addField('\u200b', conditions.reduce(
+        (fields, { nodeType, content }) => {
+          content = content
+            .map(({ data, nodeType, value, content }) => {
+              fields.push(`**${content[0].content[0].value}**${content[0].content[1].value}`)
+            })
+            .join('');
+          return fields;
+        }, 
+        []
+      ))
+      .setImage(
+        tracks.find(({ name }) => race.track.indexOf(name) >= 0).logo
+      )    	
+      .setTimestamp();
+  
+    return embed;
+  },  
   getSessionEmbed: async (session, race) => {
     const track = tracks.find(({ name }) => race.track.indexOf(name) >= 0);
     
