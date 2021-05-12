@@ -192,6 +192,12 @@ module.exports = {
     },
     { name: 'Tsukuba Circuit',
       logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/tsukuba/logo.jpg'
+    },
+    { name: 'Myrtle Beach Speedway',
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/myrtlebeach/logo.jpg'
+    },
+    { name: 'USA International Speedway',
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/usainternational/logo.jpg'
     }
   ]
 }
