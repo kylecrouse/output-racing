@@ -1,3 +1,4 @@
+import moment from 'moment'
 import Head from 'next/head'
 import league from '../../lib/league/cache';
 import Navbar from '../../components/Navbar'
@@ -34,17 +35,17 @@ export default function(props) {
 export async function getStaticProps({ params }) {
   const { name, season, seasons } = await league.load();
   
-  if (season.results) {
-    const [race] = season.results.filter(item => item.results).slice(-1);
-    return { props: { 
-      leagueName: name,
-      ...race 
-    }};
-  } else {
-    const [race] = seasons.find(({ id }) => season.id !== id).results.slice(-1);
-    return { props: { 
-      leagueName: name,
-      ...race 
-    }};
-  }
+  const s = Array.isArray(season.results) && season.results.find(({ uploaded }) => uploaded)
+    ? season
+    : seasons.find(({ id }) => id !== season.id);
+    
+  const race = s.results
+    .filter(race => moment().isSameOrAfter(race.date, 'day'))
+    .sort((a, b) => moment(a.date).diff(b.date));
+    
+  return { props: { 
+    leagueName: name,
+    ...race[race.length - 1]
+  }};
+
 };
