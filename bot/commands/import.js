@@ -53,7 +53,7 @@ module.exports = {
         break;
         
         case 'stats':
-          await handleSeason(args[1] || null);
+          await handleStats(args[1] || null);
         break;
         
         default: 
