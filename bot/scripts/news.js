@@ -25,8 +25,8 @@ async function main() {
   // TODO: Is it possible to calculate the raceweek index from schedule so it can be automated?
   
   const series = [
-    [{ seasonid: 3118, raceweek: 15 }, { seasonid: 3119, raceweek: 15 }],
-    [{ seasonid: 3122, raceweek: 6 }]
+    [{ seasonid: 3118, raceweek: 16 }, { seasonid: 3119, raceweek: 16 }],
+    [{ seasonid: 3122, raceweek: 7 }]
   ];
   
   const results = await Promise.all(series.map(series => Promise.map(
