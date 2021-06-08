@@ -40,7 +40,11 @@ export async function getStaticProps({ params }) {
     : seasons.find(({ id }) => id !== season.id);
     
   const race = s.results
-    .filter(race => moment().isSameOrAfter(race.date, 'day'))
+    .filter(race => 
+      !race.offWeek 
+        && race.uploaded 
+        && moment().isSameOrAfter(race.date, 'day')
+    )
     .sort((a, b) => moment(a.date).diff(b.date));
     
   return { props: { 
