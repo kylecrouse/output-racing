@@ -93,7 +93,7 @@ export default function Race(props) {
       <div className="columns" style={{ alignItems: "center" }}>
         <div className="column col-4 col-sm-12 text-center">
           { props.logo
-              ? <img src={ props.logo.fields.file.url } style={{ display: "block", height: "100%", maxHeight: "150px", margin: "0 auto" }} />
+              ? <img src={ props.logo.fields.file.url } style={{ display: "block", height: "100%", maxHeight: "150px", margin: "0 auto", maxWidth: "100%" }} />
               : <h3 style={{ marginBottom: "2rem" }}>{props.name}</h3>
           }
         </div>
