@@ -198,6 +198,12 @@ module.exports = {
     },
     { name: 'USA International Speedway',
       logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/usainternational/logo.jpg'
+    },
+    { name: 'Nashville Superspeedway',
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/nashvilless/logo.jpg'
+    },
+    { name: 'Road America',
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/roadamerica/tle_logo_ra.jpg'
     }
   ]
 }
