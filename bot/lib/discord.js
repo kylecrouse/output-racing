@@ -10,6 +10,6 @@ client.on('ready', () => {
 
 getSecretValue('ORLBot/Discord')
   .then(({ accessToken }) => client.login(accessToken))
-  .catch((err) => { throw new Error(err); });
+  .catch((err) => { console.log(err); });
 
 module.exports = client;
