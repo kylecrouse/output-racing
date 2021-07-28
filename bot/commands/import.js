@@ -16,7 +16,7 @@ const REACTION_FAILURE = '😢';
 
 module.exports = {
 	name: 'import',
-	description: 'Import schedule, results, stats and standings from danlisa.com',
+	description: 'Import schedule, results, stats and standings from simracerhub.com',
   args: true,
   usage: '<drivers | latest | results | season | standings | stats> [<id>]',
 	execute: async (message, args) => {
@@ -121,7 +121,7 @@ async function handleLatest(args) {
   // Get the ID for the current season
   const seasonId = league.season.id;
   
-  // Import the latest results from iRacing to danlisa.com
+  // Import the latest results from iRacing to simracerhub.com
   const race = await getLatestResults();
 
   // Update season data (schedule, standings, stats) from danlisa
