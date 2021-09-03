@@ -16,173 +16,173 @@ module.exports = {
     },
     { id: 45,
       name: '[Legacy] NASCAR Cup Chevrolet SS - 2013',
-      image: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/cars/carid_45/profile.jpg'
+      image: 'https://ir-core-sites.iracing.com/members/member_images/cars/carid_45/profile.jpg'
     },
     { id: 46,
       name: '[Legacy] NASCAR Cup Ford Fusion - 2016',
-      image: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/cars/carid_46/profile.jpg'
+      image: 'https://ir-core-sites.iracing.com/members/member_images/cars/carid_46/profile.jpg'
     },
     { id: 51,
       name: '[Legacy] NASCAR Xfinity Ford Mustang - 2016',
-      image: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/cars/fordmustangclassb/profile.jpg'
+      image: 'https://ir-core-sites.iracing.com/members/member_images/cars/fordmustangclassb/profile.jpg'
     },
     { id: 54,
       name: 'Super Late Model',
-      image: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/cars/superlatemodel/profile.jpg'
+      image: 'https://ir-core-sites.iracing.com/members/member_images/cars/superlatemodel/profile.jpg'
     },
     { id: 56,
       name: 'NASCAR Cup Series Toyota Camry',
-      image: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/cars/carid_56/profile.jpg'
+      image: 'https://ir-core-sites.iracing.com/members/member_images/cars/carid_56/profile.jpg'
     },
     { id: 58,
       name: '[Legacy] NASCAR Xfinity Chevrolet Camaro - 2014',
-      image: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/cars/camaroclassb/profile.jpg'
+      image: 'https://ir-core-sites.iracing.com/members/member_images/cars/camaroclassb/profile.jpg'
     },
     { id: 62,
       name: 'NASCAR Gander Outdoors Toyota Tundra',
-      image: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/cars/toyotatundra/profile.jpg'
+      image: 'https://ir-core-sites.iracing.com/members/member_images/cars/toyotatundra/profile.jpg'
     },
     { id: 69,
       name: '[Legacy] NASCAR Xfinity Toyota Camry - 2015',
-      image: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/cars/carid_69/profile.jpg'
+      image: 'https://ir-core-sites.iracing.com/members/member_images/cars/carid_69/profile.jpg'
     },
     { id: 103,
       name: 'NASCAR Cup Series Chevrolet Camaro ZL1',
-      image: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/cars/carid_103/profile.jpg'
+      image: 'https://ir-core-sites.iracing.com/members/member_images/cars/carid_103/profile.jpg'
     },
     { id: 110,
       name: 'NASCAR Cup Series Ford Mustang',
-      image: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/cars/carid_110/profile.jpg'
+      image: 'https://ir-core-sites.iracing.com/members/member_images/cars/carid_110/profile.jpg'
     },
     { id: 111,
       name: 'NASCAR Gander Outdoors Chevrolet Silverado',
-      image: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/cars/carid_111/profile.jpg'
+      image: 'https://ir-core-sites.iracing.com/members/member_images/cars/carid_111/profile.jpg'
     },
     { id: 123,
       name: 'NASCAR Gander Outdoors Ford F150',
-      image: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/cars/carid_123/profile.jpg'
+      image: 'https://ir-core-sites.iracing.com/members/member_images/cars/carid_123/profile.jpg'
     },
   ],
   tracks: [
     { name: 'South Boston Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/southboston/tle_logo_sbs.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/southboston/tle_logo_sbs.jpg'
     },
     { name: 'Concord Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/concordmotorsport/tle_logo_cmp.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/concordmotorsport/tle_logo_cmp.jpg'
     },
     { name: 'Martinsville Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/martinsville/tle_logo_ms.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/martinsville/tle_logo_ms.jpg'
     },
     { name: 'Atlanta Motor Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/atlantamotorspeedway/logo.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/atlantamotorspeedway/logo.jpg'
     },
     { name: 'Bristol Motor Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/bristol/tle_logo_bms.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/bristol/tle_logo_bms.jpg'
     },
     { name: 'Auto Club Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/california/logo.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/california/logo.jpg'
     },
     { name: 'Charlotte Motor Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/charlotte/logo.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/charlotte/logo.jpg'
     },
     { name: 'Chicagoland Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/chicagoland/tle_logo_cs.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/chicagoland/tle_logo_cs.jpg'
     },
     { name: 'Darlington Raceway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/darlington/tle_logo_dr.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/darlington/tle_logo_dr.jpg'
     },
     { name: 'Daytona International Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/daytona/tle_logo_day.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/daytona/tle_logo_day.jpg'
     },
     { name: 'Dover International Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/dover/tle_logo_dov.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/dover/tle_logo_dov.jpg'
     },
     { name: 'Homestead Miami Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/homesteadmiami/tle_logo_hms.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/homesteadmiami/tle_logo_hms.jpg'
     },
     { name: 'Indianapolis Motor Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/indianapolis/tle_logo_in.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/indianapolis/tle_logo_in.jpg'
     },
     { name: 'Iowa Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/iowa/tle_logo_ios.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/iowa/tle_logo_ios.jpg'
     },
     { name: 'Kansas Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/kansas/logo.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/kansas/logo.jpg'
     },
     { name: 'Kentucky Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/kentucky/2020/logo.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/kentucky/2020/logo.jpg'
     },
     { name: 'Las Vegas Motor Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/vegas/tle_logo_lvs.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/vegas/tle_logo_lvs.jpg'
     },
     { name: 'Michigan International Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/michigan/2018/logo.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/michigan/2018/logo.jpg'
     },
     { name: 'New Hampshire Motor Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/nhms/tle_logo_nhms.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/nhms/tle_logo_nhms.jpg'
     },
     { name: 'Phoenix Raceway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/phoenix/2014/logo.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/phoenix/2014/logo.jpg'
     },
     { name: 'Pocono Raceway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/pocono/2016/logo.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/pocono/2016/logo.jpg'
     },
     { name: 'Richmond Raceway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/richmond/logo.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/richmond/logo.jpg'
     },
     { name: 'Rockingham Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/rockingham/logo.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/rockingham/logo.jpg'
     },
     { name: 'Sonoma Raceway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/infineon/tle_logo_is.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/infineon/tle_logo_is.jpg'
     },
     { name: 'Talladega Superspeedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/talladega/tle_logo_tss.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/talladega/tle_logo_tss.jpg'
     },
     { name: 'Texas Motor Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/texas/2020/logo.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/texas/2020/logo.jpg'
     },
     { name: 'Watkins Glen International',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/watkinsglen/tle_logo_wtg.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/watkinsglen/tle_logo_wtg.jpg'
     },
     { name: '[Legacy] Charlotte Motor Speedway - 2008',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/lowes/tle_logo_lms.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/lowes/tle_logo_lms.jpg'
     },
     { name: '[Legacy] Daytona International Speedway - 2008',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/daytona/tle_logo_dis.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/daytona/tle_logo_dis.jpg'
     },
     { name: '[Legacy] Kentucky Speedway - 2011',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/kentucky/tle_logo_kentucky.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/kentucky/tle_logo_kentucky.jpg'
     },
     { name: '[Legacy] Michigan International Speedway - 2009',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/michigan/2014/tle_logo_mis.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/michigan/2014/tle_logo_mis.jpg'
     },
     { name: '[Legacy] Phoenix Raceway - 2008',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/phoenix/2008/logo.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/phoenix/2008/logo.jpg'
     },
     { name: '[Legacy] Pocono Raceway - 2009',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/pocono/tle_logo_poc.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/pocono/tle_logo_poc.jpg'
     },
     { name: '[Legacy] Texas Motor Speedway - 2009',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/texas/tle_logo_tms.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/texas/tle_logo_tms.jpg'
     },
     { name: 'Eldora Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/eldora/logo.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/eldora/logo.jpg'
     },
     { name: 'World Wide Technology Raceway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/gateway/logo.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/gateway/logo.jpg'
     },
     { name: 'Canadian Tire Motorsports Park',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/mosport/logo.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/mosport/logo.jpg'
     },
     { name: 'The Milwaukee Mile',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/milmile/tle_logo_tmm.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/milmile/tle_logo_tmm.jpg'
     },
     { name: 'Lanier National Speedway Dirt',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/lanier/logo.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/lanier/logo.jpg'
     },
     { name: 'Rockingham Speedway',
-      logo: 'https://d3bxz2vegbjddt.cloudfront.net/members/member_images/tracks/rockingham/logo.jpg'
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/rockingham/logo.jpg'
     },
     { name: 'Nashville Fairgrounds Speedway',
       logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/nashville/logo.jpg'
