@@ -62,6 +62,18 @@ module.exports = {
       name: 'NASCAR Gander Outdoors Ford F150',
       image: 'https://ir-core-sites.iracing.com/members/member_images/cars/carid_123/profile.jpg'
     },
+    { id: 139,
+      name: 'NASCAR Cup Series Next Gen Chevrolet Camaro ZL1',
+      image: 'https://ir-core-sites.iracing.com/members/member_images/cars/carid_139/profile.jpg'
+    },
+    { id: 140,
+      name: 'NASCAR Cup Series Next Gen Ford Mustang',
+      image: 'https://ir-core-sites.iracing.com/members/member_images/cars/carid_140/profile.jpg'
+    },
+    { id: 141,
+      name: 'NASCAR Cup Series Next Gen Toyota Camry',
+      image: 'https://ir-core-sites.iracing.com/members/member_images/cars/carid_141/profile.jpg'
+    },
   ],
   tracks: [
     { name: 'South Boston Speedway',
@@ -204,6 +216,9 @@ module.exports = {
     },
     { name: 'Road America',
       logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/roadamerica/tle_logo_ra.jpg'
+    },
+    { name: 'Five Flags Speedway',
+      logo: 'https://ir-core-sites.iracing.com/members/member_images/tracks/fiveflags/logo.jpg'
     }
   ]
 }
