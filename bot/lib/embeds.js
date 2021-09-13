@@ -166,7 +166,7 @@ module.exports = {
         const match = drivers.find(({ name }) => name == driver);
         return match && match.active;
       })
-      .sort((a, b) => (a.incidentsLap - b.incidentsLap) || (a.incidentsRace - b.incidentsRace));
+      .sort((a, b) => (b.incidentsLap - a.incidentsLap) || (b.incidentsRace - a.incidentsRace));
     
     const scheduled = season.results.filter(race => race.counts);
     const completed = scheduled.filter(race => race.raceId);
@@ -207,7 +207,7 @@ module.exports = {
         return { driver: driver.nickname || driver.name, starts, streak };
       })
       .filter(({ streak }) => streak > 0)
-      .sort((a, b) => (b.starts - a.starts) || (a.streak - b.streak));
+      .sort((a, b) => (a.starts - b.starts) || (b.streak - a.streak));
     
     const scheduled = season.results.filter(race => race.counts);
     const completed = scheduled.filter(race => race.raceId);
