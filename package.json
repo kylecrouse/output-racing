@@ -36,7 +36,7 @@
     "next": "10.0.1",
     "node-cleanup": "^2.1.2",
     "node-fetch": "^2.6.1",
-    "puppeteer": "^8.0.0",
+    "puppeteer": "^10.2.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "sharp": "^0.27.2",
