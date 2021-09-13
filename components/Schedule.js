@@ -109,11 +109,11 @@ export default function Schedule(props) {
         			<td>
                 { race.raceId 
                     ? <a href={`/results/${race.raceId}/`}>{race.name}</a>
-                    : (race.offWeek || raceNo === "")
+                    : (race.offWeek || race.raceNo === "")
                       ? <i>{race.name}</i> 
                       : race.name
                 }
-                { !race.counts && !race.offWeek && <i style={{opacity:0.5}}> (non-points)</i>}
+                { !race.counts && !race.offWeek && race.raceNo !== "" && <i style={{opacity:0.5}}> (non-points)</i>}
               </td>
         			<td>{race.track}</td>
               <td>{race.laps ? `${race.laps}\u00A0laps` : race.time}</td>
