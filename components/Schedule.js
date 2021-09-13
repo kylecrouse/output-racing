@@ -103,13 +103,15 @@ export default function Schedule(props) {
         </tr>
       </thead>
 		  <tbody>
-  			{ props.schedule.filter(({ raceNo }) => raceNo !== "").map((race) => (
+  			{ props.schedule.map((race) => (
       		  <tr key={props.raceNo}>
               <td style={{ whiteSpace: "nowrap" }}>{moment.parseZone(race.date).format('MMM D, YYYY')}</td>
         			<td>
                 { race.raceId 
                     ? <a href={`/results/${race.raceId}/`}>{race.name}</a>
-                    : race.offWeek ? <i>{race.name}</i> : race.name
+                    : (race.offWeek || raceNo === "")
+                      ? <i>{race.name}</i> 
+                      : race.name
                 }
                 { !race.counts && !race.offWeek && <i style={{opacity:0.5}}> (non-points)</i>}
               </td>
