@@ -103,22 +103,38 @@ export default function Schedule(props) {
         </tr>
       </thead>
 		  <tbody>
-  			{ props.schedule.map((race) => (
-      		  <tr key={props.raceNo}>
-              <td style={{ whiteSpace: "nowrap" }}>{moment.parseZone(race.date).format('MMM D, YYYY')}</td>
-        			<td>
-                { race.raceId 
-                    ? <a href={`/results/${race.raceId}/`}>{race.name}</a>
-                    : (race.offWeek || race.raceNo === "")
-                      ? <i>{race.name}</i> 
-                      : race.name
-                }
-                { !race.counts && !race.offWeek && race.raceNo !== "" && <i style={{opacity:0.5}}> (non-points)</i>}
-              </td>
-        			<td>{race.track}</td>
-              <td>{race.laps ? `${race.laps}\u00A0laps` : race.time}</td>
-      		  </tr>
-      		)) 
+  			{ props.schedule.map((race) => {
+            if (!race.counts && !race.offWeek && race.raceNo === "")
+              return (
+                <tr key={props.raceNo}>
+                  <td colspan="4" style={{backgroundColor:"#f4a913", textAlign: "center"}}>
+                    <i style={{fontWeight:"bold"}}>{race.name}</i>
+                  </td>
+                </tr>
+              );
+            if (race.offWeek)
+              return (
+                <tr key={props.raceNo}>
+                  <td style={{ whiteSpace: "nowrap" }}>{moment.parseZone(race.date).format('MMM D, YYYY')}</td>
+                  <td colspan="3"><i>{race.name}</i></td>
+                </tr>
+              );
+            if (!race.offWeek && race.raceNo !== "")
+              return (
+                <tr key={props.raceNo}>
+                  <td style={{ whiteSpace: "nowrap" }}>{moment.parseZone(race.date).format('MMM D, YYYY')}</td>
+                  <td>
+                    { race.raceId 
+                        ? <a href={`/results/${race.raceId}/`}>{race.name}</a>
+                        : race.name
+                    }
+                    { !race.counts && <i style={{opacity:0.5}}> (non-points)</i>}
+                  </td>
+                  <td>{race.track}</td>
+                  <td>{race.laps ? `${race.laps}\u00A0laps` : race.time}</td>
+                </tr>
+              );
+          }) 
   			}
 		  </tbody>
 		</table>
