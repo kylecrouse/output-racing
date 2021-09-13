@@ -202,19 +202,29 @@ export default function Home(props) {
                   { props.schedule &&
                     props.schedule
                       .map((props, index) => (
-                        <tr key={`schedule${index}`} style={{opacity: props.raceId ? 0.4 : 1}}>
-                          <td>{moment.parseZone(props.date).format('M/D')}</td>
-                          { props.offWeek
-                              ? <td><i>Off Week</i></td>
-                              : <td>
-                                  { props.raceId 
-                                      ? <a href={`/results/${props.raceId}/`}>{props.track}</a>
-                                      : props.track
-                                  }
-                                  { !props.counts && <i style={{ opacity: 0.5 }}> (non-points)</i>}
+                        !props.counts && !props.offWeek && props.raceNo === ""
+                          ? (
+                              <tr key={`schedule${index}`} style={{opacity: props.raceId ? 0.4 : 1}}>
+                                <td colspan="4" style={{backgroundColor:"#f4a913", textAlign: "center"}}>
+                                  <i style={{fontWeight:"bold"}}>{props.name}</i>
                                 </td>
-                          }
-                        </tr>
+                              </tr>
+                            )
+                          : (
+                              <tr key={`schedule${index}`} style={{opacity: props.raceId ? 0.4 : 1}}>
+                                <td>{moment.parseZone(props.date).format('M/D')}</td>
+                                { props.offWeek
+                                    ? <td><i>Off Week</i></td>
+                                    : <td>
+                                        { props.raceId 
+                                            ? <a href={`/results/${props.raceId}/`}>{props.track}</a>
+                                            : props.track
+                                        }
+                                        { !props.counts && <i style={{ opacity: 0.5 }}> (non-points)</i>}
+                                      </td>
+                                }
+                              </tr>
+                            )
                       ))
                   }
                 </tbody>
