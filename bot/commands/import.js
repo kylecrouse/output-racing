@@ -50,7 +50,7 @@ module.exports = {
         break;
         
         case 'standings':
-          await handleSeason(args[1] || league.season.id);
+          await handleStandings(args[1] || league.season.id);
         break;
         
         case 'stats':
