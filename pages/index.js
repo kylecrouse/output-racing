@@ -72,7 +72,7 @@ export default function Home(props) {
                 }
               </div>
               { props.lastRace.media && 
-                <div className={["carousel", styles.carousel]}>
+                <div className="carousel">
                   { props.lastRace.media.map((media, index) => {
                       let props = {
                         className: "carousel-locator",
@@ -87,7 +87,7 @@ export default function Home(props) {
                   }
                   <div className="carousel-container">
                     { props.lastRace.media.map((media, index) => (
-                        <figure className={["carousel-item", styles.carouselItem]}>
+                        <figure className="carousel-item">
                           <label className="item-prev btn btn-action btn-lg" for={`slide-${index - 1 < 0 ? props.lastRace.media.length - 1 : index - 1}`}>
                             <i className="icon icon-arrow-left"></i>
                           </label>

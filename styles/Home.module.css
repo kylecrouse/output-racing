@@ -88,6 +88,14 @@
   font-size: 0.6rem;
 }
 
+.carousel .carousel-container::before {
+  display: none !important;
+}
+
+.carousel .carousel-container .carousel-item {
+  position: static !important;
+}
+
 .carousel .img-responsive {
   height: 100%;
   max-width: auto;
@@ -150,14 +158,6 @@
 .carcut figure {
   transform: skew(20deg) scale(1.5);
   align-self: center;
-}
-
-.carousel::before {
-  display: none;
-}
-
-.carouselItem {
-  position: static;
 }
 
 @media (max-width: 600px) {
