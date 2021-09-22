@@ -152,6 +152,14 @@
   align-self: center;
 }
 
+.carousel::before {
+  display: none;
+}
+
+.carouselItem {
+  position: static;
+}
+
 @media (max-width: 600px) {
   .tagline {
     margin-left: 0;
