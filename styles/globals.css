@@ -292,3 +292,11 @@ div + div:not(.column) > h2 {
   transform: skew(20deg);
 }
 
+.carousel .carousel-container::before {
+  display: none !important;
+}
+
+.carousel .carousel-container .carousel-item {
+  position: static !important;
+}
+

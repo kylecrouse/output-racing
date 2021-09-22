@@ -88,14 +88,6 @@
   font-size: 0.6rem;
 }
 
-.carousel .carousel-container::before {
-  display: none !important;
-}
-
-.carousel .carousel-container .carousel-item {
-  position: static !important;
-}
-
 .carousel .img-responsive {
   height: 100%;
   max-width: auto;
