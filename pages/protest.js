@@ -12,7 +12,7 @@ export default function Protest(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Navbar page="apply"/>
+      <Navbar page="protest"/>
       
       <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdH-nRenusYWx1CzQ7E4F-p0VjHoLkorNgCUTGT33ZGYC4TPQ/viewform?embedded=true"  frameBorder="0">Loading…</iframe>
 
