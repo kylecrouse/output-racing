@@ -15,6 +15,9 @@ export default function Nav(props) {
       <a href="/rules/" className={props.page === 'rules' ? styles.active : ''}>
         <span>Rules</span>
       </a>
+      <a href="/protest/" className={props.page === 'protest' ? styles.active : ''}>
+        <span>Protest</span>
+      </a>
       <a href="/apply/" className={props.page === 'apply' ? styles.active : ''}>
         <span>Apply</span>
       </a>
