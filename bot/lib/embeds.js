@@ -61,20 +61,21 @@ module.exports = {
     return embed;
   },  
   getSessionEmbed: async (session, race) => {
-    const track = tracks.find(({ name }) => race.track.indexOf(name) >= 0);
+    const track = tracks.find(({ name }) => session.track_name.indexOf(name) >= 0);
+    console.log(track, session.track_name)
     
     const embed = new Discord.MessageEmbed()
-    	.setTitle(`**${session.league_season_id == 51244 ? 'Practice Session' : race.name}**`)
+    	.setTitle(`**${session.league_season_id == 51244 ? 'Practice Session' : race ? race.name : session.league_season_name }**`)
       .addField(
         `**${moment(session.launchat).tz("America/Los_Angeles").format('dddd, MMMM Do')}**`,
         `Practice: ${moment(session.launchat).tz("America/Los_Angeles").format('h:mma z')} (${session.practicedur} min)\u000AQual: ${moment(session.launchat).add(session.practicedur, 'm').tz("America/Los_Angeles").format('h:mma z')} (${session.qualifylaps} laps/${session.qualifylength} min)\u000AGrid: ${moment(session.launchat).add(session.practicedur + session.qualifylength, 'm').tz("America/Los_Angeles").format('h:mma z')}`
       )
       .addField(
-        `\u200B\u000A**${track.name}**`, 
+        `\u200B\u000A**${session.track_name}**`, 
         `Time of Day: ${timeOfDay[session.timeOfDay]}\u000A` +
         `${session.config_name ? `Configuration: ${session.config_name}\u000A` : ''}` +
         `Distance: ${session.racelaps} laps\u000A` +
-        `Weather: ${session.weather_type == 1 ? 'dynamic weather/sky' : ''}\u000A` +
+        `Weather: ${session.weather_type == 1 ? 'dynamic weather/sky' : `${session.weather_temp_value}°F`}\u000A` +
         `Conditions: practice ${session.rubberlevel_practice}%, qual ${session.rubberlevel_qualify == -1 ? 'carries over' : `${session.rubberlevel_qualify}%`}, race ${session.rubberlevel_race == -1 ? 'carries over' : `${session.rubberlevel_race}%`}\u000A` +
         `G/W/C: ${session.gwclimit} attempts`
       )
@@ -89,10 +90,11 @@ module.exports = {
       )
       .setTimestamp();
       
-    if (race.logo) {
+    if (race && race.logo) {
       const logo = await cms.getAsset(race.logo.sys.id);
       embed.setThumbnail(`https:${logo.fields.file['en-US'].url}`);
-    } else {
+    } 
+    else if (track) {
       embed.setThumbnail(track.logo);
     }
       
