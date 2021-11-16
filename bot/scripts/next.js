@@ -28,7 +28,8 @@ async function main() {
         // Get Discord channel to send announcement
         // const user = (await client.users.cache.get('697817102534311996')) || (await client.users.fetch('697817102534311996'));
         // const channel = await user.createDM();  
-        const channel = (await client.channels.cache.get(league.channels['en-US'].announcement)) || (await client.channels.fetch(league.channels['en-US'].announcement))
+        const channel = (await client.channels.cache.get(league.channels['en-US'].announcement)) 
+          || (await client.channels.fetch(league.channels['en-US'].announcement).catch(err => {}));
         
         return Promise.all(sessions
           .filter(session => moment().tz("America/Los_Angeles").isSame(session.launchat, 'day'))
