@@ -22,8 +22,8 @@ module.exports = async (message) => {
     // Exit if there is no command or message is from a bot.
     if (!message.content.startsWith(prefix) || message.author.bot) return;
     
-    // Exit if this command is not in a known guild
-    if (message.guildId && !guilds.includes(message.guildId)) return;
+    // Exit if this command is not from a known guild
+    if (message.guild && !guilds.includes(message.guild.id)) return;
     
     // Get message command (i.e., !command) and args
     // Use regex that doesn't split inside quotes but doesn't match them either
