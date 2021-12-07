@@ -2,11 +2,16 @@ const Discord = require('discord.js');
 const Promise = require('bluebird');
 const moment = require('moment');
 const { applicationsChannelId } = require('../config.json');
+const client = require('../lib/discord');
 const { getUnresolved, getApplicants, resolveApplicant } = require('../lib/applications');
 
-const client = new Discord.Client();
+if (client.uptime > 0) {
+  main();
+} else {
+  client.on('ready', main);
+}
 
-client.on('ready', async () => {
+async function main() {
   console.log(`Logged in as ${client.user.tag} for scripts/next.`);
   
     try {
@@ -50,6 +55,6 @@ client.on('ready', async () => {
       console.log(err);
     }      
 
-});
+}
 
-client.login(process.env.DISCORD_ACCESS_TOKEN);
+// client.login(process.env.DISCORD_ACCESS_TOKEN);
