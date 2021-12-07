@@ -64,7 +64,7 @@ module.exports = {
       
       await league.load();
       
-      await buildAndDeploy();
+      // await buildAndDeploy();
       
       // If is 'latest' import, annouce results
       if (race && args[0] === 'latest') 
