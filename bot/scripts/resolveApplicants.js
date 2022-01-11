@@ -36,11 +36,11 @@ async function main() {
               { name: 'SR', value: `\`${license.srPrime}.${license.srSub}\``, inline: true },
               { name: 'iRating', value: `\`${(parseInt(license.iRating)/1000).toFixed(1)}k\``, inline: true },
               { name: 'Starts', value: `\`${stats.starts}\``, inline: true },
-              { name: 'Inc/Race', value: `\`${stats.avgIncPerRace.toFixed(2)}\``, inline: true },
+              { name: 'Inc/Race', value: `\`${(stats.avgIncPerRace || 0).toFixed(2)}\``, inline: true },
               { name: 'Laps', value: `\`${stats.totalLaps}\``, inline: true },
-              { name: 'Win %', value: `\`${stats.winPerc.toFixed(2)}%\``, inline: true },
-              { name: 'Top 5%', value: `\`${stats.top5Perc.toFixed(2)}%\``, inline: true },
-              { name: 'Led %', value: `\`${stats.lapsLedPerc.toFixed(2)}%\``, inline: true },
+              { name: 'Win %', value: `\`${(stats.winPerc || 0).toFixed(2)}%\``, inline: true },
+              { name: 'Top 5%', value: `\`${(stats.top5Perc || 0).toFixed(2)}%\``, inline: true },
+              { name: 'Led %', value: `\`${(stats.lapsLedPerc || 0).toFixed(2)}%\``, inline: true },
           	)
           	.setTimestamp()
             
