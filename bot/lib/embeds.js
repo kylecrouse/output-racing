@@ -78,7 +78,7 @@ module.exports = {
         `Weather: ${session.weather_type == 1 ? 'dynamic weather/sky' : `${session.weather_temp_value}°F`}\u000A` +
         `Conditions: practice ${session.rubberlevel_practice == -1 ? 'automatically generated' : `${session.rubberlevel_practice}%`}, qual ${session.rubberlevel_qualify == -1 ? 'carries over' : `${session.rubberlevel_qualify}%`}, race ${session.rubberlevel_race == -1 ? 'carries over' : `${session.rubberlevel_race}%`}\u000A` +
         `Cautions: ${session.fullcoursecautions == 1 ? 'on' : 'local only' }` +
-        `${session.fullcoursecautions == 1 ? `G/W/C: ${session.gwclimit} attempts}` : ''}`
+        `${session.fullcoursecautions == 1 ? `\u000AG/W/C: ${session.gwclimit} attempts` : ''}`
       )
       .addField(
         '\u200B\u000A',
